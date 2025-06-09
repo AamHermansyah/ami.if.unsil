@@ -47,10 +47,10 @@ function Navbar() {
           <SidebarTrigger className="-ml-1 dark:text-white" />
           <Separator
             orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
+            className="mr-2 data-[orientation=vertical]:h-4 hidden sm:block"
           />
 
-          <Breadcrumb>
+          <Breadcrumb className="hidden sm:block">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild className={cn(isScrolled && 'text-white hover:text-secondary')}>

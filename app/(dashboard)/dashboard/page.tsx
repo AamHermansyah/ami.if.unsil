@@ -78,7 +78,7 @@ const AuditorDashboard = () => {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-2">25 Tetap, 3 NIDK</p>
+            <p className="text-sm text-muted-foreground mt-2">25 Tetap, 3 NIDK</p>
           </CardContent>
         </Card>
 
@@ -86,7 +86,7 @@ const AuditorDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Progress Audit</p>
+                <p className="text-sm mb-1">Progress Audit</p>
                 <p className="text-3xl font-bold text-green-600">84%</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -101,14 +101,14 @@ const AuditorDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Indikator Tercapai</p>
+                <p className="text-sm mb-1">Indikator Tercapai</p>
                 <p className="text-3xl font-bold text-purple-600">24/29</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <Target className="w-6 h-6 text-purple-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-2">82.8% tercapai</p>
+            <p className="text-sm text-muted-foreground mt-2">82.8% tercapai</p>
           </CardContent>
         </Card>
 
@@ -116,14 +116,14 @@ const AuditorDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Pending Approval</p>
+                <p className="text-sm mb-1">Pending Approval</p>
                 <p className="text-3xl font-bold text-orange-600">7</p>
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                 <Clock className="w-6 h-6 text-orange-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-2">Perlu tindakan</p>
+            <p className="text-sm text-muted-foreground mt-2">Perlu tindakan</p>
           </CardContent>
         </Card>
 
@@ -131,14 +131,14 @@ const AuditorDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Alert</p>
+                <p className="text-sm mb-1">Alert</p>
                 <p className="text-3xl font-bold text-red-600">3</p>
               </div>
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                 <AlertTriangle className="w-6 h-6 text-red-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-2">Perlu perhatian</p>
+            <p className="text-sm text-muted-foreground mt-2">Perlu perhatian</p>
           </CardContent>
         </Card>
       </div>

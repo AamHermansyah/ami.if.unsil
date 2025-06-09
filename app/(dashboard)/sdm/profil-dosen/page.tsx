@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -17,7 +16,6 @@ import {
   Edit,
   Eye,
   CheckCircle,
-  AlertTriangle,
   User,
   GraduationCap,
   Award,
@@ -33,6 +31,7 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 const SDMProfilDosenPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -163,8 +162,7 @@ const SDMProfilDosenPage = () => {
   const persenNIDK = Math.round((dosenNIDK / totalDosen) * 100);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-
+    <div className="space-y-6">
       {/* Header */}
       <div className="bg-card rounded-lg shadow-sm border p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -200,149 +198,22 @@ const SDMProfilDosenPage = () => {
         </div>
       </div>
 
-      {/* Key Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="border-l-4 border-l-blue-500">
-          <CardContent className="px-6 py-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-foreground mb-1">Total Dosen</p>
-                <p className="text-3xl font-bold text-blue-600">{totalDosen}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">Target: ≥5 dosen</p>
-            <div className="mt-2">
-              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                Target Tercapai
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-green-500">
-          <CardContent className="px-6 py-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-foreground mb-1">Lektor ke Atas</p>
-                <p className="text-3xl font-bold text-green-600">{persenLektorKeAtas}%</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Award className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-            <Progress value={persenLektorKeAtas} className="mt-3" />
-            <p className="text-sm text-gray-500 mt-2">Target: ≥70%</p>
-            <div className="mt-2">
-              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                Target Tercapai
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-purple-500">
-          <CardContent className="px-6 py-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-foreground mb-1">Bersertifikat</p>
-                <p className="text-3xl font-bold text-purple-600">{persenBersertifikat}%</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-            <Progress value={persenBersertifikat} className="mt-3" />
-            <p className="text-sm text-gray-500 mt-2">Target: ≥50%</p>
-            <div className="mt-2">
-              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                Target Tercapai
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-orange-500">
-          <CardContent className="px-6 py-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-foreground mb-1">Rasio NIDK</p>
-                <p className="text-3xl font-bold text-orange-600">{persenNIDK}%</p>
-              </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <Target className="w-6 h-6 text-orange-600" />
-              </div>
-            </div>
-            <Progress value={persenNIDK} className="mt-3" />
-            <p className="text-sm text-gray-500 mt-2">Target: ≤10%</p>
-            <div className="mt-2">
-              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                Sesuai Target
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-indigo-500">
-          <CardContent className="px-6 py-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-foreground mb-1">Rasio Dosen:Mhs</p>
-                <p className="text-3xl font-bold text-indigo-600">1:32</p>
-              </div>
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-indigo-600" />
-              </div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">Target: {'<'}35 (eksakta)</p>
-            <div className="mt-2">
-              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                Sesuai Target
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Alert className="border-yellow-200 bg-yellow-50">
-          <AlertTriangle className="h-4 w-4 text-yellow-600" />
-          <AlertDescription className="text-yellow-800">
-            <strong>Perhatian:</strong> 2 dosen belum melengkapi data profil.
-            Pastikan semua data terisi untuk audit mutu internal.
-          </AlertDescription>
-        </Alert>
-
-        <Alert className="border-blue-200 bg-blue-50">
-          <Users className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-800">
-            <strong>Info:</strong> Semua indikator SDM sudah memenuhi target minimum.
-            Pertahankan kualitas dan tingkatkan kompetensi dosen.
-          </AlertDescription>
-        </Alert>
-      </div>
-
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="list">Daftar Dosen</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Laporan</TabsTrigger>
-        </TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <div className="w-full overflow-x-auto">
+          <div className="min-w-max">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="list">Daftar Dosen</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="reports">Laporan</TabsTrigger>
+            </TabsList>
+          </div>
+        </div>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 items-start gap-6">
-
             {/* Jabatan Fungsional Breakdown */}
             <Card>
               <CardHeader>
@@ -438,7 +309,7 @@ const SDMProfilDosenPage = () => {
                 </div>
                 <Separator />
                 <div>
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-sm mb-1 space-y-1">
                     <span>Progress Kelengkapan</span>
                     <span>67%</span>
                   </div>
@@ -483,7 +354,6 @@ const SDMProfilDosenPage = () => {
 
         {/* List Tab */}
         <TabsContent value="list" className="space-y-6">
-
           <div className="w-full flex justify-end">
             <div className="flex-1 max-w-sm">
               <div className="relative">
@@ -502,37 +372,20 @@ const SDMProfilDosenPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {dosenData.map((dosen) => (
               <Card key={dosen.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                        <User className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold truncate">{dosen.nama}</h3>
-                        <p className="text-sm text-gray-600">{dosen.nidn || dosen.nidk}</p>
-                      </div>
+                <CardHeader>
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                      <User className="w-6 h-6 text-white" />
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Badge
-                        className={`text-xs ${dosen.status_data === "Lengkap"
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                          }`}
-                      >
-                        {dosen.status_data === "Lengkap" ? (
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                        ) : (
-                          <Clock className="w-3 h-3 mr-1" />
-                        )}
-                        {dosen.status_data}
-                      </Badge>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold truncate">{dosen.nama}</h3>
+                      <p className="text-sm text-gray-600">{dosen.nidn || dosen.nidk}</p>
                     </div>
                   </div>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
                     <div>
                       <p className="text-gray-500">Status</p>
                       <p className="font-medium">{dosen.status}</p>
@@ -550,7 +403,6 @@ const SDMProfilDosenPage = () => {
                       <p className="font-medium">{dosen.tahunLulus}</p>
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
                       <Mail className="w-4 h-4 text-gray-400" />
@@ -565,17 +417,30 @@ const SDMProfilDosenPage = () => {
                       <span className="text-gray-600 truncate">{dosen.universitas}</span>
                     </div>
                   </div>
-
                   <Separator />
-
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {dosen.sertifikat && (
                         <Badge className="bg-purple-50 text-purple-700 border-purple-200 text-xs">
                           <Shield className="w-3 h-3 mr-1" />
                           Bersertifikat
                         </Badge>
                       )}
+                      <Badge
+                        className={cn(
+                          'text-xs',
+                          dosen.status_data === "Lengkap"
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : "bg-yellow-50 text-yellow-700 border-yellow-200"
+                        )}
+                      >
+                        {dosen.status_data === "Lengkap" ? (
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                        ) : (
+                          <Clock className="w-3 h-3 mr-1" />
+                        )}
+                        {dosen.status_data}
+                      </Badge>
                     </div>
                     <div className="flex items-center gap-1">
                       <Button variant="outline" size="sm">
@@ -589,9 +454,7 @@ const SDMProfilDosenPage = () => {
                       </Button>
                     </div>
                   </div>
-
                   <Separator />
-
                   <div className="text-xs text-gray-500">
                     Terakhir update: {new Date(dosen.last_update).toLocaleDateString('id-ID')}
                   </div>

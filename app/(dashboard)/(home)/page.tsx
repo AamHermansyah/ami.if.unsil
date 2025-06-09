@@ -60,7 +60,7 @@ const AuditeeDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Progress Keseluruhan</p>
+                <p className="text-sm mb-1">Progress Keseluruhan</p>
                 <p className="text-3xl font-bold text-blue-600">87%</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -75,7 +75,7 @@ const AuditeeDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Publikasi 2024</p>
+                <p className="text-sm mb-1">Publikasi 2024</p>
                 <p className="text-3xl font-bold text-green-600">12</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -90,7 +90,7 @@ const AuditeeDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Mahasiswa Bimbingan</p>
+                <p className="text-sm mb-1">Mahasiswa Bimbingan</p>
                 <p className="text-3xl font-bold text-purple-600">18</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -105,7 +105,7 @@ const AuditeeDashboard = () => {
           <CardContent className="px-4 md:px-6 py-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Beban Mengajar</p>
+                <p className="text-sm mb-1">Beban Mengajar</p>
                 <p className="text-3xl font-bold text-orange-600">14</p>
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
