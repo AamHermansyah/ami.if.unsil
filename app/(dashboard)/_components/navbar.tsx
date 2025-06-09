@@ -39,7 +39,7 @@ function Navbar() {
 
   return (
     <header className={cn(
-      'sticky top-0 flex h-14 shrink-0 items-center gap-2 transition-[width,height,background-color] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
+      'sticky top-0 flex h-14 z-10 shrink-0 items-center gap-2 transition-[width,height,background-color] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
       isScrolled && 'bg-primary text-primary-foreground shadow-sm'
     )}>
       <div className="w-full flex items-center justify-between gap-2 px-4">
