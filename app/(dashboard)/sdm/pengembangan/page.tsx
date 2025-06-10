@@ -49,7 +49,6 @@ import {
   Users,
   Calendar,
   AlertTriangle,
-  CheckCircle,
   Target,
   FileText,
   Download,
@@ -57,7 +56,6 @@ import {
   Trash2,
   Save,
   Upload,
-  GraduationCap,
   Building,
   Globe,
   TrendingUp,
@@ -71,17 +69,17 @@ import { OverviewCard } from '@/components/shared/overview-card';
 // TypeScript interfaces
 interface KegiatanPengembangan {
   id: string;
-  jenisKegiatan: 'Studi Lanjut' | 'Postdoc' | 'ARP' | 'Kursus Singkat' | 'Magang' | 'Pelatihan' | 'Sertifikasi' | 'Konferensi' | 'Seminar' | 'Lokakarya';
+  jenisKegiatan: string;
   namaKegiatan: string;
   penyelenggara: string;
   lokasi: string;
   tanggalMulai: string;
   tanggalSelesai: string;
   durasi: number; // dalam hari
-  status: 'Selesai' | 'Sedang Berlangsung' | 'Akan Datang' | 'Dibatalkan';
+  status: string;
   sertifikat: boolean;
   deskripsi: string;
-  kategori: 'Nasional' | 'Internasional' | 'Regional' | 'Institusional';
+  kategori: string;
   dokumen?: string;
 }
 
@@ -92,8 +90,8 @@ interface SertifikatKompetensi {
   nomorSertifikat: string;
   tanggalTerbit: string;
   tanggalBerlaku: string;
-  kategori: 'Pendidik' | 'Profesional' | 'Teknis' | 'Manajemen' | 'Bahasa' | 'Lainnya';
-  status: 'Aktif' | 'Kadaluarsa' | 'Dalam Proses';
+  kategori: string;
+  status: string;
   dokumen?: string;
 }
 
@@ -546,7 +544,7 @@ const PengembanganDosenPage: React.FC = () => {
                         <Label htmlFor="jenisKegiatan">Jenis Kegiatan *</Label>
                         <Select
                           value={newKegiatan.jenisKegiatan || ''}
-                          onValueChange={(value) => setNewKegiatan({ ...newKegiatan, jenisKegiatan: value as any })}
+                          onValueChange={(value) => setNewKegiatan({ ...newKegiatan, jenisKegiatan: value })}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih jenis kegiatan" />
@@ -570,7 +568,7 @@ const PengembanganDosenPage: React.FC = () => {
                         <Label htmlFor="kategori">Kategori *</Label>
                         <Select
                           value={newKegiatan.kategori || ''}
-                          onValueChange={(value) => setNewKegiatan({ ...newKegiatan, kategori: value as any })}
+                          onValueChange={(value) => setNewKegiatan({ ...newKegiatan, kategori: value })}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih kategori" />
@@ -650,7 +648,7 @@ const PengembanganDosenPage: React.FC = () => {
                         <Label htmlFor="status">Status</Label>
                         <Select
                           value={newKegiatan.status || ''}
-                          onValueChange={(value) => setNewKegiatan({ ...newKegiatan, status: value as any })}
+                          onValueChange={(value) => setNewKegiatan({ ...newKegiatan, status: value })}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih status" />
@@ -857,7 +855,7 @@ const PengembanganDosenPage: React.FC = () => {
                         <Label htmlFor="kategoriSertifikat">Kategori</Label>
                         <Select
                           value={newSertifikat.kategori || ''}
-                          onValueChange={(value) => setNewSertifikat({ ...newSertifikat, kategori: value as any })}
+                          onValueChange={(value) => setNewSertifikat({ ...newSertifikat, kategori: value })}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih kategori" />
@@ -877,7 +875,7 @@ const PengembanganDosenPage: React.FC = () => {
                         <Label htmlFor="statusSertifikat">Status</Label>
                         <Select
                           value={newSertifikat.status || ''}
-                          onValueChange={(value) => setNewSertifikat({ ...newSertifikat, status: value as any })}
+                          onValueChange={(value) => setNewSertifikat({ ...newSertifikat, status: value })}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih status" />
@@ -1047,7 +1045,7 @@ const PengembanganDosenPage: React.FC = () => {
               <div className="space-y-4">
                 {kegiatanPengembangan
                   .sort((a, b) => new Date(b.tanggalMulai).getTime() - new Date(a.tanggalMulai).getTime())
-                  .map((kegiatan, index) => (
+                  .map((kegiatan) => (
                     <div key={kegiatan.id} className="flex items-start gap-4 p-4 border rounded-lg">
                       <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
                       <div className="flex-1">

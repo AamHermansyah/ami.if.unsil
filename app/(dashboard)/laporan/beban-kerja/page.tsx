@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -30,7 +29,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Tabs,
@@ -41,26 +39,20 @@ import {
 import {
   ArrowLeft,
   Search,
-  Filter,
   Eye,
   FileText,
-  Download,
   CheckCircle,
   AlertTriangle,
   XCircle,
   Clock,
   Users,
-  BookOpen,
   GraduationCap,
   Target,
   BarChart3,
   TrendingUp,
-  Settings,
   UserCheck,
   UserX,
   Info,
-  Calendar,
-  Award,
   Edit,
   RefreshCw
 } from 'lucide-react';
@@ -108,7 +100,7 @@ const BebanKerjaAuditorPage: React.FC = () => {
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
 
   // Sample data - Dalam implementasi nyata, ini akan dari API
-  const [dosenBebanKerja, setDosenBebanKerja] = useState<DosenBebanKerja[]>([
+  const [dosenBebanKerja] = useState<DosenBebanKerja[]>([
     {
       id: '1',
       nama: 'Dr. Ahmad Fauzi, M.Kom',

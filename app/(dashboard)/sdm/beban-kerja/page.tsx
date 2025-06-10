@@ -8,7 +8,6 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -50,7 +49,6 @@ import {
   GraduationCap,
   AlertTriangle,
   CheckCircle,
-  Calendar,
   Target,
   FileText,
   Download,
@@ -142,7 +140,7 @@ const BebanKerjaPage: React.FC = () => {
     }
   ]);
 
-  const [pembimbinganSkripsi, setPembimbinganSkripsi] = useState<PembimbinganSkripsi[]>([
+  const [pembimbinganSkripsi] = useState<PembimbinganSkripsi[]>([
     {
       id: '1',
       namaMahasiswa: 'Ahmad Rizki',
@@ -165,7 +163,7 @@ const BebanKerjaPage: React.FC = () => {
     }
   ]);
 
-  const [perwalian, setPerwalian] = useState<Perwalian[]>([
+  const [perwalian] = useState<Perwalian[]>([
     {
       id: '1',
       namaMahasiswa: 'Budi Santoso',
@@ -186,7 +184,7 @@ const BebanKerjaPage: React.FC = () => {
     }
   ]);
 
-  const [praktikLapangan, setPraktikLapangan] = useState<PraktikLapangan[]>([
+  const [praktikLapangan] = useState<PraktikLapangan[]>([
     {
       id: '1',
       namaMahasiswa: 'Andi Wijaya',
@@ -208,7 +206,6 @@ const BebanKerjaPage: React.FC = () => {
 
   // Form states
   const [newBebanMengajar, setNewBebanMengajar] = useState<Partial<BebanMengajar>>({});
-  const [newPembimbinganSkripsi, setNewPembimbinganSkripsi] = useState<Partial<PembimbinganSkripsi>>({});
 
   const handleAddBebanMengajar = () => {
     if (newBebanMengajar.namaMataKuliah && newBebanMengajar.sks) {
