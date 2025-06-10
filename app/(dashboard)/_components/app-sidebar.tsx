@@ -41,7 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="z-[11]">
       <SidebarHeader>
         <div className="w-[--radix-dropdown-menu-trigger-width] flex items-center gap-2">
           <Image
@@ -65,21 +65,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarGroupLabel className="uppercase text-primary dark:text-secondary">{key}</SidebarGroupLabel>
               <SidebarMenu>
                 {navigations[key].map((item) => {
-                  if (!item.children) return (
-                    <Link key={item.title} href={item.url}>
-                      <SidebarMenuButton
-                        variant="primary"
-                        tooltip={item.title}
-                        isActive={
-                          (pathname === '/' && item.url === '/')
-                          || (item.url !== '/' && pathname.includes(item.url))}
-                        className="cursor-pointer"
-                      >
-                        {item.icon && <item.icon />}
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </Link>
-                  );
+                  if (!item.children) {
+                    const isActive = (pathname === '/' && item.url === '/') || (item.url !== '/' && pathname.includes(item.url));
+                    return (
+                      <Link key={item.title} href={item.url}>
+                        <SidebarMenuButton
+                          variant="primary"
+                          tooltip={item.title}
+                          isActive={isActive}
+                          className="cursor-pointer"
+                        >
+                          {item.icon && <item.icon />}
+                          <span>{item.title}</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    );
+                  }
+
+                  const isActive = item.children.some((subItem) => pathname.includes(subItem.url));
 
                   return (
                     <Collapsible
@@ -89,24 +92,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     >
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
-                          <SidebarMenuButton tooltip={item.title}>
+                          <SidebarMenuButton
+                            tooltip={item.title}
+                            isActive={isActive}
+                            variant="primary"
+                          >
                             {item.icon && <item.icon />}
                             <span>{item.title}</span>
                             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
-                        <CollapsibleContent>
+                        <CollapsibleContent className="mt-1">
                           <SidebarMenuSub>
-                            {item.children.map((subItem) => (
-                              <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton asChild>
-                                  <Link href={subItem.url}>
-                                    {subItem.icon && <subItem.icon />}
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
+                            {item?.children && item.children.map((subItem) => {
+                              const isActive = item.parentPath !== subItem.url && pathname.includes(subItem.url);
+
+                              return (
+                                <SidebarMenuSubItem key={subItem.title}>
+                                  <SidebarMenuSubButton isActive={isActive || pathname === item.parentPath} asChild>
+                                    <Link href={subItem.url}>
+                                      {subItem.icon && <subItem.icon />}
+                                      <span>{subItem.title}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              )
+                            })}
                           </SidebarMenuSub>
                         </CollapsibleContent>
                       </SidebarMenuItem>

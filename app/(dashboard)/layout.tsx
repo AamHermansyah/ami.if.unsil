@@ -10,9 +10,9 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="flex-1 overflow-hidden">
         <Navbar />
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="w-full flex flex-1 flex-col gap-4 p-4 pt-14">
           {children}
         </div>
       </SidebarInset>

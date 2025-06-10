@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "@/components/shared/mode-toggle"
 
@@ -25,6 +25,7 @@ function formatSegment(segment: string) {
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const { state, isMobile } = useSidebar()
   const pathname = usePathname()
   const segments = pathname.split('/').filter(Boolean)
 
@@ -38,10 +39,16 @@ function Navbar() {
   }, [])
 
   return (
-    <header className={cn(
-      'sticky top-0 flex h-14 z-10 shrink-0 items-center gap-2 transition-[width,height,background-color] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
-      isScrolled && 'bg-primary text-primary-foreground shadow-sm'
-    )}>
+    <header
+      style={{
+        width: isMobile ? '100%' : state === 'expanded'
+          ? 'calc(100% - var(--sidebar-width))' : 'calc(100% - var(--sidebar-width-icon))'
+      }}
+      className={cn(
+        'fixed top-0 right-0 flex h-14 z-10 shrink-0 items-center gap-2 transition-[width,height,background-color] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
+        isScrolled && 'bg-primary text-primary-foreground shadow-sm'
+      )}
+    >
       <div className="w-full flex items-center justify-between gap-2 px-4">
         <div className="flex items-center gap-2">
           <SidebarTrigger className="-ml-1 dark:text-white" />

@@ -28,6 +28,7 @@ import {
   Activity,
   Zap
 } from 'lucide-react';
+import { OverviewCard } from '@/components/shared/overview-card';
 
 const AuditorDashboard = () => {
   return (
@@ -67,80 +68,41 @@ const AuditorDashboard = () => {
 
       {/* Key Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="border-l-4 border-l-blue-500">
-          <CardContent className="px-4 md:px-6 py-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Total Dosen</p>
-                <p className="text-3xl font-bold text-blue-600">28</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">25 Tetap, 3 NIDK</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-green-500">
-          <CardContent className="px-4 md:px-6 py-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm mb-1">Progress Audit</p>
-                <p className="text-3xl font-bold text-green-600">84%</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-            <Progress value={84} className="mt-3" />
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-purple-500">
-          <CardContent className="px-4 md:px-6 py-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm mb-1">Indikator Tercapai</p>
-                <p className="text-3xl font-bold text-purple-600">24/29</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Target className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">82.8% tercapai</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-orange-500">
-          <CardContent className="px-4 md:px-6 py-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm mb-1">Pending Approval</p>
-                <p className="text-3xl font-bold text-orange-600">7</p>
-              </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-orange-600" />
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">Perlu tindakan</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-red-500">
-          <CardContent className="px-4 md:px-6 py-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm mb-1">Alert</p>
-                <p className="text-3xl font-bold text-red-600">3</p>
-              </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">Perlu perhatian</p>
-          </CardContent>
-        </Card>
+        <OverviewCard
+          label="Total Dosen"
+          value="28"
+          icon={<Users className="w-6 h-6 text-blue-600" />}
+          color="blue"
+          description="25 Tetap, 3 NIDK"
+        />
+        <OverviewCard
+          label="Progress Audit"
+          value="84%"
+          icon={<BarChart3 className="w-6 h-6 text-green-600" />}
+          color="green"
+          progress={84}
+        />
+        <OverviewCard
+          label="Indikator Tercapai"
+          value="24/29"
+          icon={<Target className="w-6 h-6 text-purple-600" />}
+          color="purple"
+          description="82.8% tercapai"
+        />
+        <OverviewCard
+          label="Pending Approval"
+          value="7"
+          icon={<Clock className="w-6 h-6 text-orange-600" />}
+          color="orange"
+          description="Perlu tindakan"
+        />
+        <OverviewCard
+          label="Alert"
+          value="3"
+          icon={<AlertTriangle className="w-6 h-6 text-red-600" />}
+          color="red"
+          description="Perlu perhatian"
+        />
       </div>
 
       {/* Critical Alerts */}
