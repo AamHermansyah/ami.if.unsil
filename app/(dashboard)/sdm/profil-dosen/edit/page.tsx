@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Tag } from "emblor"
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,11 +37,10 @@ import {
   AlertTriangle,
   Info,
   Camera,
-  X,
   ChevronRight
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
+import { InnerTagsInput } from '@/components/core/inner-tags-input';
 
 // TypeScript interfaces
 interface DosenFormData {
@@ -77,11 +76,7 @@ interface DosenFormData {
   judul: string;
 
   // Additional Information
-  bidangKeahlian: string[];
-  sertifikatPendidik: boolean;
-  nomorSertifikatPendidik: string;
-  tanggalSertifikatPendidik: string;
-  sertifikatLainnya: string;
+  bidangKeahlian: Tag[];
 
   // Files
   foto: File | null;
@@ -129,10 +124,6 @@ const CreateDosenProfilePage: React.FC = () => {
     tahunLulus: '',
     judul: '',
     bidangKeahlian: [],
-    sertifikatPendidik: false,
-    nomorSertifikatPendidik: '',
-    tanggalSertifikatPendidik: '',
-    sertifikatLainnya: '',
     foto: null,
     cvFile: null,
     ijazahFile: null,
@@ -164,7 +155,7 @@ const CreateDosenProfilePage: React.FC = () => {
     {
       id: 'additional',
       title: 'Informasi Tambahan',
-      description: 'Keahlian dan sertifikasi',
+      description: 'Keahlian',
       icon: Award,
       completed: false
     },
@@ -178,13 +169,6 @@ const CreateDosenProfilePage: React.FC = () => {
   ];
 
   const handleInputChange = (field: keyof DosenFormData, value: string | boolean | File | null) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleArrayInputChange = (field: 'bidangKeahlian', value: string[]) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -222,16 +206,6 @@ const CreateDosenProfilePage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const addBidangKeahlian = (bidang: string) => {
-    if (bidang && !formData.bidangKeahlian.includes(bidang)) {
-      handleArrayInputChange('bidangKeahlian', [...formData.bidangKeahlian, bidang]);
-    }
-  };
-
-  const removeBidangKeahlian = (bidang: string) => {
-    handleArrayInputChange('bidangKeahlian', formData.bidangKeahlian.filter(b => b !== bidang));
   };
 
   const renderStepContent = () => {
@@ -594,107 +568,26 @@ const CreateDosenProfilePage: React.FC = () => {
 
       case 3: // Additional Information
         return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Label>Bidang Keahlian *</Label>
-                <p className="text-sm text-muted-foreground mb-3">Tambahkan bidang keahlian Anda (minimal 1)</p>
+          <div className="space-y-4">
+            <div>
+              <Label>Bidang Keahlian *</Label>
+              <p className="text-sm text-muted-foreground mb-3">Tambahkan bidang keahlian Anda (minimal 1)</p>
 
-                <div className="flex gap-2 mb-3">
-                  <Input
-                    id="bidangKeahlianInput"
-                    placeholder="Contoh: Machine Learning"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const input = e.target as HTMLInputElement;
-                        addBidangKeahlian(input.value);
-                        input.value = '';
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      const input = document.getElementById('bidangKeahlianInput') as HTMLInputElement;
-                      addBidangKeahlian(input.value);
-                      input.value = '';
-                    }}
-                  >
-                    Tambah
-                  </Button>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {formData.bidangKeahlian.map((bidang, index) => (
-                    <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                      {bidang}
-                      <X
-                        className="w-3 h-3 cursor-pointer"
-                        onClick={() => removeBidangKeahlian(bidang)}
-                      />
-                    </Badge>
-                  ))}
-                </div>
-
-
-                <div className="text-sm text-muted-foreground mt-2">
-                  Saran bidang keahlian: Artificial Intelligence, Machine Learning, Data Science,
-                  Computer Vision, Natural Language Processing, Software Engineering, Database Systems
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="sertifikatPendidik"
-                  checked={formData.sertifikatPendidik}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("sertifikatPendidik", checked === true)
-                  }
-                />
-                <Label htmlFor="sertifikatPendidik">Memiliki Sertifikat Pendidik</Label>
-              </div>
-
-              {formData.sertifikatPendidik && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ml-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="nomorSertifikatPendidik">Nomor Sertifikat Pendidik</Label>
-                    <Input
-                      id="nomorSertifikatPendidik"
-                      value={formData.nomorSertifikatPendidik}
-                      onChange={(e) => handleInputChange('nomorSertifikatPendidik', e.target.value)}
-                      placeholder="12345678901234567890"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="tanggalSertifikatPendidik">Tanggal Sertifikat</Label>
-                    <Input
-                      id="tanggalSertifikatPendidik"
-                      type="date"
-                      value={formData.tanggalSertifikatPendidik}
-                      onChange={(e) => handleInputChange('tanggalSertifikatPendidik', e.target.value)}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="sertifikatLainnya">Sertifikat/Kompetensi Lainnya</Label>
-              <Textarea
-                id="sertifikatLainnya"
-                value={formData.sertifikatLainnya}
-                onChange={(e) => handleInputChange('sertifikatLainnya', e.target.value)}
-                placeholder="AWS Certified Solutions Architect, Certified Ethical Hacker, dll."
-                rows={3}
+              <InnerTagsInput
+                placeholder="Contoh: Machine Learning"
+                defaultTags={[{ id: "1", text: "Red" }]}
+                onChange={(tags) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    bidangKeahlian: tags
+                  }));
+                }}
               />
-              <p className="text-sm text-muted-foreground">
-                Tuliskan sertifikat profesional, kompetensi industri, atau pelatihan relevan lainnya
-              </p>
+
+              <div className="text-sm text-muted-foreground mt-2">
+                Saran bidang keahlian: Artificial Intelligence, Machine Learning, Data Science,
+                Computer Vision, Natural Language Processing, Software Engineering, Database Systems
+              </div>
             </div>
           </div>
         );

@@ -492,7 +492,7 @@ const BebanKerjaAuditorPage: React.FC = () => {
         <TabsContent value="monitoring" className="space-y-6">
           <Card>
             <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between">
+              <div className="w-full flex flex-col md:flex-row md:items-center gap-4 justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-blue-600" />
@@ -502,7 +502,7 @@ const BebanKerjaAuditorPage: React.FC = () => {
                     Monitor dan evaluasi beban kerja seluruh dosen
                   </CardDescription>
                 </div>
-                <div className="w-full flex items-center gap-3">
+                <div className="flex items-center gap-3">
                   <div className="relative">
                     <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                     <Input

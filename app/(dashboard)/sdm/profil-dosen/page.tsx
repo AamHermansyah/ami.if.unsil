@@ -340,30 +340,6 @@ const ProfilePage = () => {
               </CardContent>
             </Card>
 
-            {/* Certifications */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-orange-600" />
-                  Sertifikasi
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                  <h4 className="font-medium text-green-800">Sertifikat Pendidik</h4>
-                  <p className="text-sm text-green-600">Kemenristekdikti • 2020</p>
-                </div>
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-800">AWS Certified Solutions Architect</h4>
-                  <p className="text-sm text-blue-600">Amazon Web Services • 2023</p>
-                </div>
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <h4 className="font-medium text-purple-800">Certified Ethical Hacker</h4>
-                  <p className="text-sm text-purple-600">EC-Council • 2022</p>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Quick Stats */}
             <Card>
               <CardContent className="space-y-3">

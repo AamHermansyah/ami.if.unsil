@@ -201,14 +201,12 @@ const SDMProfilDosenPage = () => {
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <div className="w-full overflow-x-auto">
-          <div className="min-w-max">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="list">Daftar Dosen</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="reports">Laporan</TabsTrigger>
-            </TabsList>
-          </div>
+          <TabsList className="min-w-max grid w-full grid-cols-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="list">Daftar Dosen</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="reports">Laporan</TabsTrigger>
+          </TabsList>
         </div>
 
         {/* Overview Tab */}

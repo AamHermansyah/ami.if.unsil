@@ -41,14 +41,9 @@ export const navigations = {
   auditee: [
     {
       title: "Ringkasan",
-      url: "/",
+      url: "/dashboard/auditee",
       icon: AiOutlineHome,
       isActive: true,
-    },
-    {
-      title: "Dokumen",
-      url: "/documents",
-      icon: AiOutlineCloudUpload,
     },
     {
       title: "SDM",
@@ -61,13 +56,8 @@ export const navigations = {
           icon: FaUserTie,
         },
         {
-          title: "Kualifikasi",
-          url: "/sdm/kualifikasi",
-          icon: MdOutlineVerified,
-        },
-        {
           title: "Beban Kerja",
-          url: "/sdm/beban-kerja/auditor",
+          url: "/sdm/beban-kerja",
           icon: AiOutlineClockCircle,
         },
         {
@@ -83,74 +73,32 @@ export const navigations = {
       parentPath: '/penelitian',
       children: [
         {
+          title: "Ringkasan",
+          url: "/penelitian/overview",
+          icon: AiOutlineHome,
+        },
+        {
           title: "Publikasi",
           url: "/penelitian/publikasi",
           icon: AiOutlineBook,
-        },
-        {
-          title: "Sitasi & Impact",
-          url: "/penelitian/sitasi",
-          icon: AiOutlineRise,
         },
         {
           title: "Produk Penelitian",
           url: "/penelitian/produk",
           icon: MdOutlineScience,
         },
-        {
-          title: "Kolaborasi",
-          url: "/penelitian/kolaborasi",
-          icon: MdOutlineGroups,
-        },
-        {
-          title: "Perencanaan",
-          url: "/penelitian/renstra",
-          icon: BiTargetLock,
-        },
-        {
-          title: "Peningkatan Kompetensi",
-          url: "/penelitian/peningkatan-kompetensi",
-          icon: BiChart,
-        },
       ],
     },
     {
       title: "Pengabdian",
       icon: AiOutlineHeart,
-      parentPath: '/pengabdian',
-      children: [
-        {
-          title: "Publikasi",
-          url: "/pengabdian/publikasi",
-          icon: BiBookOpen,
-        },
-        {
-          title: "Produk Pengabdian",
-          url: "/pengabdian/produk",
-          icon: FaHandsHelping,
-        },
-        {
-          title: "Kolaborasi",
-          url: "/pengabdian/kolaborasi",
-          icon: BiGroup,
-        },
-        {
-          title: "Perencanaan",
-          url: "/pengabdian/renstra",
-          icon: BiTargetLock,
-        },
-        {
-          title: "Peningkatan Kompetensi",
-          url: "/pengabdian/peningkatan-kompetensi",
-          icon: BiChart,
-        },
-      ],
+      url: '/pengabdian',
     },
   ],
   auditor: [
     {
       title: "Ringkasan",
-      url: "/dashboard",
+      url: "/dashboard/auditor",
       icon: AiOutlineHome,
       isActive: true,
     },
@@ -164,11 +112,6 @@ export const navigations = {
       icon: AiOutlineFileText,
       parentPath: '/laporan',
       children: [
-        {
-          title: "Dashboard",
-          url: "/laporan",
-          icon: AiOutlineBarChart,
-        },
         {
           title: "Dosen",
           url: "/laporan/dosen",
@@ -188,11 +131,6 @@ export const navigations = {
           title: "Pengabdian",
           url: "/laporan/pengabdian",
           icon: AiOutlineHeart,
-        },
-        {
-          title: "Export Laporan",
-          url: "/laporan/export",
-          icon: AiOutlineCloudUpload,
         },
       ],
     },
@@ -223,11 +161,6 @@ export const navigations = {
       icon: AiOutlineSetting,
       parentPath: '/manajemen',
       children: [
-        {
-          title: "Pengguna",
-          url: "/settings/users",
-          icon: AiOutlineUserAdd,
-        },
         {
           title: "Target Indikator",
           url: "/settings/targets",

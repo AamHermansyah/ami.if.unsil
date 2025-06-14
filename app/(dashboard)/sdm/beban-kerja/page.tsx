@@ -514,7 +514,7 @@ const BebanKerjaPage: React.FC = () => {
                             value={newBebanMengajar.kelas || 'A'}
                             onValueChange={(value) => setNewBebanMengajar({ ...newBebanMengajar, kelas: value })}
                           >
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
