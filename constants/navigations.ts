@@ -17,6 +17,7 @@ import {
   AiOutlineCloudUpload,
   AiOutlineFileProtect,
   AiFillLock,
+  AiFillCalendar,
 } from "react-icons/ai";
 
 import {
@@ -163,9 +164,14 @@ export const navigations = {
       parentPath: '/manajemen',
       children: [
         {
-          title: "Kelola Akses",
+          title: "Akses Email",
           url: "/manajemen/akses",
           icon: AiFillLock,
+        },
+        {
+          title: "Semester",
+          url: "/manajemen/semester",
+          icon: AiFillCalendar,
         },
         {
           title: "Target Indikator",

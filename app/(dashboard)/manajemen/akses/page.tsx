@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Lock, Plus, Eye, Edit, Ban } from 'lucide-react';
+import { Eye, Edit, Ban, Mail } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import AddAccessDialog from './_components/add-access-dialog';
 
 // Contoh data dummy
 const aksesUsers = [
@@ -43,17 +44,14 @@ function ManajemenAksesPage() {
           <div className="flex justify-between items-center">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Lock className="w-5 h-5 text-blue-600" />
-                Akses
+                <Mail className="w-5 h-5 text-red-600" />
+                Daftar Email
               </CardTitle>
               <CardDescription>
                 Kelola email untuk akses auditor dan auditee
               </CardDescription>
             </div>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Tambah Akses
-            </Button>
+            <AddAccessDialog />
           </div>
         </CardHeader>
         <CardContent>

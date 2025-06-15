@@ -16,7 +16,7 @@ function Header() {
     <>
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4" />
           Kembali
         </Button>
       </div>

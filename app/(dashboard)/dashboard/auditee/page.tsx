@@ -133,7 +133,7 @@ const AuditeeDashboard = () => {
                   <h4 className="font-medium mb-2">Profil Dosen</h4>
                   <p className="text-sm text-gray-600 mb-3">Data pribadi dan akademik lengkap</p>
                   <Button size="sm" variant="default" className="w-full">
-                    <Eye className="w-4 h-4 mr-2" />
+                    <Eye className="w-4 h-4" />
                     Lihat Profile
                   </Button>
                 </div>
@@ -142,7 +142,7 @@ const AuditeeDashboard = () => {
                   <h4 className="font-medium mb-2">Beban Kerja</h4>
                   <p className="text-sm text-gray-600 mb-3">Perlu update data semester ini</p>
                   <Button size="sm" variant="default" className="w-full">
-                    <Edit className="w-4 h-4 mr-2" />
+                    <Edit className="w-4 h-4" />
                     Update Data
                   </Button>
                 </div>
@@ -151,7 +151,7 @@ const AuditeeDashboard = () => {
                   <h4 className="font-medium mb-2">Sertifikasi</h4>
                   <p className="text-sm text-gray-600 mb-3">3 sertifikat terupload</p>
                   <Button size="sm" variant="default" className="w-full">
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-4 h-4" />
                     Tambah Sertifikat
                   </Button>
                 </div>
@@ -160,7 +160,7 @@ const AuditeeDashboard = () => {
                   <h4 className="font-medium mb-2">Pengembangan Diri</h4>
                   <p className="text-sm text-gray-600 mb-3">8 kegiatan tahun ini</p>
                   <Button size="sm" variant="default" className="w-full">
-                    <Eye className="w-4 h-4 mr-2" />
+                    <Eye className="w-4 h-4" />
                     Lihat Detail
                   </Button>
                 </div>
@@ -258,7 +258,7 @@ const AuditeeDashboard = () => {
                     </div>
                   </div>
                   <Button size="sm" variant="default" className="w-full">
-                    <Eye className="w-4 h-4 mr-2" />
+                    <Eye className="w-4 h-4" />
                     Kelola Publikasi
                   </Button>
                 </div>
@@ -274,7 +274,7 @@ const AuditeeDashboard = () => {
                     </div>
                   </div>
                   <Button size="sm" variant="default" className="w-full">
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-4 h-4" />
                     Tambah Kegiatan
                   </Button>
                 </div>
@@ -296,19 +296,19 @@ const AuditeeDashboard = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <Button className="w-full justify-start" variant="outline">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-4 h-4" />
                 Tambah Publikasi
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Edit className="w-4 h-4 mr-2" />
+                <Edit className="w-4 h-4" />
                 Update Beban Kerja
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <FileText className="w-4 h-4 mr-2" />
+                <FileText className="w-4 h-4" />
                 Upload Dokumen
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye className="w-4 h-4" />
                 Lihat Laporan Saya
               </Button>
             </CardContent>

@@ -110,7 +110,7 @@ function PublikasiPage() {
             <Dialog open={isAddingPublikasi} onOpenChange={setIsAddingPublikasi}>
               <DialogTrigger asChild>
                 <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Tambah Publikasi
                 </Button>
               </DialogTrigger>
@@ -291,7 +291,7 @@ function PublikasiPage() {
                     Batal
                   </Button>
                   <Button>
-                    <Save className="w-4 h-4 mr-2" />
+                    <Save className="w-4 h-4" />
                     Simpan
                   </Button>
                 </DialogFooter>

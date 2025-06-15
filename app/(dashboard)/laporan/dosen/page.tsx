@@ -191,7 +191,7 @@ const SDMProfilDosenPage = () => {
 
           <div className="flex items-center gap-3">
             <Button variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4" />
               Export Excel
             </Button>
           </div>
@@ -326,23 +326,23 @@ const SDMProfilDosenPage = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button className="w-full justify-start" variant="outline">
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Tambah Data Dosen
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
-                  <Upload className="w-4 h-4 mr-2" />
+                  <Upload className="w-4 h-4" />
                   Import dari Excel
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
-                  <Download className="w-4 h-4 mr-2" />
+                  <Download className="w-4 h-4" />
                   Export Rekapitulasi
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye className="w-4 h-4" />
                   Validasi Data
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
-                  <BarChart3 className="w-4 h-4 mr-2" />
+                  <BarChart3 className="w-4 h-4" />
                   Generate Laporan
                 </Button>
               </CardContent>
@@ -683,7 +683,7 @@ const SDMProfilDosenPage = () => {
                 </div>
 
                 <Button size="sm" className="w-full">
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye className="w-4 h-4" />
                   Lihat Semua Riwayat
                 </Button>
               </CardContent>
@@ -702,19 +702,19 @@ const SDMProfilDosenPage = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <Button className="w-full justify-start" variant="outline">
-                    <Download className="w-4 h-4 mr-2" />
+                    <Download className="w-4 h-4" />
                     Rekapitulasi Profil Dosen (PDF)
                   </Button>
                   <Button className="w-full justify-start" variant="outline">
-                    <Download className="w-4 h-4 mr-2" />
+                    <Download className="w-4 h-4" />
                     Data Kualifikasi Dosen (Excel)
                   </Button>
                   <Button className="w-full justify-start" variant="outline">
-                    <Download className="w-4 h-4 mr-2" />
+                    <Download className="w-4 h-4" />
                     Analisis Jabatan Fungsional (PDF)
                   </Button>
                   <Button className="w-full justify-start" variant="outline">
-                    <Download className="w-4 h-4 mr-2" />
+                    <Download className="w-4 h-4" />
                     Laporan Pencapaian Target (PDF)
                   </Button>
                 </div>
@@ -723,11 +723,11 @@ const SDMProfilDosenPage = () => {
                   <h4 className="font-medium mb-2">Template Laporan</h4>
                   <div className="space-y-2">
                     <Button size="sm" variant="outline" className="w-full justify-start">
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download className="w-4 h-4" />
                       Template Import Dosen (Excel)
                     </Button>
                     <Button size="sm" variant="outline" className="w-full justify-start">
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download className="w-4 h-4" />
                       Form Biodata Dosen (PDF)
                     </Button>
                   </div>

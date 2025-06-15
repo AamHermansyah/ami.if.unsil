@@ -40,7 +40,7 @@ const ProfilePage = () => {
               size="sm"
               className="absolute top-4 right-4 bg-background/90 hover:bg-background"
             >
-              <Camera className="w-4 h-4 mr-2" />
+              <Camera className="w-4 h-4" />
               Ubah Cover
             </Button>
           </div>

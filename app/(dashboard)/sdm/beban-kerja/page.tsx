@@ -68,6 +68,7 @@ interface BebanMengajar {
   tahunAjaran: string;
   jumlahMahasiswa: number;
   kelas: string;
+  angkatan: string;
 }
 
 interface PembimbinganSkripsi {
@@ -83,8 +84,8 @@ interface PembimbinganSkripsi {
 
 interface Perwalian {
   id: string;
-  namaMahasiswa: string;
-  nim: string;
+  kelas: string;
+  angkatan: string;
   semester: number;
   tahunAjaran: string;
   jumlahBimbingan: number;
@@ -116,7 +117,8 @@ const BebanKerjaPage: React.FC = () => {
       semester: 'Genap 2024/2025',
       tahunAjaran: '2024/2025',
       jumlahMahasiswa: 42,
-      kelas: 'A'
+      kelas: 'A, B, dan C',
+      angkatan: '2021'
     },
     {
       id: '2',
@@ -126,7 +128,8 @@ const BebanKerjaPage: React.FC = () => {
       semester: 'Genap 2024/2025',
       tahunAjaran: '2024/2025',
       jumlahMahasiswa: 38,
-      kelas: 'B'
+      kelas: 'E dan F',
+      angkatan: '2021'
     },
     {
       id: '3',
@@ -136,7 +139,8 @@ const BebanKerjaPage: React.FC = () => {
       semester: 'Genap 2024/2025',
       tahunAjaran: '2024/2025',
       jumlahMahasiswa: 25,
-      kelas: 'A'
+      kelas: 'A, B, D, dan G',
+      angkatan: '2021'
     }
   ]);
 
@@ -166,8 +170,8 @@ const BebanKerjaPage: React.FC = () => {
   const [perwalian] = useState<Perwalian[]>([
     {
       id: '1',
-      namaMahasiswa: 'Budi Santoso',
-      nim: '20220001',
+      kelas: 'A',
+      angkatan: '2022',
       semester: 5,
       tahunAjaran: '2024/2025',
       jumlahBimbingan: 3,
@@ -175,8 +179,8 @@ const BebanKerjaPage: React.FC = () => {
     },
     {
       id: '2',
-      namaMahasiswa: 'Dewi Sartika',
-      nim: '20220002',
+      kelas: 'B',
+      angkatan: '2022',
       semester: 5,
       tahunAjaran: '2024/2025',
       jumlahBimbingan: 3,
@@ -217,7 +221,8 @@ const BebanKerjaPage: React.FC = () => {
         semester: selectedSemester,
         tahunAjaran: '2024/2025',
         jumlahMahasiswa: Number(newBebanMengajar.jumlahMahasiswa) || 0,
-        kelas: newBebanMengajar.kelas || 'A'
+        kelas: newBebanMengajar.kelas || 'A',
+        angkatan: newBebanMengajar.angkatan || '2022'
       };
       setBebanMengajar([...bebanMengajar, newData]);
       setNewBebanMengajar({});
@@ -284,7 +289,7 @@ const BebanKerjaPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4" />
           Kembali
         </Button>
       </div>
@@ -309,7 +314,7 @@ const BebanKerjaPage: React.FC = () => {
               </SelectContent>
             </Select>
             <Button>
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4" />
               Export Data
             </Button>
           </div>
@@ -325,7 +330,7 @@ const BebanKerjaPage: React.FC = () => {
         </AlertDescription>
       </Alert>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="mengajar">Beban Mengajar</TabsTrigger>
@@ -466,7 +471,7 @@ const BebanKerjaPage: React.FC = () => {
                 <Dialog open={isAddingData} onOpenChange={setIsAddingData}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus className="w-4 h-4" />
                       Tambah Mata Kuliah
                     </Button>
                   </DialogTrigger>
@@ -525,15 +530,27 @@ const BebanKerjaPage: React.FC = () => {
                           </Select>
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="jumlahMahasiswa">Jumlah Mahasiswa</Label>
-                        <Input
-                          id="jumlahMahasiswa"
-                          type="number"
-                          min="0"
-                          value={newBebanMengajar.jumlahMahasiswa || ''}
-                          onChange={(e) => setNewBebanMengajar({ ...newBebanMengajar, jumlahMahasiswa: Number(e.target.value) })}
-                        />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="angkatan">Angkatan</Label>
+                          <Input
+                            id="angkatan"
+                            type="number"
+                            min="0"
+                            value={newBebanMengajar.angkatan || ''}
+                            onChange={(e) => setNewBebanMengajar({ ...newBebanMengajar, angkatan: e.target.value })}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="jumlahMahasiswa">Jumlah Mahasiswa</Label>
+                          <Input
+                            id="jumlahMahasiswa"
+                            type="number"
+                            min="0"
+                            value={newBebanMengajar.jumlahMahasiswa || ''}
+                            onChange={(e) => setNewBebanMengajar({ ...newBebanMengajar, jumlahMahasiswa: Number(e.target.value) })}
+                          />
+                        </div>
                       </div>
                     </div>
                     <DialogFooter>
@@ -541,7 +558,7 @@ const BebanKerjaPage: React.FC = () => {
                         Batal
                       </Button>
                       <Button onClick={handleAddBebanMengajar}>
-                        <Save className="w-4 h-4 mr-2" />
+                        <Save className="w-4 h-4" />
                         Simpan
                       </Button>
                     </DialogFooter>
@@ -557,7 +574,9 @@ const BebanKerjaPage: React.FC = () => {
                       <TableHead>Kode</TableHead>
                       <TableHead>Mata Kuliah</TableHead>
                       <TableHead>SKS</TableHead>
+                      <TableHead>Semester</TableHead>
                       <TableHead>Kelas</TableHead>
+                      <TableHead>Angkatan</TableHead>
                       <TableHead>Mahasiswa</TableHead>
                       <TableHead>Aksi</TableHead>
                     </TableRow>
@@ -570,7 +589,9 @@ const BebanKerjaPage: React.FC = () => {
                         <TableCell>
                           <Badge variant="secondary">{mata.sks} SKS</Badge>
                         </TableCell>
+                        <TableCell>{mata.semester}</TableCell>
                         <TableCell>{mata.kelas}</TableCell>
+                        <TableCell>{mata.angkatan}</TableCell>
                         <TableCell>{mata.jumlahMahasiswa}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
@@ -625,7 +646,7 @@ const BebanKerjaPage: React.FC = () => {
                   </CardDescription>
                 </div>
                 <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Tambah Bimbingan
                 </Button>
               </div>
@@ -700,11 +721,11 @@ const BebanKerjaPage: React.FC = () => {
                     Bimbingan Perwalian
                   </CardTitle>
                   <CardDescription>
-                    Kelola bimbingan perwalian mahasiswa (minimal 3 kali per semester)
+                    Kelola bimbingan perwalian kelas (minimal 3 kali per semester)
                   </CardDescription>
                 </div>
                 <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Tambah Perwalian
                 </Button>
               </div>
@@ -714,11 +735,11 @@ const BebanKerjaPage: React.FC = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Mahasiswa</TableHead>
-                      <TableHead>NIM</TableHead>
+                      <TableHead>Kelas</TableHead>
+                      <TableHead>Angkatan</TableHead>
                       <TableHead>Semester</TableHead>
                       <TableHead>Tahun Ajaran</TableHead>
-                      <TableHead>Jumlah Bimbingan</TableHead>
+                      <TableHead>Jumlah Perwalian</TableHead>
                       <TableHead>Keterangan</TableHead>
                       <TableHead>Aksi</TableHead>
                     </TableRow>
@@ -726,8 +747,8 @@ const BebanKerjaPage: React.FC = () => {
                   <TableBody>
                     {perwalian.map((wali) => (
                       <TableRow key={wali.id}>
-                        <TableCell className="font-medium">{wali.namaMahasiswa}</TableCell>
-                        <TableCell>{wali.nim}</TableCell>
+                        <TableCell className="font-medium">{wali.kelas}</TableCell>
+                        <TableCell>{wali.angkatan}</TableCell>
                         <TableCell>{wali.semester}</TableCell>
                         <TableCell>{wali.tahunAjaran}</TableCell>
                         <TableCell>
@@ -778,7 +799,7 @@ const BebanKerjaPage: React.FC = () => {
                   </CardDescription>
                 </div>
                 <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Tambah Bimbingan PLP
                 </Button>
               </div>
@@ -848,11 +869,11 @@ const BebanKerjaPage: React.FC = () => {
       {/* Bottom Action Buttons */}
       <div className="flex justify-end gap-3 pt-6 border-t">
         <Button variant="outline">
-          <FileText className="w-4 h-4 mr-2" />
+          <FileText className="w-4 h-4" />
           Cetak Laporan
         </Button>
         <Button>
-          <Save className="w-4 h-4 mr-2" />
+          <Save className="w-4 h-4" />
           Simpan Semua Perubahan
         </Button>
       </div>

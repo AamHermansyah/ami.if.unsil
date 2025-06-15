@@ -145,7 +145,7 @@ const AuditorDashboard = () => {
                   </div>
                 </div>
                 <Button variant="outline" size="sm">
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye className="w-4 h-4" />
                   Detail
                 </Button>
               </div>
@@ -267,7 +267,7 @@ const AuditorDashboard = () => {
               </div>
 
               <Button variant="default" size="sm" className="w-full">
-                <Eye className="w-4 h-4 mr-2" />
+                <Eye className="w-4 h-4" />
                 Lihat Semua (7)
               </Button>
             </CardContent>
@@ -287,7 +287,7 @@ const AuditorDashboard = () => {
                   </div>
                 </div>
                 <Button variant="outline" size="sm">
-                  <BarChart3 className="w-4 h-4 mr-2" />
+                  <BarChart3 className="w-4 h-4" />
                   Analytics
                 </Button>
               </div>
@@ -474,7 +474,7 @@ const AuditorDashboard = () => {
               </div>
 
               <Button variant="outline" size="sm" className="w-full">
-                <Clock className="w-4 h-4 mr-2" />
+                <Clock className="w-4 h-4" />
                 Riwayat Lengkap
               </Button>
             </CardContent>
@@ -490,23 +490,23 @@ const AuditorDashboard = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <Button className="w-full justify-start" variant="outline">
-                <BarChart3 className="w-4 h-4 mr-2" />
+                <BarChart3 className="w-4 h-4" />
                 Generate Laporan AMI
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Users className="w-4 h-4 mr-2" />
+                <Users className="w-4 h-4" />
                 Kelola Data Dosen
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Target className="w-4 h-4 mr-2" />
+                <Target className="w-4 h-4" />
                 Set Target Indikator
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Bell className="w-4 h-4 mr-2" />
+                <Bell className="w-4 h-4" />
                 Kirim Reminder
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="w-4 h-4" />
                 Export Database
               </Button>
             </CardContent>

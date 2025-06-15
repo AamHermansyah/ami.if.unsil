@@ -82,7 +82,7 @@ function ProdukPenelitianPage() {
             <Dialog open={addProductOpen} onOpenChange={setAddProductOpen}>
               <DialogTrigger asChild>
                 <Button>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Tambah Produk
                 </Button>
               </DialogTrigger>
@@ -196,7 +196,7 @@ function ProdukPenelitianPage() {
                     Batal
                   </Button>
                   <Button>
-                    <Save className="w-4 h-4 mr-2" />
+                    <Save className="w-4 h-4" />
                     Simpan
                   </Button>
                 </DialogFooter>

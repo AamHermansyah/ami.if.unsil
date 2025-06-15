@@ -19,15 +19,13 @@ interface IProps {
 function DetailProductSheet({ onOpenChange, open }: IProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-lg gap-4 overflow-y-auto">
-        <div className="sticky top-0 px-4 bg-inherit space-y-4 pt-4">
-          <SheetHeader className="p-0">
-            <SheetTitle>Detail Produk Penelitian</SheetTitle>
-            <SheetDescription>Jenis Karya: Aplikasi Mobile</SheetDescription>
-          </SheetHeader>
-          <Separator />
-        </div>
-        <div className="px-4 pb-4 space-y-4 text-sm">
+      <SheetContent className="sm:max-w-lg flex flex-col gap-4 p-4">
+        <SheetHeader className="p-0">
+          <SheetTitle>Detail Produk Penelitian</SheetTitle>
+          <SheetDescription>Jenis Karya: Aplikasi Mobile</SheetDescription>
+        </SheetHeader>
+        <Separator />
+        <div className="space-y-4 text-sm flex-1 overflow-y-auto">
           <div>
             <h4 className="font-medium mb-1">Nama Karya</h4>
             <p>Aplikasi Monitoring Kualitas Air Sungai</p>

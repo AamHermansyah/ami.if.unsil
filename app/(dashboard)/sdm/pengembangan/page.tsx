@@ -277,7 +277,7 @@ const PengembanganDosenPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4" />
           Kembali
         </Button>
       </div>
@@ -302,7 +302,7 @@ const PengembanganDosenPage: React.FC = () => {
               </SelectContent>
             </Select>
             <Button>
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4" />
               Export Data
             </Button>
           </div>
@@ -528,7 +528,7 @@ const PengembanganDosenPage: React.FC = () => {
                 <Dialog open={isAddingKegiatan} onOpenChange={setIsAddingKegiatan}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus className="w-4 h-4" />
                       Tambah Kegiatan
                     </Button>
                   </DialogTrigger>
@@ -689,7 +689,7 @@ const PengembanganDosenPage: React.FC = () => {
                         Batal
                       </Button>
                       <Button onClick={handleAddKegiatan}>
-                        <Save className="w-4 h-4 mr-2" />
+                        <Save className="w-4 h-4" />
                         Simpan
                       </Button>
                     </DialogFooter>
@@ -787,7 +787,7 @@ const PengembanganDosenPage: React.FC = () => {
                 <Dialog open={isAddingSertifikat} onOpenChange={setIsAddingSertifikat}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus className="w-4 h-4" />
                       Tambah Sertifikat
                     </Button>
                   </DialogTrigger>
@@ -893,7 +893,7 @@ const PengembanganDosenPage: React.FC = () => {
                         Batal
                       </Button>
                       <Button onClick={handleAddSertifikat}>
-                        <Save className="w-4 h-4 mr-2" />
+                        <Save className="w-4 h-4" />
                         Simpan
                       </Button>
                     </DialogFooter>
@@ -1083,11 +1083,11 @@ const PengembanganDosenPage: React.FC = () => {
       {/* Bottom Action Buttons */}
       <div className="flex justify-end gap-3 pt-6 border-t">
         <Button variant="outline">
-          <FileText className="w-4 h-4 mr-2" />
+          <FileText className="w-4 h-4" />
           Generate Laporan
         </Button>
         <Button>
-          <Save className="w-4 h-4 mr-2" />
+          <Save className="w-4 h-4" />
           Simpan Semua Data
         </Button>
       </div>

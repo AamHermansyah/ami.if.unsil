@@ -283,7 +283,7 @@ const BebanKerjaAuditorPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4" />
           Kembali ke SDM
         </Button>
       </div>
@@ -670,7 +670,7 @@ const BebanKerjaAuditorPage: React.FC = () => {
                         className="bg-green-600 hover:bg-green-700"
                         onClick={() => handleApprove(approval.id)}
                       >
-                        <UserCheck className="w-4 h-4 mr-2" />
+                        <UserCheck className="w-4 h-4" />
                         Approve
                       </Button>
                       <Button
@@ -678,11 +678,11 @@ const BebanKerjaAuditorPage: React.FC = () => {
                         variant="outline"
                         onClick={() => handleReject(approval.id)}
                       >
-                        <UserX className="w-4 h-4 mr-2" />
+                        <UserX className="w-4 h-4" />
                         Reject
                       </Button>
                       <Button size="sm" variant="outline">
-                        <Eye className="w-4 h-4 mr-2" />
+                        <Eye className="w-4 h-4" />
                         Detail
                       </Button>
                     </div>
@@ -952,7 +952,7 @@ const BebanKerjaAuditorPage: React.FC = () => {
               Tutup
             </Button>
             <Button>
-              <FileText className="w-4 h-4 mr-2" />
+              <FileText className="w-4 h-4" />
               Generate Laporan
             </Button>
           </DialogFooter>
