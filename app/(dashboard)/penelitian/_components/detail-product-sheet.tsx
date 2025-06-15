@@ -19,13 +19,15 @@ interface IProps {
 function DetailProductSheet({ onOpenChange, open }: IProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-lg gap-4 p-4">
-        <SheetHeader className="p-0">
-          <SheetTitle>Detail Produk Penelitian</SheetTitle>
-          <SheetDescription>Jenis Karya: Aplikasi Mobile</SheetDescription>
-        </SheetHeader>
-        <Separator />
-        <div className="p-0 space-y-4 text-sm">
+      <SheetContent className="sm:max-w-lg gap-4 overflow-y-auto">
+        <div className="sticky top-0 px-4 bg-inherit space-y-4 pt-4">
+          <SheetHeader className="p-0">
+            <SheetTitle>Detail Produk Penelitian</SheetTitle>
+            <SheetDescription>Jenis Karya: Aplikasi Mobile</SheetDescription>
+          </SheetHeader>
+          <Separator />
+        </div>
+        <div className="px-4 pb-4 space-y-4 text-sm">
           <div>
             <h4 className="font-medium mb-1">Nama Karya</h4>
             <p>Aplikasi Monitoring Kualitas Air Sungai</p>
@@ -70,9 +72,17 @@ function DetailProductSheet({ onOpenChange, open }: IProps) {
               </Link>
             </div>
           </div>
-          <div className="p-4 rounded-lg bg-muted">
+          <div className="p-4 rounded bg-muted">
             <h4 className="font-medium mb-1">Dampak Penerapan</h4>
             <p>Meningkatkan efisiensi monitoring kualitas air di 15 titik sungai</p>
+          </div>
+          <div className="bg-muted p-3 rounded">
+            <p className="text-sm"><span className="font-medium">Luaran yang dicapai:</span></p>
+            <ul className="text-sm mt-1 list-disc list-inside">
+              <li>2 Publikasi Internasional</li>
+              <li>1 Aplikasi Mobile</li>
+              <li>1 Paten</li>
+            </ul>
           </div>
           <div className="md:col-span-2">
             <h4 className="font-medium mb-1">Mahasiswa Terlibat (3)</h4>
@@ -81,6 +91,14 @@ function DetailProductSheet({ onOpenChange, open }: IProps) {
               <li>Elisa Nuramanah (227006019)</li>
               <li>Jhon Doe (218094001)</li>
             </ol>
+          </div>
+          <div className="bg-muted p-3 rounded">
+            <p className="text-sm"><span className="font-medium">Peran mahasiswa:</span></p>
+            <ul className="text-sm mt-1 list-disc list-inside">
+              <li>Research Assistant</li>
+              <li>Data Collector</li>
+              <li>System Developer</li>
+            </ul>
           </div>
         </div>
       </SheetContent>

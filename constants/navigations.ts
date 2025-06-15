@@ -16,6 +16,7 @@ import {
   AiOutlineHistory,
   AiOutlineCloudUpload,
   AiOutlineFileProtect,
+  AiFillLock,
 } from "react-icons/ai";
 
 import {
@@ -162,18 +163,23 @@ export const navigations = {
       parentPath: '/manajemen',
       children: [
         {
+          title: "Kelola Akses",
+          url: "/manajemen/akses",
+          icon: AiFillLock,
+        },
+        {
           title: "Target Indikator",
-          url: "/settings/targets",
+          url: "/manajemen/target",
           icon: BiTargetLock,
         },
         {
           title: "Panduan & Dokumen",
-          url: "/settings/documents",
+          url: "/manajemen/panduan",
           icon: AiOutlineFileProtect,
         },
         {
           title: "Pengaturan Sistem",
-          url: "/settings",
+          url: "/manajemen/sistem",
           icon: AiOutlineSetting,
         },
       ],

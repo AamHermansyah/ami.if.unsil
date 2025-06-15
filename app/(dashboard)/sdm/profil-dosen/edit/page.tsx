@@ -28,19 +28,20 @@ import {
   ArrowLeft,
   Save,
   Upload,
-  User,
   GraduationCap,
-  Briefcase,
   Award,
-  FileText,
   CheckCircle,
   AlertTriangle,
   Info,
-  Camera,
-  ChevronRight
+  ChevronRight,
+  LoaderCircle,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { InnerTagsInput } from '@/components/core/inner-tags-input';
+import { dosenFormSteps } from '@/constants';
+import FileUploadPreview from '../_components/file-upload-preview';
+import AvatarUploader from '@/components/core/avatar-uploader';
+import FileUploader from '@/components/core/file-uploader';
 
 // TypeScript interfaces
 interface DosenFormData {
@@ -85,14 +86,6 @@ interface DosenFormData {
   sertifikatFile: File | null;
 }
 
-interface FormStep {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  completed: boolean;
-}
-
 const CreateDosenProfilePage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -130,44 +123,6 @@ const CreateDosenProfilePage: React.FC = () => {
     sertifikatFile: null
   });
 
-  const formSteps: FormStep[] = [
-    {
-      id: 'personal',
-      title: 'Informasi Pribadi',
-      description: 'Data pribadi dan kontak',
-      icon: User,
-      completed: false
-    },
-    {
-      id: 'employment',
-      title: 'Informasi Kepegawaian',
-      description: 'NIDN, status, dan jabatan',
-      icon: Briefcase,
-      completed: false
-    },
-    {
-      id: 'education',
-      title: 'Informasi Pendidikan',
-      description: 'Riwayat pendidikan terakhir',
-      icon: GraduationCap,
-      completed: false
-    },
-    {
-      id: 'additional',
-      title: 'Informasi Tambahan',
-      description: 'Keahlian',
-      icon: Award,
-      completed: false
-    },
-    {
-      id: 'documents',
-      title: 'Upload Dokumen',
-      description: 'Foto, CV, dan dokumen pendukung',
-      icon: FileText,
-      completed: false
-    }
-  ];
-
   const handleInputChange = (field: keyof DosenFormData, value: string | boolean | File | null) => {
     setFormData(prev => ({
       ...prev,
@@ -176,7 +131,7 @@ const CreateDosenProfilePage: React.FC = () => {
   };
 
   const nextStep = () => {
-    if (currentStep < formSteps.length - 1) {
+    if (currentStep < dosenFormSteps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -575,7 +530,7 @@ const CreateDosenProfilePage: React.FC = () => {
 
               <InnerTagsInput
                 placeholder="Contoh: Machine Learning"
-                defaultTags={[{ id: "1", text: "Red" }]}
+                defaultTags={[{ id: "1", text: "Machine Learning" }]}
                 onChange={(tags) => {
                   setFormData(prev => ({
                     ...prev,
@@ -604,138 +559,59 @@ const CreateDosenProfilePage: React.FC = () => {
             </Alert>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="foto">Foto Profil</Label>
-                  <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                    <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {formData.foto ? formData.foto.name : 'Pilih foto profil'}
-                    </p>
-                    <input
-                      type="file"
-                      id="foto"
-                      accept="image/*"
-                      onChange={(e) => handleInputChange('foto', e.target.files?.[0] || null)}
-                      className="hidden"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById('foto')?.click()}
-                    >
-                      Pilih File
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cvFile">CV/Resume</Label>
-                  <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                    <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {formData.cvFile ? formData.cvFile.name : 'Upload CV/Resume (PDF)'}
-                    </p>
-                    <input
-                      type="file"
-                      id="cvFile"
-                      accept=".pdf"
-                      onChange={(e) => handleInputChange('cvFile', e.target.files?.[0] || null)}
-                      className="hidden"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById('cvFile')?.click()}
-                    >
-                      Pilih File
-                    </Button>
-                  </div>
+              <div className="space-y-2 flex flex-col">
+                <Label htmlFor="foto">Foto Profil</Label>
+                <div className="w-full flex-1 flex justify-center items-center">
+                  <AvatarUploader
+                    id="foto"
+                    maxSizeMB={2}
+                  />
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ijazahFile">Ijazah Terakhir</Label>
-                  <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                    <GraduationCap className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {formData.ijazahFile ? formData.ijazahFile.name : 'Upload ijazah terakhir (PDF)'}
-                    </p>
-                    <input
-                      type="file"
-                      id="ijazahFile"
-                      accept=".pdf"
-                      onChange={(e) => handleInputChange('ijazahFile', e.target.files?.[0] || null)}
-                      className="hidden"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById('ijazahFile')?.click()}
-                    >
-                      Pilih File
-                    </Button>
-                  </div>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="cvFile">CV/Resume</Label>
+                <FileUploader
+                  id="cvFile"
+                  accept=".pdf"
+                  label="Upload file CV/Resume"
+                  description="PDF (Max. 5MB)"
+                  maxSizeMB={5}
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="sertifikatFile">Sertifikat Pendidik</Label>
-                  <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                    <Award className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {formData.sertifikatFile ? formData.sertifikatFile.name : 'Upload sertifikat pendidik (PDF)'}
-                    </p>
-                    <input
-                      type="file"
-                      id="sertifikatFile"
-                      accept=".pdf"
-                      onChange={(e) => handleInputChange('sertifikatFile', e.target.files?.[0] || null)}
-                      className="hidden"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById('sertifikatFile')?.click()}
-                    >
-                      Pilih File
-                    </Button>
-                  </div>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="ijazahFile">Ijazah Terakhir</Label>
+                <FileUploader
+                  id="ijazahFile"
+                  accept=".pdf"
+                  label="Upload file ijazah"
+                  description="PDF (Max. 5MB)"
+                  maxSizeMB={5}
+                  icon={GraduationCap}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="sertifikatFile">Sertifikat Pendidik</Label>
+                <FileUploader
+                  id="sertifikatFile"
+                  accept=".pdf"
+                  label="Upload file sertifikat"
+                  description="PDF (Max. 5MB)"
+                  maxSizeMB={5}
+                  icon={Award}
+                />
               </div>
             </div>
 
-            <div className="rounded-lg p-4">
+            <div className="rounded-lg">
               <h4 className="font-medium mb-2">File yang telah diupload:</h4>
               <div className="space-y-2">
-                {formData.foto && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>Foto Profil: {formData.foto.name}</span>
-                  </div>
-                )}
-                {formData.cvFile && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>CV: {formData.cvFile.name}</span>
-                  </div>
-                )}
-                {formData.ijazahFile && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>Ijazah: {formData.ijazahFile.name}</span>
-                  </div>
-                )}
-                {formData.sertifikatFile && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>Sertifikat: {formData.sertifikatFile.name}</span>
-                  </div>
-                )}
+                {formData.foto && <FileUploadPreview file={formData.foto} label="Foto Profil" />}
+                {formData.cvFile && <FileUploadPreview file={formData.cvFile} label="CV/Resume" />}
+                {formData.ijazahFile && <FileUploadPreview file={formData.ijazahFile} label="Ijazah" />}
+                {formData.sertifikatFile && <FileUploadPreview file={formData.sertifikatFile} label="Sertifikat Pendidik" />}
                 {!formData.foto && !formData.cvFile && !formData.ijazahFile && !formData.sertifikatFile && (
                   <p className="text-sm text-muted-foreground">Belum ada file yang diupload</p>
                 )}
@@ -753,7 +629,7 @@ const CreateDosenProfilePage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <Button variant="ghost" size="sm">
-        <ArrowLeft className="w-4 h-4 mr-2" />
+        <ArrowLeft className="w-4 h-4" />
         Kembali
       </Button>
       <div className="bg-card rounded-lg shadow-sm border p-6">
@@ -777,11 +653,11 @@ const CreateDosenProfilePage: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                {React.createElement(formSteps[currentStep].icon, { className: "w-5 h-5 text-blue-600" })}
-                {formSteps[currentStep].title}
+                {React.createElement(dosenFormSteps[currentStep].icon, { className: "w-5 h-5 text-blue-600" })}
+                {dosenFormSteps[currentStep].title}
               </CardTitle>
               <CardDescription>
-                {formSteps[currentStep].description}
+                {dosenFormSteps[currentStep].description}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -796,14 +672,14 @@ const CreateDosenProfilePage: React.FC = () => {
                   onClick={prevStep}
                   disabled={currentStep === 0}
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <ArrowLeft className="w-4 h-4" />
                   Sebelumnya
                 </Button>
 
-                {currentStep < formSteps.length - 1 ? (
+                {currentStep < dosenFormSteps.length - 1 ? (
                   <Button onClick={nextStep}>
                     Selanjutnya
-                    <ChevronRight className="w-4 h-4 ml-2" />
+                    <ChevronRight className="w-4 h-4" />
                   </Button>
                 ) : (
                   <Button
@@ -813,12 +689,12 @@ const CreateDosenProfilePage: React.FC = () => {
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <LoaderCircle className="w-4 h-4 animate-spin" />
                         Menyimpan...
                       </>
                     ) : (
                       <>
-                        <Save className="w-4 h-4 mr-2" />
+                        <Save className="w-4 h-4" />
                         Simpan Data
                       </>
                     )}
@@ -838,7 +714,7 @@ const CreateDosenProfilePage: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <Stepper value={currentStep} orientation="vertical">
-                {formSteps.map((step, index) => (
+                {dosenFormSteps.map((step, index) => (
                   <StepperItem
                     key={step.id}
                     step={index + 1}
@@ -851,7 +727,7 @@ const CreateDosenProfilePage: React.FC = () => {
                         <StepperDescription>{step.description}</StepperDescription>
                       </div>
                     </StepperTrigger>
-                    {index + 1 < formSteps.length && (
+                    {index + 1 < dosenFormSteps.length && (
                       <StepperSeparator className="absolute inset-y-0 top-[calc(1.5rem+0.125rem)] left-3 -order-1 m-0 -translate-x-1/2 group-data-[orientation=horizontal]/stepper:w-[calc(100%-1.5rem-0.25rem)] group-data-[orientation=horizontal]/stepper:flex-none group-data-[orientation=vertical]/stepper:h-[calc(100%-1.5rem-0.25rem)]" />
                     )}
                   </StepperItem>
