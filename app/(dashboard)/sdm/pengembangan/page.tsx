@@ -65,6 +65,7 @@ import {
 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { OverviewCard } from '@/components/shared/overview-card';
+import DatePicker from '@/components/core/date-picker';
 
 // TypeScript interfaces
 interface KegiatanPengembangan {
@@ -614,22 +615,12 @@ const PengembanganDosenPage: React.FC = () => {
 
                       <div className="space-y-2">
                         <Label htmlFor="tanggalMulai">Tanggal Mulai *</Label>
-                        <Input
-                          id="tanggalMulai"
-                          type="date"
-                          value={newKegiatan.tanggalMulai || ''}
-                          onChange={(e) => setNewKegiatan({ ...newKegiatan, tanggalMulai: e.target.value })}
-                        />
+                        <DatePicker id="tanggalMulai" />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="tanggalSelesai">Tanggal Selesai</Label>
-                        <Input
-                          id="tanggalSelesai"
-                          type="date"
-                          value={newKegiatan.tanggalSelesai || ''}
-                          onChange={(e) => setNewKegiatan({ ...newKegiatan, tanggalSelesai: e.target.value })}
-                        />
+                        <DatePicker id="tanggalSelesai" />
                       </div>
 
                       <div className="space-y-2">
@@ -832,22 +823,12 @@ const PengembanganDosenPage: React.FC = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="tanggalTerbit">Tanggal Terbit</Label>
-                          <Input
-                            id="tanggalTerbit"
-                            type="date"
-                            value={newSertifikat.tanggalTerbit || ''}
-                            onChange={(e) => setNewSertifikat({ ...newSertifikat, tanggalTerbit: e.target.value })}
-                          />
+                          <DatePicker id="tanggalTerbit" />
                         </div>
 
                         <div className="space-y-2">
                           <Label htmlFor="tanggalBerlaku">Tanggal Berlaku</Label>
-                          <Input
-                            id="tanggalBerlaku"
-                            type="date"
-                            value={newSertifikat.tanggalBerlaku || ''}
-                            onChange={(e) => setNewSertifikat({ ...newSertifikat, tanggalBerlaku: e.target.value })}
-                          />
+                          <DatePicker id="tanggalBerlaku" />
                         </div>
                       </div>
 

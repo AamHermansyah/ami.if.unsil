@@ -75,7 +75,7 @@ function DetailProductSheet({ onOpenChange, open }: IProps) {
             <p>Meningkatkan efisiensi monitoring kualitas air di 15 titik sungai</p>
           </div>
           <div className="bg-muted p-3 rounded">
-            <p className="text-sm"><span className="font-medium">Luaran yang dicapai:</span></p>
+            <p className="text-sm"><span className="font-medium">Luaran:</span></p>
             <ul className="text-sm mt-1 list-disc list-inside">
               <li>2 Publikasi Internasional</li>
               <li>1 Aplikasi Mobile</li>

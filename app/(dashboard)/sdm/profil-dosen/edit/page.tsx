@@ -42,6 +42,7 @@ import { dosenFormSteps } from '@/constants';
 import FileUploadPreview from '../_components/file-upload-preview';
 import AvatarUploader from '@/components/core/avatar-uploader';
 import FileUploader from '@/components/core/file-uploader';
+import DatePicker from '@/components/core/date-picker';
 
 // TypeScript interfaces
 interface DosenFormData {
@@ -207,12 +208,7 @@ const CreateDosenProfilePage: React.FC = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="tanggalLahir">Tanggal Lahir *</Label>
-                <Input
-                  id="tanggalLahir"
-                  type="date"
-                  value={formData.tanggalLahir}
-                  onChange={(e) => handleInputChange('tanggalLahir', e.target.value)}
-                />
+                <DatePicker id="tanggalLahir" />
               </div>
 
               <div className="space-y-2">
@@ -371,12 +367,7 @@ const CreateDosenProfilePage: React.FC = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="tanggalBergabung">Tanggal Bergabung</Label>
-                <Input
-                  id="tanggalBergabung"
-                  type="date"
-                  value={formData.tanggalBergabung}
-                  onChange={(e) => handleInputChange('tanggalBergabung', e.target.value)}
-                />
+                <DatePicker id="tanggalBergabung" />
               </div>
 
               <div className="space-y-2">
@@ -399,12 +390,7 @@ const CreateDosenProfilePage: React.FC = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="tmtJabatanFungsional">TMT Jabatan Fungsional *</Label>
-                <Input
-                  id="tmtJabatanFungsional"
-                  type="date"
-                  value={formData.tmtJabatanFungsional}
-                  onChange={(e) => handleInputChange('tmtJabatanFungsional', e.target.value)}
-                />
+                <DatePicker id="tmtJabatanFungsional" />
               </div>
 
               <div className="space-y-2">

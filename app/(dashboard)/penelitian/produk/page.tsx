@@ -22,12 +22,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Award, Edit, Eye, Info, Plus, Save, Upload } from 'lucide-react';
+import { Award, Edit, Eye, Info, Plus, Save, Trash, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { getPublicationStatusColor } from '@/lib/utils';
 import DetailProductSheet from '../_components/detail-product-sheet';
+import FileUploader from '@/components/core/file-uploader';
+import { Separator } from '@/components/ui/separator';
+import RichtextEditor from '@/components/core/richtext-editor';
 
 const produkPenelitian = [
   {
@@ -99,7 +102,7 @@ function ProdukPenelitianPage() {
                       <Label htmlFor="namaKarya">Nama Karya/Produk *</Label>
                       <Input
                         id="namaKarya"
-                        placeholder="Aplikasi Monitoring Kualitas Air"
+                        placeholder="Masukan nama karya/produk"
                       />
                     </div>
 
@@ -128,6 +131,7 @@ function ProdukPenelitianPage() {
                         type="number"
                         min="2000"
                         max="2030"
+                        placeholder="2XXX"
                       />
                     </div>
 
@@ -140,11 +144,19 @@ function ProdukPenelitianPage() {
                       />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="institusiPengguna">Institusi Pengguna</Label>
                       <Input
                         id="institusiPengguna"
-                        placeholder="Dinas Lingkungan Hidup Tasikmalaya"
+                        placeholder="Co: Dinas Lingkungan Hidup Tasikmalaya"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="dana">Dana (Rupiah)</Label>
+                      <Input
+                        id="dana"
+                        placeholder="0"
                       />
                     </div>
 
@@ -165,19 +177,26 @@ function ProdukPenelitianPage() {
 
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="buktiPenerapan">Bukti Penerapan</Label>
-                      <Textarea
-                        id="buktiPenerapan"
-                        placeholder="Surat keterangan penggunaan dari institusi"
-                        rows={2}
+                      <FileUploader
+                        accept=""
+                        description="Menerima format PDF, PNG, dan JPG (Max. 2MB)"
+                        label="Upload file bukti penerapan"
                       />
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="dampakPenerapan">Dampak Penerapan</Label>
-                      <Textarea
+                      <RichtextEditor
                         id="dampakPenerapan"
-                        placeholder="Deskripsi dampak dan manfaat yang dirasakan"
-                        rows={2}
+                        placeholder="Jelaskan secara rinci dampak hasil dari penelitian..."
+                      />
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="luaran">Luaran</Label>
+                      <RichtextEditor
+                        id="luaran"
+                        placeholder="Masukan luaran yang telah ditentukan..."
                       />
                     </div>
 
@@ -188,6 +207,41 @@ function ProdukPenelitianPage() {
                         className="rounded border-gray-300"
                       />
                       <Label htmlFor="mahasiswaTerlibatProduk">Melibatkan mahasiswa</Label>
+                    </div>
+
+                    <div className="p-4 border rounded-md space-y-2 md:col-span-2">
+                      <Label>Data Mahasiswa</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                        <Input id="namaMahasiswa-1" placeholder="Nama" />
+                        <Input id="npmMahasiswa-1" placeholder="NPM" />
+                        <Button variant="ghost" size="icon" disabled>
+                          <Trash className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </div>
+
+                      <Separator />
+
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                        <Input id="namaMahasiswa-2" placeholder="Nama" />
+                        <Input id="npmMahasiswa-2" placeholder="NPM" />
+                        <Button variant="ghost" size="icon">
+                          <Trash className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </div>
+
+                      <Separator />
+
+                      {/* Tombol tambah mahasiswa */}
+                      <Button variant="outline" size="sm" className="w-full">
+                        Tambah Mahasiswa
+                      </Button>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="peranMahasiswa">Peran Mahasiswa</Label>
+                      <RichtextEditor
+                        id="peranMahasiswa"
+                        placeholder="Jelaskan peran mahasiswa dalam penelitian..."
+                      />
                     </div>
                   </div>
                 </div>

@@ -121,3 +121,109 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+
+  /* Basic editor styles */
+  .tiptap {
+    @apply focus:outline-none;
+  }
+
+  .tiptap:first-child {
+    margin-top: 0;
+  }
+
+  /* List styles */
+  .tiptap ul,
+  .tiptap ol {
+    padding-left: 1.25rem;
+    margin: 0.75rem 0;
+  }
+
+  .tiptap ul li p,
+  .tiptap ol li p {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+  }
+
+  .tiptap p.is-empty::before {
+    @apply text-muted-foreground;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .tiptap h1 {
+    @apply text-2xl;
+  }
+
+  .tiptap h2 {
+    @apply text-xl;
+  }
+
+  .tiptap h3 {
+    @apply text-lg;
+  }
+
+  .tiptap p {
+    @apply text-sm;
+  }
+
+  .tiptap h4,
+  .tiptap h5,
+  .tiptap h6 {
+    @apply text-sm;
+  }
+
+  /* Inline code */
+  .tiptap code {
+    background-color: var(--purple-light);
+    border-radius: 0.25rem;
+    color: var(--black);
+    font-size: 0.85rem;
+    padding: 0.15em 0.3em;
+  }
+
+  /* Code block */
+  .tiptap pre {
+    background: var(--black);
+    border-radius: 0.4rem;
+    color: var(--white);
+    font-family: 'JetBrainsMono', monospace;
+    margin: 1rem 0;
+    padding: 0.5rem 0.75rem;
+    overflow-x: auto;
+  }
+
+  .tiptap pre code {
+    background: none;
+    color: inherit;
+    font-size: 0.8rem;
+    padding: 0;
+  }
+
+  /* Marked text */
+  .tiptap mark {
+    background-color: #FAF594;
+    border-radius: 0.25rem;
+    box-decoration-break: clone;
+    padding: 0.1rem 0.2rem;
+  }
+
+  /* Blockquote */
+  .tiptap blockquote {
+    border-left: 3px solid var(--gray-3);
+    margin: 1rem 0;
+    padding-left: 0.75rem;
+    color: var(--gray-6);
+    font-style: italic;
+  }
+
+  /* Horizontal rule */
+  .tiptap hr {
+    border: none;
+    border-top: 1px solid var(--gray-2);
+    margin: 1.25rem 0;
+  }
+}
