@@ -7,37 +7,21 @@ import {
   AiOutlineFileText,
   AiOutlineBarChart,
   AiOutlineSetting,
-  AiOutlineUserAdd,
   AiOutlineClockCircle,
   AiOutlineRise,
-  AiOutlineUsergroupAdd,
   AiOutlineEye,
   AiOutlineAlert,
   AiOutlineHistory,
-  AiOutlineCloudUpload,
   AiOutlineFileProtect,
   AiFillLock,
   AiFillCalendar,
+  AiOutlineFileDone,
+  AiOutlineCheckCircle,
 } from "react-icons/ai";
-
-import {
-  BiBookOpen,
-  BiGroup,
-  BiChart,
-  BiCalendarCheck,
-  BiTargetLock
-} from "react-icons/bi";
-
-import {
-  FaHandsHelping,
-  FaUserTie
-} from "react-icons/fa";
-
-import {
-  MdOutlineScience,
-  MdOutlineGroups,
-  MdOutlineVerified,
-} from "react-icons/md";
+import { BsPersonGear } from "react-icons/bs"
+import { BiCalendarCheck, BiTargetLock } from "react-icons/bi";
+import { FaUserTie } from "react-icons/fa";
+import { MdOutlineMonitorHeart, MdOutlineScience } from "react-icons/md";
 
 export const navigations = {
   auditee: [
@@ -107,38 +91,119 @@ export const navigations = {
     {
       title: "Tenaga Kependidikan",
       url: "/tendik",
-      icon: AiOutlineUsergroupAdd,
+      icon: BsPersonGear,
     },
     {
-      title: "Laporan & Audit",
-      icon: AiOutlineFileText,
-      parentPath: '/laporan',
+      title: "Audit Dosen",
+      icon: AiOutlineTeam,
+      parentPath: "/audit/dosen",
       children: [
         {
-          title: "Dosen",
-          url: "/laporan/dosen",
-          icon: AiOutlineTeam,
+          title: "Ringkasan",
+          url: "/audit/dosen/ringkasan",
+          icon: AiOutlineFileText,
         },
         {
-          title: "Beban Kerja",
-          url: "/laporan/beban-kerja",
-          icon: AiOutlineClockCircle,
+          title: "Monitoring",
+          url: "/audit/dosen/monitoring",
+          icon: AiOutlineEye,
         },
         {
-          title: "Penelitian",
-          url: "/laporan/penelitian",
-          icon: AiOutlineExperiment,
+          title: "Analisis",
+          url: "/audit/dosen/analisis",
+          icon: AiOutlineBarChart,
         },
         {
-          title: "Pengabdian",
-          url: "/laporan/pengabdian",
-          icon: AiOutlineHeart,
+          title: "Laporan",
+          url: "/audit/dosen/laporan",
+          icon: AiOutlineFileDone,
+        },
+      ],
+    },
+    {
+      title: "Audit Beban Kerja",
+      icon: AiOutlineClockCircle,
+      parentPath: "/audit/beban-kerja",
+      children: [
+        {
+          title: "Ringkasan",
+          url: "/audit/beban-kerja/ringkasan",
+          icon: AiOutlineFileText,
+        },
+        {
+          title: "Monitoring",
+          url: "/audit/beban-kerja/monitoring",
+          icon: AiOutlineEye,
+        },
+        {
+          title: "Verifikasi",
+          url: "/audit/beban-kerja/verifikasi",
+          icon: AiOutlineCheckCircle,
+        },
+        {
+          title: "Analisis",
+          url: "/audit/beban-kerja/analisis",
+          icon: AiOutlineBarChart,
+        },
+      ],
+    },
+    {
+      title: "Audit Penelitian",
+      icon: AiOutlineExperiment,
+      parentPath: "/audit/penelitian",
+      children: [
+        {
+          title: "Ringkasan",
+          url: "/audit/penelitian/ringkasan",
+          icon: AiOutlineFileText,
+        },
+        {
+          title: "Monitoring",
+          url: "/audit/penelitian/monitoring",
+          icon: AiOutlineEye,
+        },
+        {
+          title: "Verifikasi",
+          url: "/audit/penelitian/verifikasi",
+          icon: AiOutlineCheckCircle,
+        },
+        {
+          title: "Laporan",
+          url: "/audit/penelitian/laporan",
+          icon: AiOutlineFileDone,
+        },
+      ],
+    },
+    {
+      title: "Audit Pengabdian",
+      icon: AiOutlineHeart,
+      parentPath: "/audit/pengabdian",
+      children: [
+        {
+          title: "Ringkasan",
+          url: "/audit/pengabdian/ringkasan",
+          icon: AiOutlineFileText,
+        },
+        {
+          title: "Monitoring",
+          url: "/audit/pengabdian/monitoring",
+          icon: AiOutlineEye,
+        },
+        {
+          title: "Verifikasi",
+          url: "/audit/pengabdian/verifikasi",
+          icon: AiOutlineCheckCircle,
+        },
+        {
+          title: "Laporan",
+          url: "/audit/pengabdian/laporan",
+          icon: AiOutlineFileDone,
         },
       ],
     },
     {
       title: "Monitoring",
-      icon: AiOutlineEye,
+      icon: MdOutlineMonitorHeart,
       parentPath: '/monitoring',
       children: [
         {

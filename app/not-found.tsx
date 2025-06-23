@@ -10,6 +10,7 @@ import {
   Mail,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // 404 Error Page Component
 const NotFoundPage: React.FC = () => {
@@ -19,7 +20,7 @@ const NotFoundPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl w-full space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -30,11 +31,11 @@ const NotFoundPage: React.FC = () => {
               fill
             />
           </div>
-          <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+          <h1 className="text-6xl font-bold mb-4">404</h1>
+          <h2 className="text-2xl font-semibold mb-2">
             Halaman Tidak Ditemukan
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p className="text-muted-foreground text-lg">
             Maaf, halaman yang kamu cari tidak dapat ditemukan di sistem AMI Prodi Informatika.
           </p>
         </div>
@@ -43,26 +44,22 @@ const NotFoundPage: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-blue-600" />
+              <HelpCircle className="w-5 h-5 text-primary dark:text-secondary" />
               Kemungkinan Penyebab
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li className="flex items-start gap-2">
-                <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+            <ul className="space-y-2 pl-4 list-disc text-sm text-muted-foreground">
+              <li>
                 URL yang Anda masukkan salah atau tidak lengkap
               </li>
-              <li className="flex items-start gap-2">
-                <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+              <li>
                 Halaman telah dipindahkan atau dihapus
               </li>
-              <li className="flex items-start gap-2">
-                <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+              <li>
                 Anda tidak memiliki akses ke halaman tersebut
               </li>
-              <li className="flex items-start gap-2">
-                <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+              <li>
                 Link yang Anda klik sudah kadaluarsa
               </li>
             </ul>
@@ -80,9 +77,9 @@ const NotFoundPage: React.FC = () => {
           <Mail className="h-4 w-4" />
           <AlertDescription>
             <strong>Butuh Bantuan?</strong> Hubungi administrator sistem di{' '}
-            <a href="mailto:admin@informatika.unsil.ac.id" className="text-blue-600 hover:underline">
+            <Link href="mailto:admin@informatika.unsil.ac.id" className="text-primary dark:text-secondary hover:underline">
               admin@informatika.unsil.ac.id
-            </a>{' '}
+            </Link>{' '}
             atau telepon (0265) 330634.
           </AlertDescription>
         </Alert>

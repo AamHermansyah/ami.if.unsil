@@ -196,7 +196,7 @@ function ProdukPenelitianPage() {
                       <Label htmlFor="luaran">Luaran</Label>
                       <RichtextEditor
                         id="luaran"
-                        placeholder="Masukan luaran yang telah ditentukan..."
+                        placeholder="Uraikan luaran yang telah ditentukan..."
                       />
                     </div>
 

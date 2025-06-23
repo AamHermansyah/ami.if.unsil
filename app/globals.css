@@ -133,19 +133,6 @@
     margin-top: 0;
   }
 
-  /* List styles */
-  .tiptap ul,
-  .tiptap ol {
-    padding-left: 1.25rem;
-    margin: 0.75rem 0;
-  }
-
-  .tiptap ul li p,
-  .tiptap ol li p {
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
-  }
-
   .tiptap p.is-empty::before {
     @apply text-muted-foreground;
     content: attr(data-placeholder);
@@ -169,6 +156,25 @@
   .tiptap p {
     @apply text-sm;
   }
+
+  .tiptap ul {
+    @apply list-disc;
+  }
+
+  .tiptap ol {
+    @apply list-decimal;
+  }
+
+  .tiptap ul,
+  .tiptap ol {
+    @apply text-sm pl-4;
+  }
+
+  .tiptap ul li,
+  .tiptap ol li {
+    @apply text-sm;
+  }
+
 
   .tiptap h4,
   .tiptap h5,
