@@ -28,6 +28,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { AiOutlineQuestionCircle } from "react-icons/ai"
+import Link from "next/link"
 
 export function NavUser({
   user,
@@ -80,10 +81,12 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Profil
-              </DropdownMenuItem>
+              <Link href="/profil">
+                <DropdownMenuItem>
+                  <BadgeCheck />
+                  Profil
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <Bell />
                 Notifikasi

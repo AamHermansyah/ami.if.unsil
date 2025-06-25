@@ -10,18 +10,21 @@ import {
   AiOutlineClockCircle,
   AiOutlineRise,
   AiOutlineEye,
-  AiOutlineAlert,
-  AiOutlineHistory,
   AiOutlineFileProtect,
   AiFillLock,
   AiFillCalendar,
   AiOutlineFileDone,
   AiOutlineCheckCircle,
+  AiOutlineProfile,
+  AiOutlineCalendar,
+  AiOutlineSolution,
+  AiOutlineUsergroupAdd,
+  AiOutlineUserSwitch,
+  AiOutlineRead,
 } from "react-icons/ai";
 import { BsPersonGear } from "react-icons/bs"
-import { BiCalendarCheck, BiTargetLock } from "react-icons/bi";
-import { FaUserTie } from "react-icons/fa";
-import { MdOutlineMonitorHeart, MdOutlineScience } from "react-icons/md";
+import { BiTargetLock } from "react-icons/bi";
+import { MdOutlineScience } from "react-icons/md";
 
 export const navigations = {
   auditee: [
@@ -32,24 +35,56 @@ export const navigations = {
       isActive: true,
     },
     {
-      title: "SDM",
-      icon: AiOutlineTeam,
-      parentPath: '/sdm',
+      title: "Beban Kerja",
+      icon: AiOutlineClockCircle,
+      parentPath: "/beban-kerja",
       children: [
         {
-          title: "Profil Dosen",
-          url: "/sdm/profil-dosen",
-          icon: FaUserTie,
+          title: "Ringkasan",
+          url: "/beban-kerja/ringkasan",
+          icon: AiOutlineProfile,
         },
         {
-          title: "Beban Kerja",
-          url: "/sdm/beban-kerja",
-          icon: AiOutlineClockCircle,
+          title: "Mengajar",
+          url: "/beban-kerja/mengajar",
+          icon: AiOutlineRead,
         },
         {
-          title: "Pengembangan",
-          url: "/sdm/pengembangan",
-          icon: AiOutlineRise,
+          title: "Bimbingan",
+          url: "/beban-kerja/bimbingan",
+          icon: AiOutlineUserSwitch,
+        },
+        {
+          title: "Perwalian",
+          url: "/beban-kerja/perwalian",
+          icon: AiOutlineUsergroupAdd,
+        },
+        {
+          title: "Kerja Praktek",
+          url: "/beban-kerja/kerja-praktek",
+          icon: AiOutlineSolution,
+        },
+      ],
+    },
+    {
+      title: "Pengembangan",
+      icon: AiOutlineRise,
+      parentPath: "/pengembangan",
+      children: [
+        {
+          title: "Ringkasan",
+          url: "/pengembangan/ringkasan",
+          icon: AiOutlineProfile,
+        },
+        {
+          title: "Kegiatan",
+          url: "/pengembangan/kegiatan",
+          icon: AiOutlineCalendar,
+        },
+        {
+          title: "Sertifikat",
+          url: "/pengembangan/sertifikat",
+          icon: AiOutlineFileDone,
         },
       ],
     },
@@ -198,28 +233,6 @@ export const navigations = {
           title: "Laporan",
           url: "/audit/pengabdian/laporan",
           icon: AiOutlineFileDone,
-        },
-      ],
-    },
-    {
-      title: "Monitoring",
-      icon: MdOutlineMonitorHeart,
-      parentPath: '/monitoring',
-      children: [
-        {
-          title: "Progress Indikator",
-          url: "/monitoring/progress",
-          icon: BiCalendarCheck,
-        },
-        {
-          title: "Alert & Peringatan",
-          url: "/monitoring/alert",
-          icon: AiOutlineAlert,
-        },
-        {
-          title: "Audit Trail",
-          url: "/audit/log",
-          icon: AiOutlineHistory,
         },
       ],
     },

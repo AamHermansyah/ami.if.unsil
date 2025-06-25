@@ -18,7 +18,7 @@ function Header() {
           </p>
         </div>
         <div className="flex items-center flex-wrap gap-3">
-          <Select>
+          <Select defaultValue="Genap 2024/2025">
             <SelectTrigger className="w-48">
               <SelectValue />
             </SelectTrigger>

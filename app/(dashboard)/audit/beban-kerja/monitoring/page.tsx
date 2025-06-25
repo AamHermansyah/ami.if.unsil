@@ -37,7 +37,6 @@ import {
   Clock,
   Edit,
   Eye,
-  FileText,
   IdCard,
   Search,
   Users,
@@ -304,7 +303,7 @@ function AuditBebanKerjaMonitoringPage() {
         </CardContent>
       </Card>
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
           <DialogHeader className="pb-4 border-b">
             <DialogTitle className="text-xl font-bold">
               Detail Beban Kerja
@@ -315,7 +314,7 @@ function AuditBebanKerjaMonitoringPage() {
           </DialogHeader>
 
           {selectedDosen && (
-            <div className="overflow-y-auto max-h-[calc(90vh-200px)] pr-2">
+            <div className="flex-1 overflow-y-auto pr-2">
               {/* Header Section with Lecturer Info */}
               <div className="relative bg-gradient-to-r from-card to-background rounded-xl p-4 mb-4 border">
                 <Badge className={cn(
@@ -325,7 +324,7 @@ function AuditBebanKerjaMonitoringPage() {
                   {selectedDosen.statusKeseluruhan}
                 </Badge>
                 <h2 className="text-xl font-bold mb-2">{selectedDosen?.nama}</h2>
-                <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground mt-3">
+                <div className="grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground mt-3">
                   <span className="flex items-center gap-1">
                     <IdCard className="w-4 h-4" />
                     NIDN: {selectedDosen.nidn}
@@ -334,7 +333,7 @@ function AuditBebanKerjaMonitoringPage() {
                     <Briefcase className="w-4 h-4" />
                     {selectedDosen.statusKepegawaian}
                   </span>
-                  <span className="col-span-2 flex items-center gap-1">
+                  <span className="sm:col-span-2 flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     Semester {selectedDosen.semester}
                   </span>
@@ -380,7 +379,7 @@ function AuditBebanKerjaMonitoringPage() {
                 {/* Bimbingan & Perwalian Card */}
                 <div>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-lg">
+                    <div className="p-2 bg-card rounded-lg">
                       <Users className="w-4 h-4 text-orange-600" />
                     </div>
                     <h4 className="font-semibold">Bimbingan & Perwalian</h4>
@@ -423,7 +422,7 @@ function AuditBebanKerjaMonitoringPage() {
               {/* Status Indikator AMI */}
               <div className="mt-4">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg">
+                  <div className="p-2 bg-card rounded-lg">
                     <CheckSquare className="w-4 h-4 text-orange-600" />
                   </div>
                   <h4 className="font-semibold">Status Indikator AMI</h4>
@@ -535,8 +534,7 @@ function AuditBebanKerjaMonitoringPage() {
               Tutup
             </Button>
             <Button className="text-white shadow-sm">
-              <FileText className="w-4 h-4 mr-2" />
-              Generate Laporan
+              Lebih Lanjut
             </Button>
           </DialogFooter>
         </DialogContent>

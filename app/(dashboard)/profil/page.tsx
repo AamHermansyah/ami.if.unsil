@@ -16,20 +16,15 @@ import {
   Edit,
   Camera,
   Shield,
-  Activity,
-  FileText,
-  CheckCircle,
   Download,
-  Upload,
   Briefcase,
-  Users
 } from 'lucide-react';
 import Link from 'next/link';
 
 const ProfilePage = () => {
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-4">
 
         {/* Header Section */}
         <div className="relative bg-card rounded-lg shadow-sm border overflow-hidden">
@@ -47,7 +42,7 @@ const ProfilePage = () => {
 
           {/* Profile Info */}
           <div className="px-6 py-6">
-            <div className="flex flex-col md:flex-row md:items-start gap-6">
+            <div className="flex flex-col md:flex-row md:items-start gap-4">
               {/* Profile Picture */}
               <div className="w-max relative">
                 <div className="w-23 sm:w-32 h-23 sm:h-32 bg-background rounded-2xl shadow-lg border-4 border-background flex items-center justify-center">
@@ -121,7 +116,7 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
           {/* Personal Information */}
           <div className="lg:col-span-2">
@@ -135,8 +130,8 @@ const ProfilePage = () => {
                   Data pribadi dan kontak
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="fullname">Nama Lengkap</Label>
                     <Input
@@ -184,15 +179,15 @@ const ProfilePage = () => {
             </Card>
 
             {/* Professional Information */}
-            <Card className="mt-6">
+            <Card className="mt-4">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-green-600" />
                   Informasi Kepegawaian
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="position">Status Kepegawaian</Label>
                     <Input
@@ -244,66 +239,10 @@ const ProfilePage = () => {
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-blue-600" />
-                  Aktivitas Terbaru
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4 max-h-96 overflow-y-auto">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">Menambahkan publikasi baru</p>
-                      <p className="text-xs text-gray-500">Deep Learning Approach for Text Classification</p>
-                      <p className="text-xs text-gray-400">2 jam yang lalu</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <FileText className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">Update data beban kerja</p>
-                      <p className="text-xs text-gray-500">Semester Genap 2024/2025</p>
-                      <p className="text-xs text-gray-400">1 hari yang lalu</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Upload className="w-4 h-4 text-purple-600" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">Upload sertifikat AWS</p>
-                      <p className="text-xs text-gray-500">AWS Certified Solutions Architect</p>
-                      <p className="text-xs text-gray-400">3 hari yang lalu</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Users className="w-4 h-4 text-orange-600" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">Bimbingan skripsi - Muhammad Rizki</p>
-                      <p className="text-xs text-gray-500">Progress penelitian dan revisi proposal</p>
-                      <p className="text-xs text-gray-400">5 hari yang lalu</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Education */}
             <Card>
               <CardHeader>
