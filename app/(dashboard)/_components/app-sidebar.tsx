@@ -66,9 +66,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {navigations[key].map((item) => {
                   if (!item.children) {
-                    const isActive = (pathname === '/' && item.url === '/') || (item.url !== '/' && pathname.includes(item.url));
+                    const isActive = (pathname === '/' && item.url === '/') || (item.url !== '/' && pathname.includes(item.url!));
                     return (
-                      <Link key={item.title} href={item.url}>
+                      <Link key={item.title} href={item.url || ''}>
                         <SidebarMenuButton
                           variant="primary"
                           tooltip={item.title}
@@ -82,7 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     );
                   }
 
-                  const isActive = item.children.some((subItem) => pathname.includes(subItem.url));
+                  const isActive = item.children.some((subItem) => pathname.includes(subItem.url || ''));
 
                   return (
                     <Collapsible
@@ -105,12 +105,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <CollapsibleContent className="mt-1">
                           <SidebarMenuSub>
                             {item?.children && item.children.map((subItem) => {
-                              const isActive = item.parentPath !== subItem.url && pathname.includes(subItem.url);
+                              const isActive = item.parentPath !== subItem.url && pathname.includes(subItem.url!);
 
                               return (
                                 <SidebarMenuSubItem key={subItem.title}>
                                   <SidebarMenuSubButton isActive={isActive || pathname === item.parentPath} asChild>
-                                    <Link href={subItem.url}>
+                                    <Link href={subItem.url || ''}>
                                       {subItem.icon && <subItem.icon />}
                                       <span>{subItem.title}</span>
                                     </Link>

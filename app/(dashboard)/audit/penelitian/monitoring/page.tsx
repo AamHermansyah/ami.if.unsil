@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select"
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const dosenList = [
   {
@@ -192,13 +193,15 @@ function AuditPenelitianMonitoringPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 ml-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Eye className="w-4 h-4 mr-1" />
-                      Detail
-                    </Button>
+                    <Link href="/audit/penelitian/monitoring/122423423">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        Detail
+                      </Button>
+                    </Link>
                     <Button variant="outline" size="sm">
                       <MessageSquare className="w-4 h-4" />
                     </Button>

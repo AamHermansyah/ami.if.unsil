@@ -25,9 +25,46 @@ import {
 import { BsPersonGear } from "react-icons/bs"
 import { BiTargetLock } from "react-icons/bi";
 import { MdOutlineScience } from "react-icons/md";
+import { IconType } from "react-icons/lib";
 
-export const navigations = {
-  auditee: [
+export type NavigationItem = {
+  title: string;
+  url?: string;
+  icon: IconType;
+  isActive?: boolean;
+  parentPath?: string;
+  children?: NavigationItem[];
+};
+
+export type NavigationRole = {
+  [role: string]: NavigationItem[];
+};
+
+export const navigations: NavigationRole = {
+  mahasiswa: [
+    {
+      title: "Ringkasan",
+      url: "/dashboard/mahasiswa",
+      icon: AiOutlineHome,
+      isActive: true,
+    },
+    {
+      title: "Perwalian",
+      url: "/aktivitas/perwalian",
+      icon: AiOutlineUsergroupAdd,
+    },
+    {
+      title: "Kerja Praktek",
+      url: "/aktivitas/kp",
+      icon: AiOutlineSolution,
+    },
+    {
+      title: "Bimbingan",
+      url: "/aktivitas/bimbingan",
+      icon: MdOutlineScience,
+    },
+  ],
+  dosen: [
     {
       title: "Ringkasan",
       url: "/dashboard/auditee",

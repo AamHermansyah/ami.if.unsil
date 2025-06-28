@@ -2,7 +2,6 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
   LogOut,
 } from "lucide-react"
@@ -15,7 +14,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -27,7 +25,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { AiOutlineQuestionCircle } from "react-icons/ai"
 import Link from "next/link"
 
 export function NavUser({
@@ -80,27 +77,18 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <Link href="/profil">
-                <DropdownMenuItem>
-                  <BadgeCheck />
-                  Profil
-                </DropdownMenuItem>
-              </Link>
+            <Link href="/profil">
               <DropdownMenuItem>
-                <Bell />
-                Notifikasi
+                <BadgeCheck />
+                Profil
               </DropdownMenuItem>
+            </Link>
+            <Link href="/login">
               <DropdownMenuItem>
-                <AiOutlineQuestionCircle />
-                Bantuan
+                <LogOut />
+                Log out
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
