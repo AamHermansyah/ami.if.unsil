@@ -1,4 +1,4 @@
-import { Users, FileText, CheckCircle, Globe, User, Briefcase, GraduationCap, Award } from 'lucide-react';
+import { Users, FileText, CheckCircle, Globe } from 'lucide-react';
 
 export const featuresLogin = [
   {
@@ -29,42 +29,4 @@ export const featuresLogin = [
     iconBg: 'bg-purple-100',
     iconColor: 'text-purple-600',
   },
-];
-
-export const dosenFormSteps = [
-  {
-    id: 'personal',
-    title: 'Informasi Pribadi',
-    description: 'Data pribadi dan kontak',
-    icon: User,
-    completed: false
-  },
-  {
-    id: 'employment',
-    title: 'Informasi Kepegawaian',
-    description: 'NIDN, status, dan jabatan',
-    icon: Briefcase,
-    completed: false
-  },
-  {
-    id: 'education',
-    title: 'Informasi Pendidikan',
-    description: 'Riwayat pendidikan terakhir',
-    icon: GraduationCap,
-    completed: false
-  },
-  {
-    id: 'additional',
-    title: 'Informasi Tambahan',
-    description: 'Keahlian',
-    icon: Award,
-    completed: false
-  },
-  {
-    id: 'documents',
-    title: 'Upload Dokumen',
-    description: 'Foto, CV, dan dokumen pendukung',
-    icon: FileText,
-    completed: false
-  }
 ];

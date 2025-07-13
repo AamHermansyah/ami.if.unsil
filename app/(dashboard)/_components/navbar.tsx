@@ -28,7 +28,7 @@ function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const { state, isMobile } = useSidebar()
   const pathname = usePathname()
-  const segments = pathname.split('/').filter(Boolean)
+  const segments = pathname.split('/').filter(Boolean).map((item) => decodeURIComponent(item))
 
   useEffect(() => {
     const handleScroll = () => {

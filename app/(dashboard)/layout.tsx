@@ -5,6 +5,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from './_components/app-sidebar'
+import Footer from './_layouts/footer'
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +14,10 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       <SidebarInset className="flex-1 overflow-hidden">
         <Navbar />
         <div className="w-full flex flex-1 flex-col gap-4 p-4 pt-14">
-          {children}
+          <div className="flex-1">
+            {children}
+          </div>
+          <Footer />
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -30,12 +30,11 @@ export default function GlobalError({
   };
 
   return (
-    <html>
+    <html className="dark">
       <body>
         <main>
-          return (
           <div className="min-h-screen flex items-center justify-center px-4 py-10">
-            <div className="max-w-2xl w-full space-y-8">
+            <div className="max-w-2xl w-full space-y-4">
               {/* Header */}
               <div className="text-center">
                 <div className="relative w-24 h-24 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-6 overflow-hidden">
@@ -45,11 +44,11 @@ export default function GlobalError({
                     fill
                   />
                 </div>
-                <h1 className="text-6xl font-bold text-gray-900 mb-4">500</h1>
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                <h1 className="text-6xl font-bold mb-4">500</h1>
+                <h2 className="text-2xl font-semibold mb-2">
                   Terjadi Kesalahan Server
                 </h2>
-                <p className="text-gray-600 text-lg">
+                <p className="text-muted-foreground text-lg">
                   Maaf, terjadi kesalahan internal pada server. Tim teknis kami sedang menangani masalah ini.
                 </p>
               </div>
@@ -114,15 +113,15 @@ export default function GlobalError({
                 <CardContent>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Error Code:</span>
+                      <span className="text-muted-foreground">Error Code:</span>
                       <span className="font-mono text-gray-800">HTTP 500</span>
                     </div>
                     <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Timestamp:</span>
+                      <span className="text-muted-foreground">Timestamp:</span>
                       <span className="font-mono text-gray-800">{new Date().toISOString()}</span>
                     </div>
                     <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Request ID:</span>
+                      <span className="text-muted-foreground">Request ID:</span>
                       <span className="font-mono text-gray-800">AMI-{Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
                     </div>
                   </div>
@@ -161,13 +160,12 @@ export default function GlobalError({
               </Card>
 
               {/* Footer */}
-              <div className="text-center text-sm text-gray-500">
+              <div className="text-center text-sm text-muted-foreground">
                 <p>AMI Prodi Informatika - Universitas Siliwangi</p>
                 <p className="mt-1">Jika masalah berlanjut, tim teknis akan segera menangani</p>
               </div>
             </div>
           </div>
-          );
         </main>
       </body>
     </html>

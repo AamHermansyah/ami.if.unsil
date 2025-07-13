@@ -4,13 +4,15 @@ import { AlertCircleIcon, CircleUserRoundIcon, XIcon } from "lucide-react"
 
 import { useFileUpload } from "@/hooks/use-file-upload"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
 
 interface IProps {
   maxSizeMB?: number;
   id?: string;
+  className?: string;
 }
 
-export default function AvatarUploader({ id, maxSizeMB }: IProps) {
+export default function AvatarUploader({ id, maxSizeMB, className }: IProps) {
   const [
     { files, isDragging, errors },
     {
@@ -30,7 +32,10 @@ export default function AvatarUploader({ id, maxSizeMB }: IProps) {
   const previewUrl = files[0]?.preview || null
 
   return (
-    <div className="w-full flex-1 flex flex-col gap-2 justify-center items-center">
+    <div className={cn(
+      'w-full flex-1 flex flex-col gap-2 justify-center items-center',
+      className
+    )}>
       <div className="relative inline-flex">
         {/* Drop area */}
         <button
