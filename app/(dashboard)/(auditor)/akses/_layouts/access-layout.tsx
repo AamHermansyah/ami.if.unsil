@@ -1,0 +1,261 @@
+"use client"
+
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Header from './header'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { MoreVertical, Pencil, Trash, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { Access, Status } from '@/lib/generated/prisma';
+import { Session } from 'next-auth';
+import { BarsLoader } from '@/components/core/loader';
+import { useRouter, useSearchParams } from 'next/navigation';
+import axios, { CancelTokenSource, isAxiosError } from 'axios';
+import InputSearch from '@/components/shared/input-search';
+import { toast } from 'sonner';
+import AddEditAccessDialog from '../_components/add-edit-access-dialog';
+import { updateStatusAccess } from '@/actions/access';
+import { id } from 'date-fns/locale';
+
+interface IProps {
+  user: Session['user'];
+}
+
+function AccessLayout({ user }: IProps) {
+  const [data, setData] = useState<Access[]>([]);
+  const [addEditDialog, setAddEditDialog] = useState(false);
+  const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
+  const [selectedAccess, setSelectedAccess] = useState<Access | null>(null);
+  const [searching, setSearching] = useState(true);
+
+  const searchParams = useSearchParams();
+  const q = searchParams.get('q') || '';
+  const navigate = useRouter();
+  const cancelTokenSource = useRef<CancelTokenSource | null>(null);
+
+  const fetch = useCallback((keyword: string) => {
+    if (cancelTokenSource.current) {
+      cancelTokenSource.current.cancel('Operation canceled due to new request.');
+    }
+
+    const source = axios.CancelToken.source();
+    cancelTokenSource.current = source;
+
+    setSearching(true);
+
+    axios
+      .get(`/api/akses`, {
+        params: { q: keyword },
+        cancelToken: source.token,
+      })
+      .then((res) => setData(res.data))
+      .catch((error) => {
+        setData([]);
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          if (isAxiosError(error)) {
+            toast.error(error.response?.data || error.message);
+          } else {
+            toast.error(error.message || 'Internal Error');
+          }
+        }
+      })
+      .finally(() => setSearching(false));
+  }, []);
+
+  const handleSearch = (value: string) => {
+    value = value.trim();
+    if (q !== value) {
+      navigate.push(`?q=${value}`);
+    }
+  }
+
+  const handleUpdateStatus = (value: string, email: string) => {
+    toast.promise(updateStatusAccess(value as Status, email), {
+      loading: 'Mengubah status...',
+      error: (error) => error?.message || 'Internal server error',
+      success: (res) => {
+        if (res.success) {
+          setData((prev) => {
+            return prev.map((item) => {
+              if (item.email === email) return { ...item, status: value as Status };
+              return item;
+            });
+          });
+          return value === 'ACTIVATE' ? 'Akun berhasil dinonaktifkan' : 'Akun berhasil diaktifkan';
+        } else {
+          throw Error(res.message);
+        }
+      }
+    });
+  }
+
+  useEffect(() => {
+    if (!searching) setSearching(true);
+    fetch(q);
+  }, [q]);
+
+  return (
+    <div className="space-y-4">
+      <Header />
+      <Card>
+        <CardHeader className="border-b space-y-4">
+          <CardTitle>Daftar Email</CardTitle>
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <InputSearch
+              defaultValue={q}
+              placeholder="Cari kriteria atau kode..."
+              onChange={handleSearch}
+            />
+            <AddEditAccessDialog
+              open={addEditDialog}
+              onOpenChange={(open) => {
+                if (!open) {
+                  setTimeout(() => {
+                    setSelectedAccess(null);
+                    setTypeAction('add');
+                  }, 200);
+                };
+                setAddEditDialog(open);
+              }}
+              onAddSuccess={(data) => setData((prev) => [data, ...prev])}
+              onEditSuccess={(data) => {
+                setData((prev) => {
+                  return prev.map((item) => item.id === data.id ? data : item)
+                });
+              }}
+              type={typeAction}
+              selectedAccess={selectedAccess}
+            />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Email</TableHead>
+                <TableHead>Peran</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Dibuat</TableHead>
+                <TableHead className="text-center">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {!searching ? (
+                <>
+                  {data.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8">
+                        {q.length > 0 ? "Data tidak ditemukan" : "Belum ada data akses"}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    data.map((access) => (
+                      <TableRow key={access.id}>
+                        <TableCell>{access.email}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{access.role}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={access.status === 'ACTIVE' ? 'success' : 'destructive'}>
+                            {access.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{format(access.createdAt, 'eeee, d MMMM y', { locale: id })}</TableCell>
+                        <TableCell>
+                          <div className="w-full flex justify-center">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="mx-auto"
+                                  disabled={access.email === user.email}
+                                >
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-40">
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setTypeAction('edit');
+                                    setSelectedAccess(access);
+                                    setAddEditDialog(true);
+                                  }}
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuSub>
+                                  <DropdownMenuSubTrigger className="gap-2">
+                                    <User className="w-4 h-4 text-muted-foreground" />
+                                    Status
+                                  </DropdownMenuSubTrigger>
+                                  <DropdownMenuPortal>
+                                    <DropdownMenuSubContent>
+                                      <DropdownMenuRadioGroup
+                                        value={access.status}
+                                        onValueChange={(value) => {
+                                          handleUpdateStatus(value, access.email);
+                                        }}
+                                      >
+                                        <DropdownMenuRadioItem value="ACTIVE">
+                                          Aktif
+                                        </DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="NONACTIVE">
+                                          Nonaktif
+                                        </DropdownMenuRadioItem>
+                                      </DropdownMenuRadioGroup>
+                                    </DropdownMenuSubContent>
+                                  </DropdownMenuPortal>
+                                </DropdownMenuSub>
+                                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                  <Trash className="w-4 h-4 text-destructive" />
+                                  Hapus
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </>
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8">
+                    <BarsLoader fontSize={20} className="mx-auto" />
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+export default AccessLayout

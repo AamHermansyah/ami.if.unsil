@@ -80,7 +80,6 @@ function CriteriaLayout({ user }: IProps) {
 
   useEffect(() => {
     if (!searching) setSearching(true);
-
     fetch(q);
   }, [q]);
 

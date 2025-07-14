@@ -1,4 +1,4 @@
-import { getAllCriteriaWithIndicatorCount } from "@/data/criteria";
+import { getAllEmailAccess } from "@/data/access";
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 
@@ -13,17 +13,17 @@ export async function GET(req: Request) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const criterias = await getAllCriteriaWithIndicatorCount({
+    const emails = await getAllEmailAccess({
       q: keyword
     });
 
-    if (criterias.error) throw new Error(criterias.message);
+    if (emails.error) throw new Error(emails.message);
 
-    return NextResponse.json(criterias.data!, {
+    return NextResponse.json(emails.data!, {
       status: 200
     })
   } catch (error) {
-    console.log('ERROR GET ALL CRITERIAS API : ', error);
+    console.log('ERROR GET ALL ACCESS API: ', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }
