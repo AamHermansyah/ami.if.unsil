@@ -6,7 +6,7 @@ import authConfig from "./auth-config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user }) {
       if (!user.email || !user.email.endsWith("unsil.ac.id")) {
         console.error("Login attempt failed: Email is not from unsil.ac.id domain.");
         return false;

@@ -11,9 +11,13 @@ import { auth } from '@/lib/auth'
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
+  if (!session?.user) {
+    throw new Error("User tidak ditemukan di session.");
+  }
+
   return (
     <SidebarProvider>
-      <AppSidebar user={session?.user!} />
+      <AppSidebar user={session.user} />
       <SidebarInset className="flex-1 overflow-hidden">
         <Navbar />
         <div className="w-full flex flex-1 flex-col gap-4 p-4 pt-14">

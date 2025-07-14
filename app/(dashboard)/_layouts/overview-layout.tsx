@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -60,8 +60,6 @@ interface IProps {
 }
 
 function OverviewLayout({ user }: IProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState('2024-1');
-
   // Data dummy untuk metrics
   const metrics: AuditMetrics = {
     totalKriteria: 9,

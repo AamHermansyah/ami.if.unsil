@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     return NextResponse.json(criterias.data!, {
       status: 200
     })
-  } catch (error: any) {
+  } catch (error) {
     console.log('GET USERS MANAGE ADMIN ERROR: ', error);
     return new NextResponse('Internal Error', { status: 500 });
   }

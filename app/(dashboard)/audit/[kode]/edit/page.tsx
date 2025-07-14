@@ -1,22 +1,18 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  ArrowLeft,
   Save,
-  X,
   FileText,
   Link2,
   AlertCircle,
-  CheckCircle2,
   Target
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { Badge } from '@/components/ui/badge';
 
 interface AuditEditData {

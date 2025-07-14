@@ -21,24 +21,6 @@ import {
   Trash2,
 } from 'lucide-react';
 
-interface Notification {
-  id: string;
-  title: string;
-  description: string;
-  category: 'system' | 'verification' | 'deadline' | 'achievement' | 'update' | 'message';
-  type: 'info' | 'success' | 'warning' | 'error';
-  isRead: boolean;
-  timestamp: string;
-  from?: string;
-  actionUrl?: string;
-  actionLabel?: string;
-  relatedData?: {
-    type: 'dosen' | 'publikasi' | 'produk' | 'target';
-    name: string;
-    id: string;
-  };
-}
-
 const NotificationSheet: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('all');

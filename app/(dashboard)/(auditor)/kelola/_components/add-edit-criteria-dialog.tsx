@@ -73,8 +73,8 @@ function AddEditCriteriaDialog({
             }
           })
           .catch((err) => toast.error((err as Error).message))
-      } else {
-        updateCriteria({ ...values, updatedBy: userId, id: selectedCriteria?.id! })
+      } else if (selectedCriteria?.id) {
+        updateCriteria({ ...values, updatedBy: userId, id: selectedCriteria.id })
           .then((res) => {
             if (res.success) {
               onEditSuccess(res.data);
@@ -91,8 +91,8 @@ function AddEditCriteriaDialog({
 
   useEffect(() => {
     if (type === 'edit') {
-      form.setValue('code', selectedCriteria?.code!);
-      form.setValue('title', selectedCriteria?.title!);
+      form.setValue('code', selectedCriteria?.code || '');
+      form.setValue('title', selectedCriteria?.title || '');
     }
   }, [type]);
 

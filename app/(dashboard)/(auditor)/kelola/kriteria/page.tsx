@@ -5,8 +5,12 @@ import { auth } from '@/lib/auth'
 async function CriteriaManagementPage() {
   const session = await auth();
 
+  if (!session?.user) {
+    throw new Error("User tidak ditemukan di session.");
+  }
+
   return (
-    <CriteriaLayout user={session?.user!} />
+    <CriteriaLayout user={session.user} />
   )
 }
 

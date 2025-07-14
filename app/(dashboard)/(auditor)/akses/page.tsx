@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, MoreVertical, Pencil, Trash, User } from 'lucide-react';
+import { MoreVertical, Pencil, Trash, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import AddAccessDialog from './_components/add-access-dialog';

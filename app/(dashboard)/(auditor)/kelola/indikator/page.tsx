@@ -1,7 +1,20 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Search, ChevronDown, ChevronRight, Target, BookOpen, Table2, Group, MoreVertical, Pencil, Delete } from 'lucide-react';
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
+  ChevronDown,
+  ChevronRight,
+  Target,
+  Table2,
+  Group,
+  MoreVertical,
+  Pencil,
+  Delete
+} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -90,7 +103,7 @@ const AuditIndikatorPage: React.FC = () => {
     }
   ]);
 
-  const [indikatorData, setIndikatorData] = useState<IndikatorData[]>([
+  const [indikatorData] = useState<IndikatorData[]>([
     {
       id: '1',
       kodeIndikator: 'I001',
@@ -170,7 +183,7 @@ const AuditIndikatorPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<'table' | 'grouped'>('grouped');
   const [expandedKriteria, setExpandedKriteria] = useState<string[]>(['K001', 'K002', 'K003', 'K004', 'K005']);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<IndikatorData | null>(null);
+  const [editingItem] = useState<IndikatorData | null>(null);
 
   const filteredData = indikatorData.filter(item => {
     const matchesSearch = item.namaIndikator.toLowerCase().includes(searchTerm.toLowerCase()) ||
