@@ -4,11 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FcGoogle } from "react-icons/fc";
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
+import { signIn } from '@/lib/auth';
 
 function FormLogin() {
   return (
     <div className="w-full flex justify-center lg:justify-end">
-      <Card className="w-full max-w-md shadow-xl border bg-card backdrop-blur-lg">
+      <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
           <div className="relative mx-auto w-20 h-20">
             <Image
@@ -29,16 +30,17 @@ function FormLogin() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* Google Login Button */}
-          <Button
-            className="w-full h-12 shadow-sm"
-            variant="outline"
+          <form
+            action={async () => {
+              "use server"
+              await signIn("google")
+            }}
           >
-            <div className="flex items-center justify-center gap-3">
+            <Button className="w-full h-12">
               <FcGoogle className="w-4 h-4" />
               <span className="font-medium">Masuk dengan Google</span>
-            </div>
-          </Button>
+            </Button>
+          </form>
 
           {/* Info Text */}
           <div className="text-center space-y-2">

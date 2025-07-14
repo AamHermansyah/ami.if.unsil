@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ENUMS (tetap sama)
+enum Role {
+  AUDITEE
+  AUDITOR
+}
+
+enum Status {
+  ACTIVE
+  NONACTIVE
+}
+
+enum FindingStatus {
+  SESUAI
+  OBSERVASI
+  KTS_MINOR
+  KTS_MAYOR
+}
+
+enum AchievementLabel {
+  SANGAT_BAIK
+  BAIK
+  CUKUP
+  KURANG
+  SANGAT_KURANG
+}
+
+enum ActivityAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum ActivityTable {
+  CRITERIA
+  INDICATOR
+  CRITERIA_AUDIT
+  INDICATOR_AUDIT
+  ACCESS
+}
+
+// TABEL CRITERIA
+model Criteria {
+  id             String          @id @default(cuid())
+  code           String
+  title          String
+  indicators     Indicator[]
+  criteriaAudits CriteriaAudit[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String?
+  createdByUser User?    @relation("CriteriaCreatedBy", fields: [createdBy], references: [id])
+}
+
+// TABEL INDICATOR
+model Indicator {
+  id              String           @id @default(cuid())
+  code            String
+  title           String
+  criteriaId      String
+  criteria        Criteria         @relation(fields: [criteriaId], references: [id])
+  indicatorAudits IndicatorAudit[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String?
+  createdByUser User?    @relation("IndicatorCreatedBy", fields: [createdBy], references: [id])
+}
+
+// TABEL ACCESS
+model Access {
+  id     String  @id @default(cuid())
+  email  String  @unique
+  role   Role
+  status Status
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+}
+
+// TABEL USER
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  gender       String?
+  placeOfBirth String?
+  dateOfBirth  DateTime?
+  religion     String?
+  citizenship  String?
+  phone        String?
+  city         String?
+  province     String?
+  zipCode      String?
+  address      String?
+  nidn         String?
+  image        String?
+  access       Access?
+
+  createdCriteria       Criteria[]        @relation("CriteriaCreatedBy")
+  createdIndicator      Indicator[]       @relation("IndicatorCreatedBy")
+  createdCriteriaAudit  CriteriaAudit[]   @relation("CriteriaAuditCreatedBy")
+  createdIndicatorAudit IndicatorAudit[]  @relation("IndicatorAuditCreatedBy")
+  activities            UserActivityLog[]
+}
+
+// TABEL CRITERIA AUDIT
+model CriteriaAudit {
+  id               String           @id @default(cuid())
+  totalAchievement Int              @default(0)
+  idealCondition   Int              @default(0)
+  period           String           @unique
+  criteriaId       String
+  criteria         Criteria         @relation(fields: [criteriaId], references: [id])
+  indicatorAudits  IndicatorAudit[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String?
+  createdByUser User?    @relation("CriteriaAuditCreatedBy", fields: [createdBy], references: [id])
+}
+
+// TABEL INDICATOR AUDIT
+model IndicatorAudit {
+  id               String            @id @default(cuid())
+  achievement      Int               @default(0)
+  achievementLabel AchievementLabel?
+  documentName     String?
+  documentLink     String?
+  rootCause        String?
+  plan             String?
+  findingStatus    FindingStatus     @default(OBSERVASI)
+  note             String?
+  recomendation    String?
+  criteriaAuditId  String
+  criteriaAudit    CriteriaAudit     @relation(fields: [criteriaAuditId], references: [id])
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  createdBy     String?
+  createdByUser User?      @relation("IndicatorAuditCreatedBy", fields: [createdBy], references: [id])
+  Indicator     Indicator? @relation(fields: [indicatorId], references: [id])
+  indicatorId   String?
+}
+
+model UserActivityLog {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+  action    ActivityAction
+  table     ActivityTable
+  recordId  String // ID record yang dimodifikasi
+  note      String?
+  createdAt DateTime       @default(now())
+}

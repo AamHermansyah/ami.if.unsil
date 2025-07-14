@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Search, ChevronDown, ChevronRight, Target, BookOpen, Table2, Group } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, ChevronDown, ChevronRight, Target, BookOpen, Table2, Group, MoreVertical, Pencil, Delete } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -9,6 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -225,8 +231,8 @@ const AuditIndikatorPage: React.FC = () => {
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Tambah Indikator
+                  <Plus className="h-4 w-4" />
+                  Tambah
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
@@ -329,30 +335,28 @@ const AuditIndikatorPage: React.FC = () => {
                   className="cursor-pointer"
                   onClick={() => toggleKriteriaExpansion(kriteriaCode)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        {isExpanded ? (
-                          <ChevronDown className="h-5 w-5 text-primary dark:text-secondary" />
-                        ) : (
-                          <ChevronRight className="h-5 w-5 text-primary dark:text-secondary" />
-                        )}
-                        <div className="bg-gradient-to-r from-primary to-secondary p-2 rounded-lg">
-                          <BookOpen className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center space-x-3">
-                          <code className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-mono">
+                  <div className="w-full flex sm:items-center justify-between gap-y-2">
+                    <div className="flex-1 flex items-center space-x-4">
+                      {isExpanded ? (
+                        <ChevronDown className="h-5 w-5 text-primary dark:text-secondary" />
+                      ) : (
+                        <ChevronRight className="h-5 w-5 text-primary dark:text-secondary" />
+                      )}
+                      <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-x-3 gap-y-2">
+                        <div className="flex items-center justify-between">
+                          <code className="bg-primary w-max text-primary-foreground px-2 py-1 rounded-full text-xs sm:text-sm font-mono">
                             {kriteriaCode}
                           </code>
-                          <h3 className="text-lg font-semibold">
-                            {kriteria?.kriteria}
-                          </h3>
+                          <Badge variant="outline" className="sm:hidden">
+                            {indikators.length} Indikator
+                          </Badge>
                         </div>
+                        <h3 className="flex-1 sm:text-lg font-semibold">
+                          {kriteria?.kriteria}
+                        </h3>
                       </div>
                     </div>
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="hidden sm:inline-flex">
                       {indikators.length} Indikator
                     </Badge>
                   </div>
@@ -361,9 +365,9 @@ const AuditIndikatorPage: React.FC = () => {
                   <CardContent className="pt-4">
                     <div className="space-y-3">
                       {indikators.map((indikator) => (
-                        <div key={indikator.id} className="flex items-center justify-between p-4 border rounded-md">
-                          <div className="flex items-center space-x-4">
-                            <div className="bg-foreground p-2 rounded-lg border border-gray-200">
+                        <div key={indikator.id} className="w-full flex gap-3 items-center justify-between p-4 border rounded-md">
+                          <div className="flex-1 flex items-center space-x-4">
+                            <div className="hidden sm:block bg-foreground p-2 rounded-lg border border-gray-200">
                               <Target className="h-4 w-4 text-background" />
                             </div>
                             <div>
@@ -375,20 +379,23 @@ const AuditIndikatorPage: React.FC = () => {
                               <p className="text-sm font-medium">{indikator.namaIndikator}</p>
                             </div>
                           </div>
-                          <div className="flex space-x-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              size="icon"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Pencil className="w-4 h-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Delete className="w-4 h-4" />
+                                Hapus
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       ))}
                     </div>

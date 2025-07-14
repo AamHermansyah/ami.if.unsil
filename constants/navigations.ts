@@ -25,6 +25,11 @@ export type NavigationRole = {
 export const navigations: NavigationRole = {
   auditee: [
     {
+      title: "Ringkasan",
+      url: "/",
+      icon: AiOutlineHome,
+    },
+    {
       title: "Audit",
       url: "/audit",
       icon: AiOutlineSearch, // lebih cocok untuk proses audit/pemeriksaan
@@ -42,6 +47,11 @@ export const navigations: NavigationRole = {
       icon: AiOutlineHome,
     },
     {
+      title: "Audit",
+      url: "/audit",
+      icon: AiOutlineSearch,
+    },
+    {
       title: "Kelola",
       icon: AiOutlineAppstore,
       parentPath: "/kelola",
@@ -55,11 +65,6 @@ export const navigations: NavigationRole = {
           title: "Indikator",
           url: "/kelola/indikator",
           icon: AiOutlineFileText,
-        },
-        {
-          title: "Audit",
-          url: "/kelola/audit",
-          icon: AiOutlineSearch,
         },
       ],
     },

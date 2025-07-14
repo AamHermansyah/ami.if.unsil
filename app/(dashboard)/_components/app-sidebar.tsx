@@ -28,15 +28,13 @@ import { navigations } from "@/constants/navigations"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronRight } from "lucide-react"
+import { Session } from "next-auth"
 
-// This is sample data.
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
+interface IProps {
+  user: Session['user'];
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & IProps) {
   const { state } = useSidebar();
   const pathname = usePathname();
 
@@ -53,13 +51,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           />
           {state === 'expanded' && (
             <h1 className="flex-1 text-sm py-1.5 text-primary dark:text-foreground font-semibold whitespace-wrap overflow-hidden">
-              Aktual Mutu Internal Informatika
+              Aktual Mutu Internal
+              <br />
+              Informatika
             </h1>
           )}
         </div>
       </SidebarHeader>
       <SidebarContent>
         {(Object.keys(navigations) as Array<keyof typeof navigations>).map((key) => {
+          if (key !== user.role.toLowerCase()) return null;
+
           return (
             <SidebarGroup key={`sb-${key}`}>
               <SidebarGroupLabel className="uppercase text-primary dark:text-secondary">{key}</SidebarGroupLabel>

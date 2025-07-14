@@ -43,7 +43,7 @@ const initialData: AuditEditData = {
 
 export default function AuditEditPage() {
   return (
-    <div className="space-y-4 grid items-start grid-cols-3 gap-4">
+    <div className="space-y-4 grid items-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <Card>
         <CardHeader className="border-b">
           <CardTitle>Informasi Indikator</CardTitle>
@@ -80,7 +80,7 @@ export default function AuditEditPage() {
           </div>
         </CardContent>
       </Card>
-      <Card className="col-span-2">
+      <Card className="lg:col-span-2">
         <CardHeader className="border-b">
           <CardTitle>Form Edit Data Audit</CardTitle>
           <CardDescription>Tahun Akademik 2024/2025</CardDescription>

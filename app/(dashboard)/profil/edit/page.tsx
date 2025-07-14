@@ -69,6 +69,14 @@ const CreateDosenProfilePage: React.FC = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="nidn">NIDN *</Label>
+                <Input
+                  id="nidn"
+                  placeholder="Masukan NIDN"
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="jenisKelamin">Jenis Kelamin *</Label>
                 <Select>
                   <SelectTrigger className="w-full">

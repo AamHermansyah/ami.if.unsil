@@ -6,11 +6,14 @@ import {
 } from "@/components/ui/sidebar"
 import { AppSidebar } from './_components/app-sidebar'
 import Footer from './_layouts/footer'
+import { auth } from '@/lib/auth'
 
-function DashboardLayout({ children }: { children: React.ReactNode }) {
+async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={session?.user!} />
       <SidebarInset className="flex-1 overflow-hidden">
         <Navbar />
         <div className="w-full flex flex-1 flex-col gap-4 p-4 pt-14">

@@ -3,22 +3,22 @@ import { Users, FileText, CheckCircle, Globe } from 'lucide-react';
 export const featuresLogin = [
   {
     icon: Users,
-    title: 'Manajemen SDM',
-    description: 'Profil & Kualifikasi Dosen',
+    title: 'Mudah dan Cepat',
+    description: 'Efisiensi Audit',
     iconBg: 'bg-blue-100',
     iconColor: 'text-primary',
   },
   {
     icon: FileText,
-    title: 'Penelitian & Pengabdian',
-    description: 'Publikasi & Sitasi',
+    title: 'Laporan Lengkap',
+    description: 'Grafik dan Tabel',
     iconBg: 'bg-indigo-100',
     iconColor: 'text-primary',
   },
   {
     icon: CheckCircle,
     title: 'Monitoring Mudah',
-    description: 'Dashboard & Laporan',
+    description: 'Kelola Audit',
     iconBg: 'bg-green-100',
     iconColor: 'text-green-600',
   },
