@@ -9,7 +9,7 @@ export async function GET(req: Request) {
 
   try {
     const session = await auth();
-    if (!session || !session.user || (session.user.role !== 'AUDITOR')) {
+    if ((session?.user?.role !== 'AUDITOR') || session.user.status !== 'ACTIVE') {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
@@ -17,7 +17,9 @@ export async function GET(req: Request) {
       q: keyword
     });
 
-    if (criterias.error) throw new Error(criterias.message);
+    if (criterias.error) {
+      return new NextResponse(criterias.message, { status: 500 });
+    };
 
     return NextResponse.json(criterias.data!, {
       status: 200

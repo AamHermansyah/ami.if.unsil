@@ -37,6 +37,8 @@ import { toast } from 'sonner';
 import AddEditAccessDialog from '../_components/add-edit-access-dialog';
 import { updateStatusAccess } from '@/actions/access';
 import { id } from 'date-fns/locale';
+import DeleteAccessDialog from '../_components/delete-access-dialog';
+import { Pagination } from '@/components/ui/pagination';
 
 interface IProps {
   user: Session['user'];
@@ -45,12 +47,20 @@ interface IProps {
 function AccessLayout({ user }: IProps) {
   const [data, setData] = useState<Access[]>([]);
   const [addEditDialog, setAddEditDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null);
-  const [searching, setSearching] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 0,
+    limit: 10,
+    totalPages: 0,
+  });
 
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
+  const page = searchParams.get('page');
   const navigate = useRouter();
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
 
@@ -62,27 +72,36 @@ function AccessLayout({ user }: IProps) {
     const source = axios.CancelToken.source();
     cancelTokenSource.current = source;
 
-    setSearching(true);
+    setLoading(true);
 
     axios
       .get(`/api/akses`, {
-        params: { q: keyword },
+        params: {
+          q: keyword,
+          limit: pagination.limit,
+          page: typeof page === 'string' && !isNaN(+page) ? +page : 1
+        },
         cancelToken: source.token,
       })
-      .then((res) => setData(res.data))
+      .then((res) => {
+        const { items, ...pagination } = res.data
+        setData(items);
+        setPagination(pagination);
+        setLoading(false)
+      })
       .catch((error) => {
-        setData([]);
         if (axios.isCancel(error)) {
           console.log('Request canceled:', error.message);
         } else {
+          setData([]);
+          setLoading(false)
           if (isAxiosError(error)) {
             toast.error(error.response?.data || error.message);
           } else {
             toast.error(error.message || 'Internal Error');
           }
         }
-      })
-      .finally(() => setSearching(false));
+      });
   }, []);
 
   const handleSearch = (value: string) => {
@@ -113,7 +132,6 @@ function AccessLayout({ user }: IProps) {
   }
 
   useEffect(() => {
-    if (!searching) setSearching(true);
     fetch(q);
   }, [q]);
 
@@ -126,7 +144,7 @@ function AccessLayout({ user }: IProps) {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <InputSearch
               defaultValue={q}
-              placeholder="Cari kriteria atau kode..."
+              placeholder="Cari email..."
               onChange={handleSearch}
             />
             <AddEditAccessDialog
@@ -151,7 +169,7 @@ function AccessLayout({ user }: IProps) {
             />
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <Table>
             <TableHeader>
               <TableRow>
@@ -163,7 +181,7 @@ function AccessLayout({ user }: IProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!searching ? (
+              {!loading ? (
                 <>
                   {data.length === 0 ? (
                     <TableRow>
@@ -231,7 +249,13 @@ function AccessLayout({ user }: IProps) {
                                     </DropdownMenuSubContent>
                                   </DropdownMenuPortal>
                                 </DropdownMenuSub>
-                                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                <DropdownMenuItem
+                                  className="text-destructive focus:text-destructive"
+                                  onClick={() => {
+                                    setSelectedAccess(access);
+                                    setDeleteDialog(true);
+                                  }}
+                                >
                                   <Trash className="w-4 h-4 text-destructive" />
                                   Hapus
                                 </DropdownMenuItem>
@@ -252,8 +276,32 @@ function AccessLayout({ user }: IProps) {
               )}
             </TableBody>
           </Table>
+          {pagination.totalPages > 1 && (
+            <div className="w-full flex justify-end">
+              <Pagination
+                className="w-max mx-0"
+                page={pagination.page}
+                pages={pagination.totalPages}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
+      <DeleteAccessDialog
+        email={selectedAccess?.email || ''}
+        open={deleteDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTimeout(() => {
+              setSelectedAccess(null);
+            }, 200);
+          };
+          setDeleteDialog(open);
+        }}
+        onDeleteSuccess={(email) => {
+          setData((prev) => prev.filter((access) => access.email !== email));
+        }}
+      />
     </div>
   )
 }

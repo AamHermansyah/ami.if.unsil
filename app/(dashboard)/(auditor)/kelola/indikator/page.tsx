@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-  Plus,
   Edit,
   Trash2,
   Search,
@@ -16,13 +15,6 @@ import {
   Delete
 } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -30,7 +22,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -39,7 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -48,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import AddEditIndicatorDialog from '../_components/add-edit-indicator-dialog';
 
 interface KriteriaData {
   id: string;
@@ -182,8 +174,6 @@ const AuditIndikatorPage: React.FC = () => {
   const [filterKriteria, setFilterKriteria] = useState('');
   const [viewMode, setViewMode] = useState<'table' | 'grouped'>('grouped');
   const [expandedKriteria, setExpandedKriteria] = useState<string[]>(['K001', 'K002', 'K003', 'K004', 'K005']);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [editingItem] = useState<IndikatorData | null>(null);
 
   const filteredData = indikatorData.filter(item => {
     const matchesSearch = item.namaIndikator.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -214,125 +204,32 @@ const AuditIndikatorPage: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Daftar Indikator</CardTitle>
+          <CardDescription>Kelola indikator dari setiap kriteria dengan mudah</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-xs">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" />
-                <Input
-                  placeholder="Cari indikator atau kode..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Select value={filterKriteria} onValueChange={setFilterKriteria}>
-                <SelectTrigger className="w-full sm:w-40">
-                  <SelectValue placeholder="Filter by Kriteria" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua Kriteria</SelectItem>
-                  {kriteriaData.map(kriteria => (
-                    <SelectItem key={kriteria.code} value={kriteria.code}>
-                      {kriteria.code}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4" />
-                  Tambah
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle className="text-xl">
-                    {editingItem ? 'Edit Indikator' : 'Tambah Indikator Baru'}
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="kode" className="text-sm font-medium">Kode Indikator</Label>
-                    <div className="w-full flex items-center gap-4">
-                      <Select>
-                        <SelectTrigger className="w-24">
-                          <SelectValue placeholder="Huruf" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="T">T</SelectItem>
-                          <SelectItem value="U">U</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input
-                        placeholder="Masukkan angka"
-                        className="flex-1"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="kodeKriteria" className="text-sm font-medium">Kriteria</Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih kriteria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {kriteriaData.map(kriteria => (
-                          <SelectItem key={kriteria.code} value={kriteria.code}>
-                            {kriteria.code} - {kriteria.kriteria}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="deskripsi" className="text-sm font-medium">Deskripsi Indikator</Label>
-                    <Input
-                      id="deskripsi"
-                      placeholder="Masukkan deskripsi indikator"
-                    />
-                  </div>
-                  <div className="flex justify-end space-x-2 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsAddDialogOpen(false)}
-                    >
-                      Batal
-                    </Button>
-                    <Button>
-                      {editingItem ? 'Update' : 'Simpan'}
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardContent>
       </Card>
 
-      <div className="w-max flex bg-card border rounded-lg p-1">
-        <Button
-          variant={viewMode === 'grouped' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setViewMode('grouped')}
-          className="rounded-md"
-        >
-          <Group className="h-4 w-4" />
-          Grouped
-        </Button>
-        <Button
-          variant={viewMode === 'table' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setViewMode('table')}
-          className="rounded-md"
-        >
-          <Table2 className="h-4 w-4" />
-          Table
-        </Button>
+      <div className="w-full flex items-center justify-between gap-2">
+        <div className="w-max flex bg-card border rounded-lg p-1">
+          <Button
+            variant={viewMode === 'grouped' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('grouped')}
+            className="rounded-md"
+          >
+            <Group className="h-4 w-4" />
+            Grouped
+          </Button>
+          <Button
+            variant={viewMode === 'table' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('table')}
+            className="rounded-md"
+          >
+            <Table2 className="h-4 w-4" />
+            Table
+          </Button>
+        </div>
+        <AddEditIndicatorDialog />
       </div>
 
       {/* Content */}
@@ -420,6 +317,32 @@ const AuditIndikatorPage: React.FC = () => {
         </div>
       ) : (
         <Card>
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <div className="relative flex-1 max-w-xs">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" />
+                <Input
+                  placeholder="Cari indikator atau kode..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Select value={filterKriteria} onValueChange={setFilterKriteria}>
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue placeholder="Filter by Kriteria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Kriteria</SelectItem>
+                  {kriteriaData.map(kriteria => (
+                    <SelectItem key={kriteria.code} value={kriteria.code}>
+                      {kriteria.code}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>

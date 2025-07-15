@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import db from "./prisma";
 import { getUserByEmail } from "@/data/user";
-import { Role } from "./generated/prisma";
+import { Role, Status } from "./generated/prisma";
 import authConfig from "./auth-config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -63,6 +63,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.role = token.role as Role;
       }
 
+      if (token.status && session.user) {
+        session.user.status = token.status as Status;
+      }
+
       if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email as string;
@@ -81,6 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       token.name = access.user.name;
       token.email = access.email;
       token.role = access.role;
+      token.status = access.status;
 
       return token;
     },

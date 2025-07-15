@@ -6,13 +6,17 @@ import {
 } from "@/components/ui/sidebar"
 import { AppSidebar } from './_components/app-sidebar'
 import Footer from './_layouts/footer'
-import { auth } from '@/lib/auth'
+import { auth, signOut } from '@/lib/auth'
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
   if (!session?.user) {
     throw new Error("User tidak ditemukan di session.");
+  }
+
+  if (session.user.status === 'NONACTIVE') {
+    signOut();
   }
 
   return (

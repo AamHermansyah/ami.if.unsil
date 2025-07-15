@@ -18,6 +18,17 @@ export async function createAccess(input: AccessValues) {
   }
 
   try {
+    const existing = await db.access.findUnique({
+      where: { email: parsed.data.email }
+    })
+
+    if (existing) {
+      return {
+        error: true,
+        message: 'Email sudah terdaftar.'
+      }
+    }
+
     const access = await db.access.create({
       data: { ...parsed.data },
     })
@@ -98,6 +109,41 @@ export async function updateStatusAccess(status: Status, email: string) {
     return {
       success: true,
       data: updatedAccess
+    }
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message
+    }
+  }
+}
+
+export async function removeAccess(email: string) {
+  try {
+    const existing = await db.access.findUnique({
+      where: { email },
+      include: { user: true }
+    })
+
+    if (!existing) {
+      return {
+        error: true,
+        message: 'Email tidak ditemukan.'
+      }
+    }
+
+    if (existing.user) {
+      return {
+        error: true,
+        message: 'Email ini sudah pernah melakukan login.'
+      }
+    }
+
+    await db.access.delete({ where: { email } });
+
+    return {
+      success: true,
+      message: 'Email telah dihapus.'
     }
   } catch (error) {
     return {

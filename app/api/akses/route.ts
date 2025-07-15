@@ -1,29 +1,50 @@
 import { getAllEmailAccess } from "@/data/access";
-import { auth } from "@/lib/auth"
-import { NextResponse } from "next/server"
+import { auth } from "@/lib/auth";
+import { paginationSchema } from "@/lib/schemas/pagination";
+import { NextResponse } from "next/server";
+import z from "zod";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const searchParams = url.searchParams;
-  const keyword = searchParams.get('q') || '';
+  const searchParams = Object.fromEntries(url.searchParams.entries());
 
   try {
     const session = await auth();
-    if (!session || !session.user || (session.user.role !== 'AUDITOR')) {
-      return new NextResponse('Unauthorized', { status: 401 });
+    if (
+      session?.user?.role !== "AUDITOR" ||
+      session.user.status !== "ACTIVE"
+    ) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const emails = await getAllEmailAccess({
-      q: keyword
+    // Validasi dan parsing query
+    const parsed = paginationSchema.safeParse(searchParams);
+    if (!parsed.success) {
+      const tree = z.treeifyError(parsed.error);
+
+      return NextResponse.json(
+        { error: "Invalid query", details: tree.errors.join(', ') },
+        { status: 400 }
+      );
+    }
+
+    const { q = "", page, limit } = parsed.data;
+
+    const res = await getAllEmailAccess({
+      q,
+      page,
+      limit,
     });
 
-    if (emails.error) throw new Error(emails.message);
+    if (res.error) {
+      return new NextResponse(res.message, { status: 500 });
+    }
 
-    return NextResponse.json(emails.data!, {
-      status: 200
-    })
+    return NextResponse.json(res.data!, {
+      status: 200,
+    });
   } catch (error) {
-    console.log('ERROR GET ALL ACCESS API: ', error);
-    return new NextResponse('Internal Error', { status: 500 });
+    console.error("ERROR GET ALL ACCESS API: ", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

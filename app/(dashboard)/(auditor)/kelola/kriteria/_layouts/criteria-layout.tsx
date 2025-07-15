@@ -33,7 +33,7 @@ function CriteriaLayout({ user }: IProps) {
   const [criterias, setCriterias] = useState<(Criteria & { totalIndicator: number })[]>([]);
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
   const [selectedCriteria, setSelectedCriteria] = useState<Criteria | null>(null);
-  const [searching, setSearching] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
@@ -48,27 +48,30 @@ function CriteriaLayout({ user }: IProps) {
     const source = axios.CancelToken.source();
     cancelTokenSource.current = source;
 
-    setSearching(true);
+    setLoading(true);
 
     axios
       .get(`/api/kelola/kriteria`, {
         params: { q: keyword },
         cancelToken: source.token,
       })
-      .then((res) => setCriterias(res.data))
+      .then((res) => {
+        setCriterias(res.data);
+        setLoading(false);
+      })
       .catch((error) => {
-        setCriterias([]);
         if (axios.isCancel(error)) {
           console.log('Request canceled:', error.message);
         } else {
+          setCriterias([]);
+          setLoading(false);
           if (isAxiosError(error)) {
             toast.error(error.response?.data || error.message);
           } else {
             toast.error(error.message || 'Internal Error');
           }
         }
-      })
-      .finally(() => setSearching(false));
+      });
   }, []);
 
   const handleSearch = (value: string) => {
@@ -79,7 +82,6 @@ function CriteriaLayout({ user }: IProps) {
   }
 
   useEffect(() => {
-    if (!searching) setSearching(true);
     fetch(q);
   }, [q]);
 
@@ -138,7 +140,7 @@ function CriteriaLayout({ user }: IProps) {
             </TableHeader>
 
             <TableBody>
-              {!searching ? (
+              {!loading ? (
                 <>
                   {criterias.length === 0 ? (
                     <TableRow>
