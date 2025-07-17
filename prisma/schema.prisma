@@ -54,35 +54,6 @@ enum ActivityTable {
   ACCESS
 }
 
-// TABEL CRITERIA
-model Criteria {
-  id             String          @id @default(cuid())
-  code           String
-  title          String
-  indicators     Indicator[]
-  criteriaAudits CriteriaAudit[]
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  createdBy     String?
-  createdByUser User?    @relation("CriteriaCreatedBy", fields: [createdBy], references: [id])
-}
-
-// TABEL INDICATOR
-model Indicator {
-  id              String           @id @default(cuid())
-  code            String
-  title           String
-  criteriaId      String
-  criteria        Criteria         @relation(fields: [criteriaId], references: [id])
-  indicatorAudits IndicatorAudit[]
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  createdBy     String?
-  createdByUser User?    @relation("IndicatorCreatedBy", fields: [createdBy], references: [id])
-}
-
 // TABEL ACCESS
 model Access {
   id     String  @id @default(cuid())
@@ -120,12 +91,54 @@ model User {
   activities            UserActivityLog[]
 }
 
+// TABEL PERIODE
+model Period {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  startDate       DateTime
+  endDate         DateTime
+  status          Status
+  criteriaAudits  CriteriaAudit[]
+  indicatorAudits IndicatorAudit[]
+  createdAt       DateTime         @default(now())
+}
+
+// TABEL CRITERIA
+model Criteria {
+  id             String          @id @default(cuid())
+  code           String
+  title          String
+  indicators     Indicator[]
+  criteriaAudits CriteriaAudit[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String?
+  createdByUser User?    @relation("CriteriaCreatedBy", fields: [createdBy], references: [id])
+}
+
+// TABEL INDICATOR
+model Indicator {
+  id              String           @id @default(cuid())
+  code            String
+  title           String
+  criteriaId      String
+  criteria        Criteria         @relation(fields: [criteriaId], references: [id])
+  indicatorAudits IndicatorAudit[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String?
+  createdByUser User?    @relation("IndicatorCreatedBy", fields: [createdBy], references: [id])
+}
+
 // TABEL CRITERIA AUDIT
 model CriteriaAudit {
   id               String           @id @default(cuid())
   totalAchievement Int              @default(0)
   idealCondition   Int              @default(0)
-  period           String           @unique
+  periodId         String
+  period           Period           @relation(fields: [periodId], references: [id])
   criteriaId       String
   criteria         Criteria         @relation(fields: [criteriaId], references: [id])
   indicatorAudits  IndicatorAudit[]
@@ -150,13 +163,15 @@ model IndicatorAudit {
   recomendation    String?
   criteriaAuditId  String
   criteriaAudit    CriteriaAudit     @relation(fields: [criteriaAuditId], references: [id])
+  indicatorId      String
+  Indicator        Indicator         @relation(fields: [indicatorId], references: [id])
+  periodId         String
+  period           Period            @relation(fields: [periodId], references: [id])
 
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   createdBy     String?
-  createdByUser User?      @relation("IndicatorAuditCreatedBy", fields: [createdBy], references: [id])
-  Indicator     Indicator? @relation(fields: [indicatorId], references: [id])
-  indicatorId   String?
+  createdByUser User?    @relation("IndicatorAuditCreatedBy", fields: [createdBy], references: [id])
 }
 
 model UserActivityLog {

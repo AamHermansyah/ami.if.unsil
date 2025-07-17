@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const paginationSchema = z.object({
-  q: z.string().optional(),
+  q: z.string().trim().optional(),
   page: z
     .string()
     .optional()

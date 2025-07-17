@@ -15,35 +15,38 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BarsLoader } from '@/components/core/loader';
-import { removeAccess } from '@/actions/access';
 import { toast } from 'sonner';
+import { Period } from '@/lib/generated/prisma';
+import { removePeriod } from '@/actions/period';
 
 interface IProps {
-  email: string;
+  data: Period | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onDeleteSuccess: (email: string) => void;
+  onDeleteSuccess: (id: string) => void;
 }
 
-export default function DeleteAccessDialog({ email, onOpenChange, open, onDeleteSuccess }: IProps) {
+export default function DeletePeriodDialog({ data, onOpenChange, open, onDeleteSuccess }: IProps) {
   const id = useId();
   const [inputValue, setInputValue] = useState('');
   const [loading, startAction] = useTransition();
 
   const handleDelete = () => {
-    startAction(() => {
-      removeAccess(email)
-        .then((res) => {
-          if (res.success) {
-            toast.warning(res.message);
-            onDeleteSuccess(email);
-            onOpenChange(false);
-          } else {
-            toast.error(res.message);
-          }
-        })
-        .catch((err) => toast.error((err as Error).message))
-    })
+    if (data) {
+      startAction(() => {
+        removePeriod(data.id)
+          .then((res) => {
+            if (res.success) {
+              toast.warning(res.message);
+              onDeleteSuccess(data.id);
+              onOpenChange(false);
+            } else {
+              toast.error(res.message);
+            }
+          })
+          .catch((err) => toast.error((err as Error).message))
+      })
+    }
   }
 
   return (
@@ -63,18 +66,18 @@ export default function DeleteAccessDialog({ email, onOpenChange, open, onDelete
               Peringatan Konfirmasi
             </DialogTitle>
             <DialogDescription className="sm:text-center">
-              Akses email bisa dihapus hanya ketika <span className="text-primary dark:text-secondary">{email}</span> belum pernah login ke website.
+              Periode bisa dihapus hanya ketika periode <span className="text-primary dark:text-secondary">&quot;{data?.name}&quot;</span> belum dilakukan proses audit.
             </DialogDescription>
           </DialogHeader>
         </div>
 
         <form className="space-y-5">
           <div className="*:not-first:mt-2">
-            <Label htmlFor={id}>Email</Label>
+            <Label htmlFor={id}>Nama Periode</Label>
             <Input
               id={id}
               type="text"
-              placeholder={`Tulis "${email}" untuk konfirmasi`}
+              placeholder={`Tulis "${data?.name}" untuk konfirmasi`}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
@@ -89,7 +92,7 @@ export default function DeleteAccessDialog({ email, onOpenChange, open, onDelete
               type="button"
               variant="destructive"
               className="flex-1"
-              disabled={loading || (inputValue !== email)}
+              disabled={loading || (inputValue !== data?.name)}
               onClick={handleDelete}
             >
               {loading && <BarsLoader className="h-4 w-auto" />}

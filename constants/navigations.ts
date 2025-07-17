@@ -7,6 +7,7 @@ import {
   AiOutlineAppstore,
   AiFillLock,
   AiOutlineForm,
+  AiFillCalendar,
 } from "react-icons/ai";
 import { IconType } from "react-icons/lib";
 
@@ -65,6 +66,11 @@ export const navigations: NavigationRole = {
           title: "Indikator",
           url: "/kelola/indikator",
           icon: AiOutlineFileText,
+        },
+        {
+          title: "Periode",
+          url: "/kelola/periode",
+          icon: AiFillCalendar,
         },
       ],
     },

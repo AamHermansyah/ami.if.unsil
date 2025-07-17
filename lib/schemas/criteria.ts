@@ -3,9 +3,11 @@ import z from 'zod'
 export const criteriaSchema = z.object({
   title: z
     .string()
+    .trim()
     .min(10, { message: 'Kriteria minimal 10 karakter' }),
   code: z
     .string()
+    .trim()
     .length(3, { message: 'Kode harus tepat 3 huruf' })
     .regex(/^[A-Za-z]{3}$/, { message: 'Kode hanya boleh berisi huruf tanpa angka' }),
 })

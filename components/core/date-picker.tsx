@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
 import { format } from "date-fns"
+import { id as idn } from 'date-fns/locale';
 import { CalendarIcon } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -13,13 +12,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-interface IProps {
+interface DatePickerProps {
   id?: string;
+  value?: Date;
+  onChange?: (date: Date | undefined) => void;
+  disabled?: boolean;
 }
 
-export default function DatePicker({ id }: IProps) {
-  const [date, setDate] = useState<Date | undefined>()
-
+export default function DatePicker({ id, value, onChange, disabled }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -27,11 +27,10 @@ export default function DatePicker({ id }: IProps) {
           id={id}
           variant={"outline"}
           className="group shadow-xs bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
+          disabled={disabled}
         >
-          <span
-            className={cn("truncate", !date && "text-muted-foreground")}
-          >
-            {date ? format(date, "PPP") : "Pick a date"}
+          <span className={cn("truncate", !value && "text-muted-foreground")}>
+            {value ? format(value, "PPP", { locale: idn }) : "Pick a date"}
           </span>
           <CalendarIcon
             size={16}
@@ -41,7 +40,12 @@ export default function DatePicker({ id }: IProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-2" align="start">
-        <Calendar mode="single" selected={date} onSelect={setDate} />
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={onChange}
+          captionLayout="dropdown"
+        />
       </PopoverContent>
     </Popover>
   )

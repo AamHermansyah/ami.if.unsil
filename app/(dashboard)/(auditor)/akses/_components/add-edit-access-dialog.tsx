@@ -96,14 +96,7 @@ function AddEditAccessDialog({
   }, [type]);
 
   return (
-    <AlertDialog open={open} onOpenChange={(open) => {
-      if (!open) {
-        setTimeout(() => {
-          form.reset();
-        }, 200);
-      };
-      onOpenChange(open);
-    }}>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4" />
