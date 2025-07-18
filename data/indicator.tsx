@@ -7,12 +7,12 @@ interface ConfigGet {
   q?: string;
   limit?: number;
   page?: number;
+  criteriaId?: string;
 }
 
 export async function getAllIndicators(config?: ConfigGet) {
-  const { q, limit = 10, page = 1 } = config || {};
+  const { q, limit = 10, page = 1, criteriaId } = config || {};
 
-  // Gunakan type Prisma.IndicatorWhereInput agar aman
   const whereClause: Prisma.IndicatorWhereInput = {
     ...(q && {
       OR: [
@@ -20,6 +20,7 @@ export async function getAllIndicators(config?: ConfigGet) {
         { title: { contains: q, mode: 'insensitive' } },
       ],
     }),
+    ...(criteriaId && { criteriaId }),
   };
 
   try {
@@ -29,6 +30,7 @@ export async function getAllIndicators(config?: ConfigGet) {
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
+        include: { criteria: true }
       }),
       db.indicator.count({
         where: Object.keys(whereClause).length > 0 ? whereClause : undefined,

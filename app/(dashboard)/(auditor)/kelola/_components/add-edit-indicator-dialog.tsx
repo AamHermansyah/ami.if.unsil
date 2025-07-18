@@ -1,4 +1,4 @@
-import React, { useState, useTransition } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import {
   Select,
   SelectContent,
@@ -97,6 +97,16 @@ function AddEditIndicatorDialog({
     })
   };
 
+  useEffect(() => {
+    if (type === 'edit' && selectedIndicator) {
+      const [, letter, number] = selectedIndicator.code.split('/');
+      form.setValue('codeLetter', letter as 'T' | 'U');
+      form.setValue('codeNumber', number);
+      form.setValue('description', selectedIndicator.title);
+      form.setValue('criteriaId', selectedIndicator.criteriaId);
+    }
+  }, [type]);
+
   return (
     <AlertDialog open={open} onOpenChange={(open) => {
       if (!open) {
@@ -126,7 +136,11 @@ function AddEditIndicatorDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Kriteria</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={type === 'edit'}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih kriteria" />
@@ -174,7 +188,6 @@ function AddEditIndicatorDialog({
                       <FormControl>
                         <Input
                           placeholder="Masukkan angka"
-                          disabled={type === 'edit'}
                           {...field}
                         />
                       </FormControl>

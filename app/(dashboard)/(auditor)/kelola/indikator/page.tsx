@@ -15,7 +15,7 @@ async function IndicatorManagementPage() {
 
   return (
     <IndicatorLayout
-      criterias={criterias.data!}
+      data={criterias.data!}
       user={session.user}
     />
   )

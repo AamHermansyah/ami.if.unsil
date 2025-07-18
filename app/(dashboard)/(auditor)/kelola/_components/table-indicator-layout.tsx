@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import {
-  Edit,
-  Trash2,
-  Search,
-} from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -22,168 +22,116 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Criteria, Indicator } from '@/lib/generated/prisma';
+import { useRouter, useSearchParams } from 'next/navigation';
+import axios, { CancelTokenSource, isAxiosError } from 'axios';
+import { toast } from 'sonner';
+import InputSearch from '@/components/shared/input-search';
+import { Pagination } from '@/components/ui/pagination';
+import { BarsLoader } from '@/components/core/loader';
+import { MoreVertical, Pencil, Plus, Trash } from 'lucide-react';
 
-interface KriteriaData {
-  id: string;
-  kriteria: string;
-  capaian: number;
-  kondisiIdeal: number;
-  code: string;
+interface IProps {
+  criterias: Criteria[];
+  onClickEdit: (data: Indicator) => void;
 }
 
-interface IndikatorData {
-  id: string;
-  kodeIndikator: string;
-  namaIndikator: string;
-  kodeKriteria: string;
+type IndicatorType = Indicator & {
+  criteria: Criteria;
 }
 
-const kriteriaData: KriteriaData[] = [
-  {
-    id: '1',
-    kriteria: 'Kurikulum Program Studi',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K001'
-  },
-  {
-    id: '2',
-    kriteria: 'Dosen dan Tenaga Kependidikan',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K002'
-  },
-  {
-    id: '3',
-    kriteria: 'Mahasiswa dan Lulusan',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K003'
-  },
-  {
-    id: '4',
-    kriteria: 'Sarana dan Prasarana',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K004'
-  },
-  {
-    id: '5',
-    kriteria: 'Pembiayaan',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K005'
-  }
-];
-
-const indikatorData: IndikatorData[] = [
-  {
-    id: '1',
-    kodeIndikator: 'I001',
-    namaIndikator: 'Kesesuaian Kurikulum dengan Standar Kompetensi',
-    kodeKriteria: 'K001',
-  },
-  {
-    id: '2',
-    kodeIndikator: 'I002',
-    namaIndikator: 'Pemutakhiran Kurikulum Secara Berkala',
-    kodeKriteria: 'K001',
-  },
-  {
-    id: '3',
-    kodeIndikator: 'I003',
-    namaIndikator: 'Relevansi Kurikulum dengan Kebutuhan Industri',
-    kodeKriteria: 'K001',
-  },
-  {
-    id: '4',
-    kodeIndikator: 'I004',
-    namaIndikator: 'Kualifikasi Akademik Dosen',
-    kodeKriteria: 'K002',
-  },
-  {
-    id: '5',
-    kodeIndikator: 'I005',
-    namaIndikator: 'Rasio Dosen terhadap Mahasiswa',
-    kodeKriteria: 'K002',
-  },
-  {
-    id: '6',
-    kodeIndikator: 'I006',
-    namaIndikator: 'Kompetensi Tenaga Kependidikan',
-    kodeKriteria: 'K002',
-  },
-  {
-    id: '7',
-    kodeIndikator: 'I007',
-    namaIndikator: 'Tingkat Kelulusan Tepat Waktu',
-    kodeKriteria: 'K003',
-  },
-  {
-    id: '8',
-    kodeIndikator: 'I008',
-    namaIndikator: 'Prestasi Akademik Mahasiswa',
-    kodeKriteria: 'K003',
-  },
-  {
-    id: '9',
-    kodeIndikator: 'I009',
-    namaIndikator: 'Ketersediaan Laboratorium Komputer',
-    kodeKriteria: 'K004',
-  },
-  {
-    id: '10',
-    kodeIndikator: 'I010',
-    namaIndikator: 'Kondisi Perangkat Keras dan Lunak',
-    kodeKriteria: 'K004',
-  },
-  {
-    id: '11',
-    kodeIndikator: 'I011',
-    namaIndikator: 'Alokasi Anggaran Operasional',
-    kodeKriteria: 'K005',
-  },
-  {
-    id: '12',
-    kodeIndikator: 'I012',
-    namaIndikator: 'Transparansi Pengelolaan Keuangan',
-    kodeKriteria: 'K005',
-  }
-];
-
-function TableIndicatorLayout() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterKriteria, setFilterKriteria] = useState('');
-
-  const filteredData = indikatorData.filter(item => {
-    const matchesSearch = item.namaIndikator.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.kodeIndikator.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterKriteria === '' || item.kodeKriteria === filterKriteria;
-    return matchesSearch && matchesFilter;
+function TableIndicatorLayout({ criterias, onClickEdit }: IProps) {
+  const [data, setData] = useState<IndicatorType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 0,
+    limit: 10,
+    totalPages: 0,
   });
+
+  const searchParams = useSearchParams();
+  const q = searchParams.get('q') || '';
+  const page = searchParams.get('page') || '1';
+  const criteriaId = searchParams.get('criteriaId') || '';
+  const navigate = useRouter();
+  const cancelTokenSource = useRef<CancelTokenSource | null>(null);
+
+  const fetch = useCallback((q: string, page: string, criteriaId: string) => {
+    if (cancelTokenSource.current) {
+      cancelTokenSource.current.cancel('Operation canceled due to new request.');
+    }
+
+    const source = axios.CancelToken.source();
+    cancelTokenSource.current = source;
+
+    setLoading(true);
+
+    axios
+      .get(`/api/kelola/indikator`, {
+        params: {
+          q,
+          page,
+          limit: pagination.limit,
+          criteriaId: criteriaId || undefined
+        },
+        cancelToken: source.token,
+      })
+      .then((res) => {
+        const { items, ...pagination } = res.data
+        setData(items);
+        setPagination(pagination);
+        setLoading(false)
+      })
+      .catch((error) => {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          setData([]);
+          setLoading(false)
+          if (isAxiosError(error)) {
+            toast.error(error.response?.data || error.message);
+          } else {
+            toast.error(error.message || 'Internal Error');
+          }
+        }
+      });
+  }, []);
+
+  const handleSearch = (value: string) => {
+    value = value.trim();
+    if (q !== value) {
+      navigate.push(`?q=${value}&criteriaId=${criteriaId}`);
+    }
+  }
+
+  useEffect(() => {
+    fetch(q, page, criteriaId);
+  }, [q, page, criteriaId]);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-col sm:flex-row gap-4 flex-1">
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" />
-            <Input
-              placeholder="Cari indikator atau kode..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Select value={filterKriteria} onValueChange={setFilterKriteria}>
+          <InputSearch
+            defaultValue={q}
+            placeholder="Cari indikator atau kode..."
+            onChange={handleSearch}
+          />
+          <Select
+            defaultValue={criteriaId}
+            onValueChange={(value) => {
+              navigate.push(`?q=${q}${value !== 'all' ? `&criteriaId=${value}` : ''}`);
+            }}
+          >
             <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder="Filter by Kriteria" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Semua Kriteria</SelectItem>
-              {kriteriaData.map(kriteria => (
-                <SelectItem key={kriteria.code} value={kriteria.code}>
-                  {kriteria.code}
+              {criterias.map(item => (
+                <SelectItem key={item.code} value={item.id}>
+                  {item.code}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -198,57 +146,85 @@ function TableIndicatorLayout() {
               <TableHead className="w-32">Kode Indikator</TableHead>
               <TableHead className="w-32">Kode Kriteria</TableHead>
               <TableHead className="min-w-64">Nama Kriteria</TableHead>
-              <TableHead className="w-24">Aksi</TableHead>
+              <TableHead className="min-w-24 text-center">Aksi</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {filteredData.length === 0 ? (
+            {!loading ? (
+              <>
+                {data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8">
+                      {q.length > 0 ? "Data tidak ditemukan" : "Belum ada data indikator"}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  data.map((item, index) => (
+                    <TableRow key={item.id} className="transition-colors">
+                      <TableCell className="text-sm font-medium">{index + 1}</TableCell>
+                      <TableCell>
+                        <code className="px-2 py-1 rounded text-sm font-mono">
+                          {item.code}
+                        </code>
+                      </TableCell>
+                      <TableCell>
+                        <code className="px-2 py-1 rounded text-sm font-mono">
+                          {item.criteria.code}
+                        </code>
+                      </TableCell>
+                      <TableCell>
+                        <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                          <div dangerouslySetInnerHTML={{ __html: item.title }} />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col items-center justify-center">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => onClickEdit(item)}>
+                                <Pencil className="w-4 h-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Plus className="w-4 h-4" />
+                                Tambah ke Audit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Trash className="w-4 h-4" />
+                                Hapus
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </>
+            ) : (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-sm">
-                  {searchTerm || filterKriteria
-                    ? "Data tidak ditemukan"
-                    : "Belum ada data indikator"}
+                <TableCell colSpan={5} className="text-center py-8">
+                  <BarsLoader fontSize={20} className="mx-auto" />
                 </TableCell>
               </TableRow>
-            ) : (
-              filteredData.map((item, index) => (
-                <TableRow key={item.id} className="transition-colors">
-                  <TableCell className="text-sm font-medium">{index + 1}</TableCell>
-                  <TableCell>
-                    <code className="px-2 py-1 rounded text-sm font-mono">
-                      {item.kodeIndikator}
-                    </code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="px-2 py-1 rounded text-sm font-mono">
-                      {item.kodeKriteria}
-                    </code>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm">{item.namaIndikator}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
             )}
           </TableBody>
         </Table>
+        {pagination.totalPages > 1 && (
+          <div className="w-full flex justify-end">
+            <Pagination
+              className="w-max mx-0"
+              page={pagination.page}
+              pages={pagination.totalPages}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   )

@@ -32,14 +32,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const { q, page, limit, role } = parsed.data;
-
-    const res = await getAllEmailAccess({
-      q,
-      page,
-      limit,
-      role
-    });
+    const res = await getAllEmailAccess({ ...parsed.data });
 
     if (res.error) {
       return new NextResponse(res.message, { status: 500 });

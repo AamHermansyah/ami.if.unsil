@@ -117,7 +117,7 @@ function RichTextEditor({ id, placeholder, value = '', onValueChange }: IProps) 
       <EditorContent
         id={id}
         editor={editor}
-        className="min-h-[150px] p-4 bg-card prose dark:prose-invert max-w-none"
+        className="min-h-[150px] p-4 bg-card max-w-none"
       />
     </div>
   );

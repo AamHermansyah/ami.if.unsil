@@ -35,8 +35,12 @@ interface IProps {
 }
 
 export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & IProps) {
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
   const pathname = usePathname();
+
+  const handleClick = () => {
+    if (isMobile) setOpenMobile(false);
+  }
 
   return (
     <Sidebar collapsible="icon" {...props} className="z-[11]">
@@ -70,7 +74,11 @@ export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sideb
                   if (!item.children) {
                     const isActive = (pathname === '/' && item.url === '/') || (item.url !== '/' && pathname.includes(item.url!));
                     return (
-                      <Link key={item.title} href={item.url || ''}>
+                      <Link
+                        key={item.title}
+                        href={item.url || ''}
+                        onClick={handleClick}
+                      >
                         <SidebarMenuButton
                           variant="primary"
                           tooltip={item.title}
@@ -112,7 +120,7 @@ export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sideb
                               return (
                                 <SidebarMenuSubItem key={subItem.title}>
                                   <SidebarMenuSubButton isActive={isActive || pathname === item.parentPath} asChild>
-                                    <Link href={subItem.url || ''}>
+                                    <Link href={subItem.url || ''} onClick={handleClick}>
                                       {subItem.icon && <subItem.icon />}
                                       <span>{subItem.title}</span>
                                     </Link>

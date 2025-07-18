@@ -229,11 +229,13 @@ export default function PeriodLayout({ lastData }: IProps) {
           };
           setAddEditDialog(open);
         }}
-        onAddSuccess={(data) => {
-          setData((prev) => {
-            if (prev.length === 0) setLastPeriod(data);
-            return [data, ...prev]
-          });
+        onAddSuccess={(item) => {
+          if (!page || (page === '1')) {
+            setData((prev) => {
+              if (prev.length === 0) setLastPeriod(item);
+              return [item, ...prev]
+            });
+          } else navigate.push('?page=1');
         }}
         onEditSuccess={(data) => {
           setData((prev) => {

@@ -13,11 +13,12 @@ const GroupedIndicatorLayout = dynamic(() => import('../../_components/grouped-i
 const TableIndicatorLayout = dynamic(() => import('../../_components/table-indicator-layout'))
 
 interface IProps {
-  criterias: (Criteria & { totalIndicator: number })[];
+  data: (Criteria & { totalIndicator: number })[];
   user: Session['user'];
 }
 
-function IndicatorLayout({ criterias, user }: IProps) {
+function IndicatorLayout({ data, user }: IProps) {
+  const [criterias, setCriterias] = useState(data);
   const [viewMode, setViewMode] = useState<'table' | 'grouped'>('grouped');
   const [addEditDialog, setAddEditDialog] = useState(false);
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
@@ -41,7 +42,7 @@ function IndicatorLayout({ criterias, user }: IProps) {
             className="rounded-md"
           >
             <Group className="h-4 w-4" />
-            Grouped
+            Grup
           </Button>
           <Button
             variant={viewMode === 'table' ? 'default' : 'ghost'}
@@ -50,7 +51,7 @@ function IndicatorLayout({ criterias, user }: IProps) {
             className="rounded-md"
           >
             <Table2 className="h-4 w-4" />
-            Table
+            Tabel
           </Button>
         </div>
         <AddEditIndicatorDialog
@@ -66,7 +67,13 @@ function IndicatorLayout({ criterias, user }: IProps) {
             };
             setAddEditDialog(open);
           }}
-          onAddSuccess={() => null}
+          onAddSuccess={(item) => {
+            setCriterias((prev) => {
+              return prev.map((criteria) => {
+                return criteria.id === item.criteriaId ? { ...criteria, totalIndicator: criteria.totalIndicator + 1 } : criteria;
+              });
+            });
+          }}
           onEditSuccess={() => null}
           type={typeAction}
           selectedIndicator={selectedIndicator}
@@ -75,9 +82,23 @@ function IndicatorLayout({ criterias, user }: IProps) {
 
       {/* Content */}
       {viewMode === 'grouped' ? (
-        <GroupedIndicatorLayout data={criterias} />
+        <GroupedIndicatorLayout
+          data={criterias}
+          onClickEdit={(data) => {
+            setTypeAction('edit');
+            setSelectedIndicator(data);
+            setAddEditDialog(true);
+          }}
+        />
       ) : (
-        <TableIndicatorLayout />
+        <TableIndicatorLayout
+          criterias={criterias}
+          onClickEdit={(data) => {
+            setTypeAction('edit');
+            setSelectedIndicator(data);
+            setAddEditDialog(true);
+          }}
+        />
       )}
     </div>
   );

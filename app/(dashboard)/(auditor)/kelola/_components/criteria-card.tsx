@@ -5,7 +5,9 @@ import {
   Target,
   MoreVertical,
   Pencil,
-  Delete
+  Delete,
+  RefreshCcw,
+  Plus
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -23,12 +25,12 @@ import { toast } from 'sonner';
 
 interface IProps {
   item: Criteria & { totalIndicator: number };
+  onClickEdit: (data: Indicator) => void;
 }
 
-function CriteriaCard({ item }: IProps) {
+function CriteriaCard({ item, onClickEdit }: IProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [itHasOpen, setItHasOpen] = useState(false);
   const [data, setData] = useState<Indicator[]>([]);
 
   const fetch = useCallback(() => {
@@ -49,44 +51,81 @@ function CriteriaCard({ item }: IProps) {
   }, []);
 
   useEffect(() => {
-    if (itHasOpen) {
+    if (isExpanded) {
       fetch();
     }
-  }, [itHasOpen]);
+  }, [isExpanded]);
 
   return (
     <Card>
-      <CardHeader
-        className="cursor-pointer"
-        onClick={() => {
-          if (!itHasOpen) setItHasOpen(true);
-          setIsExpanded((prev) => !prev);
-        }}
-      >
+      <CardHeader>
         <div className="w-full flex sm:items-center justify-between gap-y-2">
           <div className="flex-1 flex items-center space-x-4">
-            {isExpanded ? (
-              <ChevronDown className="h-5 w-5 text-primary dark:text-secondary" />
-            ) : (
-              <ChevronRight className="h-5 w-5 text-primary dark:text-secondary" />
-            )}
+            <button
+              onClick={() => setIsExpanded((prev) => !prev)}
+              className="cursor-pointer focus:outline-none"
+            >
+              {isExpanded ? (
+                <ChevronDown className="h-5 w-5 text-primary dark:text-secondary" />
+              ) : (
+                <ChevronRight className="h-5 w-5 text-primary dark:text-secondary" />
+              )}
+            </button>
             <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-x-3 gap-y-2">
               <div className="flex items-center justify-between">
                 <code className="bg-primary w-max text-primary-foreground px-2 py-1 rounded-full text-xs sm:text-sm font-mono">
                   {item.code}
                 </code>
-                <Badge variant="outline" className="sm:hidden">
-                  {item.totalIndicator} Indikator
-                </Badge>
+                <div className="flex items-center gap-3 sm:hidden">
+                  <Badge variant="outline">
+                    {item.totalIndicator} Indikator
+                  </Badge>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={fetch}>
+                        <RefreshCcw className="w-4 h-4" />
+                        Refresh
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Plus className="w-4 h-4" />
+                        Tambah ke Audit (Semua)
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
               <h3 className="flex-1 sm:text-lg font-semibold">
                 {item.title}
               </h3>
             </div>
           </div>
-          <Badge variant="outline" className="hidden sm:inline-flex">
-            {item.totalIndicator} Indikator
-          </Badge>
+          <div className="hidden sm:flex items-center gap-3">
+            <Badge variant="outline" className="hidden sm:inline-flex">
+              {item.totalIndicator} Indikator
+            </Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={fetch}>
+                  <RefreshCcw className="w-4 h-4" />
+                  Refresh
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Plus className="w-4 h-4" />
+                  Tambah ke Audit (Semua)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </CardHeader>
       {isExpanded && (
@@ -101,7 +140,7 @@ function CriteriaCard({ item }: IProps) {
               ) : data.map((item) => (
                 <div
                   key={item.id}
-                  className="w-full flex gap-3 items-center justify-between p-4 border rounded-md"
+                  className="w-full flex gap-3 items-start justify-between p-4 border rounded-md"
                 >
                   <div className="flex-1 flex items-start space-x-4">
                     <div className="hidden sm:block bg-foreground p-2 rounded-lg border border-gray-200">
@@ -125,13 +164,17 @@ function CriteriaCard({ item }: IProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onClickEdit(item)}>
                         <Pencil className="w-4 h-4" />
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Delete className="w-4 h-4" />
                         Hapus
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Plus className="w-4 h-4" />
+                        Tambah ke Audit
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

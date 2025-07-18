@@ -184,7 +184,10 @@ function AccessLayout({ user }: IProps) {
                 };
                 setAddEditDialog(open);
               }}
-              onAddSuccess={(data) => setData((prev) => [data, ...prev])}
+              onAddSuccess={(data) => {
+                if (!page || (page === '1')) setData((prev) => [data, ...prev]);
+                else navigate.push('?page=1');
+              }}
               onEditSuccess={(data) => {
                 setData((prev) => {
                   return prev.map((item) => item.id === data.id ? data : item)
