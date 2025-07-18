@@ -1,13 +1,4 @@
-import React from 'react'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import React, { useState, useTransition } from 'react'
 import {
   Select,
   SelectContent,
@@ -15,114 +6,219 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from '@/components/ui/button';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Plus } from 'lucide-react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Criteria, Indicator } from '@/lib/generated/prisma';
+import { indicatorSchema, IndicatorValues } from '@/lib/schemas/indicator';
+import RichTextEditor from '@/components/core/richtext-editor';
+import { FormError } from '@/components/shared/form-error';
+import { AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { BarsLoader } from '@/components/core/loader';
+import { AlertDialog } from '@radix-ui/react-alert-dialog';
+import { createIndicator } from '@/actions/indicator';
+import { toast } from 'sonner';
 
-const kriteriaData = [
-  {
-    id: '1',
-    kriteria: 'Kurikulum Program Studi',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K001'
-  },
-  {
-    id: '2',
-    kriteria: 'Dosen dan Tenaga Kependidikan',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K002'
-  },
-  {
-    id: '3',
-    kriteria: 'Mahasiswa dan Lulusan',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K003'
-  },
-  {
-    id: '4',
-    kriteria: 'Sarana dan Prasarana',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K004'
-  },
-  {
-    id: '5',
-    kriteria: 'Pembiayaan',
-    capaian: 0,
-    kondisiIdeal: 100,
-    code: 'K005'
-  }
-]
+interface IProps {
+  userId?: string;
+  criterias: Criteria[];
+  onAddSuccess: (data: Indicator) => void;
+  onEditSuccess: (data: Indicator) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  type: 'edit' | 'add';
+  selectedIndicator: Indicator | null;
+}
 
-function AddEditIndicatorDialog() {
+function AddEditIndicatorDialog({
+  criterias,
+  onAddSuccess,
+  // onEditSuccess,
+  onOpenChange,
+  open,
+  selectedIndicator,
+  type,
+  userId
+}: IProps) {
+  const [loading, startAction] = useTransition();
+  const [error, setError] = useState('');
+
+  const form = useForm<IndicatorValues>({
+    resolver: zodResolver(indicatorSchema),
+    defaultValues: {
+      codeLetter: 'T',
+      codeNumber: '',
+      criteriaId: '',
+      description: ''
+    },
+  });
+
+  const onSubmit = (values: IndicatorValues) => {
+    if (!userId) return;
+
+    setError('');
+    startAction(() => {
+      if (type === 'add') {
+        createIndicator({ ...values, createdBy: userId })
+          .then((res) => {
+            if (res.success) {
+              onAddSuccess(res.data);
+              form.reset();
+              onOpenChange(false);
+            } else {
+              setError(res.message!);
+            }
+          })
+          .catch((err) => toast.error((err as Error).message))
+      } else if (selectedIndicator?.id) {
+        // updateAccess(values)
+        //   .then((res) => {
+        //     if (res.success) {
+        //       onEditSuccess(res.data);
+        //       form.reset();
+        //       onOpenChange(false);
+        //     } else {
+        //       setError(res.message!);
+        //     }
+        //   })
+        //   .catch((err) => toast.error((err as Error).message))
+      }
+    })
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <AlertDialog open={open} onOpenChange={(open) => {
+      if (!open) {
+        setTimeout(() => {
+          form.reset();
+        }, 200);
+      };
+      onOpenChange(open);
+    }}>
+      <AlertDialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4" />
           Tambah
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl">
-            Tambah Indikator Baru
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="kode" className="text-sm font-medium">Kode Indikator</Label>
-            <div className="w-full flex items-center gap-4">
-              <Select>
-                <SelectTrigger className="w-24">
-                  <SelectValue placeholder="Huruf" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="T">T</SelectItem>
-                  <SelectItem value="U">U</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input
-                placeholder="Masukkan angka"
-                className="flex-1"
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="kodeKriteria" className="text-sm font-medium">Kriteria</Label>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Pilih kriteria" />
-              </SelectTrigger>
-              <SelectContent>
-                {kriteriaData.map(kriteria => (
-                  <SelectItem key={kriteria.code} value={kriteria.code}>
-                    {kriteria.code} - {kriteria.kriteria}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="deskripsi" className="text-sm font-medium">Deskripsi Indikator</Label>
-            <Input
-              id="deskripsi"
-              placeholder="Masukkan deskripsi indikator"
+      </AlertDialogTrigger>
+      <AlertDialogContent className="sm:max-w-md flex flex-col max-h-[90vh]">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl">
+            {type === 'add' ? 'Tambah Indikator Baru' : 'Edit Indikator'}
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2 flex-1 overflow-y-auto">
+            <FormField
+              control={form.control}
+              name="criteriaId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kriteria</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih kriteria" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {criterias.map((item) => (
+                        <SelectItem key={item.code} value={item.id}>
+                          {item.code} - {item.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <DialogFooter>
-            <DialogClose>Batal</DialogClose>
-            <Button>
-              Simpan
-            </Button>
-          </DialogFooter>
-        </div>
-      </DialogContent>
-    </Dialog>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Kode Indikator</Label>
+              <div className="w-full flex items-center gap-4">
+                <FormField
+                  control={form.control}
+                  name="codeLetter"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-24">
+                            <SelectValue placeholder="Huruf" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="T">T</SelectItem>
+                          <SelectItem value="U">U</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="codeNumber"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input
+                          placeholder="Masukkan angka"
+                          disabled={type === 'edit'}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {form.formState.errors.codeLetter && (
+                <p className="text-destructive text-sm">{form.formState.errors.codeLetter.message}</p>
+              )}
+              {form.formState.errors.codeNumber && (
+                <p className="text-destructive text-sm">{form.formState.errors.codeNumber.message}</p>
+              )}
+            </div>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deskripsi Indikator</FormLabel>
+                  <FormControl>
+                    <RichTextEditor
+                      placeholder="Masukkan kriteria audit"
+                      id={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormError message={error} />
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+              <Button disabled={loading}>
+                {loading && <BarsLoader className="h-4 w-auto" />}
+                {type === 'add' ? 'Simpan' : 'Update'}
+              </Button>
+            </AlertDialogFooter>
+          </form>
+        </Form>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 

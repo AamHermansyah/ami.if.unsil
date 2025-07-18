@@ -52,11 +52,11 @@ export default function PeriodLayout({ lastData }: IProps) {
 
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
-  const page = searchParams.get('page');
+  const page = searchParams.get('page') || '1';
   const navigate = useRouter();
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
 
-  const fetch = useCallback((keyword: string) => {
+  const fetch = useCallback((keyword: string, page: string) => {
     if (cancelTokenSource.current) {
       cancelTokenSource.current.cancel('Operation canceled due to new request.');
     }
@@ -104,8 +104,8 @@ export default function PeriodLayout({ lastData }: IProps) {
   }
 
   useEffect(() => {
-    fetch(q);
-  }, [q]);
+    fetch(q, page);
+  }, [q, page]);
 
   return (
     <div className="space-y-4">

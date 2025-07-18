@@ -24,6 +24,17 @@ export async function createCriteria(input: CreateCriteriaInput) {
   }
 
   try {
+    const existing = await db.criteria.findUnique({
+      where: { code: parsed.data.code },
+    });
+
+    if (existing) {
+      return {
+        error: true,
+        message: `Kode '${parsed.data.code}' sudah digunakan.`,
+      };
+    }
+
     const newCriteria = await db.criteria.create({
       data: {
         title: parsed.data.title,

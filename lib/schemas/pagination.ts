@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const paginationSchema = z.object({
+export const paginationSchema = {
   q: z.string().trim().optional(),
   page: z
     .string()
@@ -16,4 +16,4 @@ export const paginationSchema = z.object({
     .refine((val) => !isNaN(val) && val > 0 && val <= 100, {
       message: "Limit harus berupa angka antara 1 hingga 100",
     }),
-});
+};

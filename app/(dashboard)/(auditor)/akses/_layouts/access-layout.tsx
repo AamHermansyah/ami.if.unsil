@@ -22,6 +22,13 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MoreVertical, Pencil, Trash, User } from 'lucide-react';
@@ -60,11 +67,12 @@ function AccessLayout({ user }: IProps) {
 
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
-  const page = searchParams.get('page');
+  const page = searchParams.get('page') || '1';
+  const role = searchParams.get('role') || 'all';
   const navigate = useRouter();
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
 
-  const fetch = useCallback((keyword: string) => {
+  const fetch = useCallback((q: string, page: string, role: string) => {
     if (cancelTokenSource.current) {
       cancelTokenSource.current.cancel('Operation canceled due to new request.');
     }
@@ -77,9 +85,10 @@ function AccessLayout({ user }: IProps) {
     axios
       .get(`/api/akses`, {
         params: {
-          q: keyword,
+          q,
+          page,
           limit: pagination.limit,
-          page: typeof page === 'string' && !isNaN(+page) ? +page : 1
+          role: role !== 'all' ? role : undefined
         },
         cancelToken: source.token,
       })
@@ -107,7 +116,7 @@ function AccessLayout({ user }: IProps) {
   const handleSearch = (value: string) => {
     value = value.trim();
     if (q !== value) {
-      navigate.push(`?q=${value}`);
+      navigate.push(`?q=${value}&role=${role}`);
     }
   }
 
@@ -132,8 +141,8 @@ function AccessLayout({ user }: IProps) {
   }
 
   useEffect(() => {
-    fetch(q);
-  }, [q]);
+    fetch(q, page, role);
+  }, [q, page, role]);
 
   return (
     <div className="space-y-4">
@@ -142,11 +151,28 @@ function AccessLayout({ user }: IProps) {
         <CardHeader className="border-b space-y-4">
           <CardTitle>Daftar Email</CardTitle>
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <InputSearch
-              defaultValue={q}
-              placeholder="Cari email..."
-              onChange={handleSearch}
-            />
+            <div className="flex gap-2">
+              <InputSearch
+                defaultValue={q}
+                placeholder="Cari email..."
+                onChange={handleSearch}
+              />
+              <Select
+                defaultValue={role}
+                onValueChange={(value) => {
+                  navigate.push(`?q=${q}&role=${value}`);
+                }}
+              >
+                <SelectTrigger className="w-26">
+                  <SelectValue placeholder="Pilih role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua</SelectItem>
+                  <SelectItem value="auditee">Auditee</SelectItem>
+                  <SelectItem value="auditor">Auditor</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <AddEditAccessDialog
               open={addEditDialog}
               onOpenChange={(open) => {

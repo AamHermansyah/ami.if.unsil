@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { EditorContent, useEditor, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Button } from '../ui/button'
 
@@ -74,18 +74,42 @@ const MenuBar: FC<{ editor: Editor | null }> = ({ editor }) => {
 interface IProps {
   id?: string;
   placeholder?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
-function RichTextEditor({ id, placeholder }: IProps) {
+function RichTextEditor({ id, placeholder, value = '', onValueChange }: IProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: placeholder,
+        placeholder,
       }),
     ],
-    content: '',
+    content: value,
   });
+
+  // Update editor content if `value` prop changes from outside
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || '', false); // false = no history update
+    }
+  }, [value, editor]);
+
+  // Emit value change to parent
+  useEffect(() => {
+    if (!editor || !onValueChange) return;
+
+    const handleUpdate = () => {
+      const html = editor.getHTML();
+      onValueChange(html);
+    };
+
+    editor.on('update', handleUpdate);
+    return () => {
+      editor.off('update', handleUpdate);
+    };
+  }, [editor, onValueChange]);
 
   return (
     <div className="rounded-lg border overflow-hidden">
@@ -96,7 +120,7 @@ function RichTextEditor({ id, placeholder }: IProps) {
         className="min-h-[150px] p-4 bg-card prose dark:prose-invert max-w-none"
       />
     </div>
-  )
+  );
 }
 
-export default RichTextEditor
+export default RichTextEditor;

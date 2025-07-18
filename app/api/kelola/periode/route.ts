@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     }
 
     // Validasi dan parsing query
-    const parsed = paginationSchema.safeParse(searchParams);
+    const parsed = z.object(paginationSchema).safeParse(searchParams);
     if (!parsed.success) {
       const tree = z.treeifyError(parsed.error);
 

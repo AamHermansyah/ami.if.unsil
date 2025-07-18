@@ -18,7 +18,11 @@ export async function GET(req: Request) {
     }
 
     // Validasi dan parsing query
-    const parsed = paginationSchema.safeParse(searchParams);
+    const parsed = z.object({
+      ...paginationSchema,
+      role: z.string().trim().optional(),
+    }).safeParse(searchParams);
+
     if (!parsed.success) {
       const tree = z.treeifyError(parsed.error);
 
@@ -28,12 +32,13 @@ export async function GET(req: Request) {
       );
     }
 
-    const { q = "", page, limit } = parsed.data;
+    const { q, page, limit, role } = parsed.data;
 
     const res = await getAllEmailAccess({
       q,
       page,
       limit,
+      role
     });
 
     if (res.error) {

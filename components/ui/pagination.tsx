@@ -7,6 +7,7 @@ import {
   ChevronRight,
   MoreHorizontal,
 } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface PaginationProps extends React.ComponentProps<"nav"> {
   page: number;
@@ -18,6 +19,15 @@ function Pagination({
   page,
   pages,
 }: PaginationProps) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const createPageHref = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+
   if (pages <= 1) return null;
 
   const renderPageNumbers = () => {
@@ -30,7 +40,7 @@ function Pagination({
         pageNumbers.push(
           <PaginationItem key={`pagination-ka-${i}`}>
             <PaginationLink
-              href={`?page=${i}`}
+              href={createPageHref(i)}
               isActive={i === page}
             >
               {i}
@@ -43,7 +53,7 @@ function Pagination({
       pageNumbers.push(
         <PaginationItem key={1}>
           <PaginationLink
-            href={`?page=${1}`}
+            href={createPageHref(1)}
             isActive={1 === page}
           >
             1
@@ -63,7 +73,7 @@ function Pagination({
         pageNumbers.push(
           <PaginationItem key={`pagination-kb-${i}`}>
             <PaginationLink
-              href={`?page=${i}`}
+              href={createPageHref(i)}
               isActive={i === page}
             >
               {i}
@@ -79,7 +89,7 @@ function Pagination({
       pageNumbers.push(
         <PaginationItem key={`pagination-kc-${pages}`}>
           <PaginationLink
-            href={`?page=${pages}`}
+            href={createPageHref(pages)}
             isActive={pages === page}
           >
             {pages}
@@ -97,7 +107,7 @@ function Pagination({
         {/* Tombol Previous */}
         <PaginationItem>
           <PaginationPrevious
-            href={`?page=${page - 1}`}
+            href={createPageHref(page - 1)}
             className={page === 1 ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
@@ -108,7 +118,7 @@ function Pagination({
         {/* Tombol Next */}
         <PaginationItem>
           <PaginationNext
-            href={`?page=${page + 1}`}
+            href={createPageHref(page + 1)}
             className={page === pages ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
