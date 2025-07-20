@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Save } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Info } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -30,12 +29,20 @@ import { EditProfileInput, EditProfileOutput, editProfileSchema } from '@/lib/sc
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import { updateUser } from '@/actions/user';
+import { Session } from 'next-auth';
+import { useRouter } from 'next/navigation';
+import { BarsLoader } from '@/components/core/loader';
+import { toast } from 'sonner';
 
 interface IProps {
   access: Access & { user: User };
+  user: Session['user'];
 }
 
-function EditProfileLayout({ access }: IProps) {
+function EditProfileLayout({ access, user: userSession }: IProps) {
+  const [loading, startAction] = useTransition();
+
   const { user } = access;
   const form = useForm<EditProfileInput>({
     resolver: zodResolver(editProfileSchema),
@@ -56,9 +63,23 @@ function EditProfileLayout({ access }: IProps) {
     },
   });
 
+  const navigate = useRouter();
+
   const onSubmit = (data: EditProfileOutput) => {
-    console.log("Form Data:", data)
-    // TODO: kirim ke backend
+    startAction(() => {
+      updateUser(data, userSession.id!)
+        .then((res) => {
+          if (res.success) {
+            navigate.push('/profil');
+            toast.info('Profil berhasil di perbarui.');
+          } else {
+            toast.error(res.message);
+          }
+        })
+        .catch((err) => {
+          toast.error((err as Error).message);
+        });
+    })
   }
 
   return (
@@ -188,9 +209,22 @@ function EditProfileLayout({ access }: IProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Agama</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Masukan agama" {...field} />
-                      </FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Pilih agama" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="islam">Islam</SelectItem>
+                          <SelectItem value="kristen">Kristen</SelectItem>
+                          <SelectItem value="katolik">Katolik</SelectItem>
+                          <SelectItem value="hindu">Hindu</SelectItem>
+                          <SelectItem value="buddha">Buddha</SelectItem>
+                          <SelectItem value="konghucu">Konghucu</SelectItem>
+                          <SelectItem value="lainnya">Lainnya</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -202,9 +236,19 @@ function EditProfileLayout({ access }: IProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Kewarganegaraan</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Masukan kewarganegaraan" {...field} />
-                      </FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Pilih kewarganegaraan" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="indonesia">Indonesia</SelectItem>
+                          <SelectItem value="malaysia">Malaysia</SelectItem>
+                          <SelectItem value="singapore">Singapura</SelectItem>
+                          <SelectItem value="lainnya">Lainnya</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -291,8 +335,8 @@ function EditProfileLayout({ access }: IProps) {
                 />
 
                 <div className="md:col-span-2 flex justify-end">
-                  <Button>
-                    <Save className="w-4 h-4" />
+                  <Button disabled={loading}>
+                    {loading && <BarsLoader className="h-4 w-auto" />}
                     Simpan
                   </Button>
                 </div>

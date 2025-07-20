@@ -111,10 +111,11 @@ model Criteria {
   indicators     Indicator[]
   criteriaAudits CriteriaAudit[]
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime? // ← Soft delete
   createdBy     String?
-  createdByUser User?    @relation("CriteriaCreatedBy", fields: [createdBy], references: [id])
+  createdByUser User?     @relation("CriteriaCreatedBy", fields: [createdBy], references: [id])
 }
 
 // TABEL INDICATOR
@@ -126,10 +127,11 @@ model Indicator {
   criteria        Criteria         @relation(fields: [criteriaId], references: [id])
   indicatorAudits IndicatorAudit[]
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime? // ← Soft delete
   createdBy     String?
-  createdByUser User?    @relation("IndicatorCreatedBy", fields: [createdBy], references: [id])
+  createdByUser User?     @relation("IndicatorCreatedBy", fields: [createdBy], references: [id])
 }
 
 // TABEL CRITERIA AUDIT

@@ -39,10 +39,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data: { userId: newUser.id }
           });
         } else if (existingUser.status === 'ACTIVE') {
-          await db.user.update({
-            where: { id: existingUser.user.id },
-            data: { image: user.image }
-          });
+          if (user.image) {
+            await db.user.update({
+              where: { id: existingUser.user.id },
+              data: { image: user.image }
+            });
+          }
         } else {
           console.error(`Login attempt failed: Email ${user.email} is not activated in the Access table.`);
           return false;

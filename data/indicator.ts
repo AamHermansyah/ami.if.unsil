@@ -14,6 +14,7 @@ export async function getAllIndicators(config?: ConfigGet) {
   const { q, limit = 10, page = 1, criteriaId } = config || {};
 
   const whereClause: Prisma.IndicatorWhereInput = {
+    deletedAt: null,
     ...(q && {
       OR: [
         { code: { contains: q, mode: 'insensitive' } },
@@ -58,15 +59,22 @@ export async function getAllIndicators(config?: ConfigGet) {
 export async function getAllIndicatorsByCriteriaCode(criteriaCode: string) {
   try {
     const criteria = await db.criteria.findUnique({
-      where: { code: criteriaCode },
-      include: { indicators: true }
+      where: { code: criteriaCode, deletedAt: null },
+      select: {
+        id: true,
+        code: true,
+        title: true,
+        indicators: {
+          where: { deletedAt: null }, // hanya ambil indikator yang belum dihapus
+        },
+      },
     });
 
     if (!criteria) {
       return {
         error: false,
-        message: 'Kriteria tidak ditemukan'
-      }
+        message: 'Kriteria tidak ditemukan',
+      };
     }
 
     return {

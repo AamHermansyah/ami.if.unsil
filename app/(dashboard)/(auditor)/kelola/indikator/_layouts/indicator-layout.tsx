@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Group, Table2 } from 'lucide-react';
@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic'
 import AddEditIndicatorDialog from '../../_components/add-edit-indicator-dialog';
 import { Criteria, Indicator } from '@/lib/generated/prisma';
 import { Session } from 'next-auth';
+import DeleteIndicatorDialog from '../../_components/delete-indicator-dialog';
 
 const GroupedIndicatorLayout = dynamic(() => import('../../_components/grouped-indicator-layout'))
 const TableIndicatorLayout = dynamic(() => import('../../_components/table-indicator-layout'))
@@ -23,6 +24,10 @@ function IndicatorLayout({ data, user }: IProps) {
   const [addEditDialog, setAddEditDialog] = useState(false);
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
   const [selectedIndicator, setSelectedIndicator] = useState<Indicator | null>(null);
+  const [lastEditedIndicator, setLastEditedIndicator] = useState<Indicator | null>(null);
+  const [lastDeletedIndicator, setLastDeletedIndicator] = useState<Indicator | null>(null);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const addIndicatorRef = useRef<((indicator: Indicator & { criteria: Criteria }) => void) | null>(null);
 
   return (
     <div className="h-full space-y-4">
@@ -68,13 +73,17 @@ function IndicatorLayout({ data, user }: IProps) {
             setAddEditDialog(open);
           }}
           onAddSuccess={(item) => {
+            if (viewMode === 'table' && addIndicatorRef.current) {
+              addIndicatorRef.current(item);
+            }
+
             setCriterias((prev) => {
               return prev.map((criteria) => {
                 return criteria.id === item.criteriaId ? { ...criteria, totalIndicator: criteria.totalIndicator + 1 } : criteria;
               });
             });
           }}
-          onEditSuccess={() => null}
+          onEditSuccess={setLastEditedIndicator}
           type={typeAction}
           selectedIndicator={selectedIndicator}
         />
@@ -84,22 +93,58 @@ function IndicatorLayout({ data, user }: IProps) {
       {viewMode === 'grouped' ? (
         <GroupedIndicatorLayout
           data={criterias}
+          lastEditedIndicator={lastEditedIndicator}
+          lastDeletedIndicator={lastDeletedIndicator}
           onClickEdit={(data) => {
             setTypeAction('edit');
             setSelectedIndicator(data);
             setAddEditDialog(true);
+          }}
+          onClickDelete={(data) => {
+            setSelectedIndicator(data);
+            setDeleteDialog(true);
           }}
         />
       ) : (
         <TableIndicatorLayout
           criterias={criterias}
+          lastEditedIndicator={lastEditedIndicator}
+          lastDeletedIndicator={lastDeletedIndicator}
+          addIndicatorCb={(cb) => {
+            addIndicatorRef.current = cb;
+          }}
           onClickEdit={(data) => {
             setTypeAction('edit');
             setSelectedIndicator(data);
             setAddEditDialog(true);
           }}
+          onClickDelete={(data) => {
+            setSelectedIndicator(data);
+            setDeleteDialog(true);
+          }}
         />
       )}
+
+      <DeleteIndicatorDialog
+        selectedIndicator={selectedIndicator}
+        open={deleteDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTimeout(() => {
+              setSelectedIndicator(null);
+            }, 200);
+          };
+          setDeleteDialog(open);
+        }}
+        onDeleteSuccess={(data) => {
+          setCriterias((prev) => {
+            return prev.map((criteria) => {
+              return criteria.id === data.criteriaId ? { ...criteria, totalIndicator: criteria.totalIndicator - 1 } : criteria;
+            });
+          });
+          setLastDeletedIndicator(data);
+        }}
+      />
     </div>
   );
 };

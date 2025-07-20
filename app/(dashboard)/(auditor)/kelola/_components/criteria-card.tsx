@@ -26,20 +26,31 @@ import { toast } from 'sonner';
 interface IProps {
   item: Criteria & { totalIndicator: number };
   onClickEdit: (data: Indicator) => void;
+  onClickDelete: (data: Indicator) => void;
+  lastEditedIndicator: Indicator | null;
+  lastDeletedIndicator: Indicator | null;
 }
 
-function CriteriaCard({ item, onClickEdit }: IProps) {
+function CriteriaCard({
+  item,
+  onClickEdit,
+  onClickDelete,
+  lastEditedIndicator,
+  lastDeletedIndicator
+}: IProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<Indicator[]>([]);
 
-  const fetch = useCallback(() => {
+  const fetch = useCallback((signal?: AbortSignal) => {
     setLoading(true);
 
     axios
-      .get(`/api/kelola/indikator/${item.code}`)
+      .get(`/api/kelola/indikator/${item.code}`, { signal })
       .then((res) => setData(res.data))
       .catch((error) => {
+        if (axios.isCancel(error)) return;
+
         setData([]);
         if (isAxiosError(error)) {
           toast.error(error.response?.data || error.message);
@@ -48,13 +59,31 @@ function CriteriaCard({ item, onClickEdit }: IProps) {
         }
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [item.code]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     if (isExpanded) {
-      fetch();
+      fetch(controller.signal);
     }
-  }, [isExpanded]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [isExpanded, fetch]);
+
+  useEffect(() => {
+    if (lastEditedIndicator) {
+      setData((prev) => prev.map((item) => item.id === lastEditedIndicator.id ? lastEditedIndicator : item));
+    }
+  }, [lastEditedIndicator]);
+
+  useEffect(() => {
+    if (!lastDeletedIndicator) return;
+
+    setData((prev) => prev.filter((item) => item.id !== lastDeletedIndicator.id));
+  }, [lastDeletedIndicator]);
 
   return (
     <Card>
@@ -87,7 +116,7 @@ function CriteriaCard({ item, onClickEdit }: IProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={fetch}>
+                      <DropdownMenuItem onClick={() => fetch()} disabled={!isExpanded}>
                         <RefreshCcw className="w-4 h-4" />
                         Refresh
                       </DropdownMenuItem>
@@ -115,7 +144,7 @@ function CriteriaCard({ item, onClickEdit }: IProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={fetch}>
+                <DropdownMenuItem onClick={() => fetch()} disabled={!isExpanded}>
                   <RefreshCcw className="w-4 h-4" />
                   Refresh
                 </DropdownMenuItem>
@@ -168,7 +197,7 @@ function CriteriaCard({ item, onClickEdit }: IProps) {
                         <Pencil className="w-4 h-4" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onClickDelete(item)}>
                         <Delete className="w-4 h-4" />
                         Hapus
                       </DropdownMenuItem>

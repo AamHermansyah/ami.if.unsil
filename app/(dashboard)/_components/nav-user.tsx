@@ -32,7 +32,7 @@ import { toast } from "sonner"
 import { logout } from "@/actions/logout"
 
 export function NavUser({ user }: { user: Session['user'] }) {
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const handleLogout = () => {
     const toastId = toast.loading('Sedang keluar...');
@@ -83,7 +83,9 @@ export function NavUser({ user }: { user: Session['user'] }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href="/profil">
+            <Link href="/profil" onClick={() => {
+              if (isMobile) setOpenMobile(false);
+            }}>
               <DropdownMenuItem>
                 <BadgeCheck />
                 Profil

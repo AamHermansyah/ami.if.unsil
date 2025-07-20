@@ -12,7 +12,7 @@ async function ProfilEditPage() {
   if (!access) return redirect('/404');
 
   return (
-    <EditProfileLayout access={access} />
+    <EditProfileLayout user={session.user} access={access} />
   )
 }
 

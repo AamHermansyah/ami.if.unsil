@@ -27,13 +27,13 @@ import { FormError } from '@/components/shared/form-error';
 import { AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { BarsLoader } from '@/components/core/loader';
 import { AlertDialog } from '@radix-ui/react-alert-dialog';
-import { createIndicator } from '@/actions/indicator';
+import { createIndicator, updateIndicator } from '@/actions/indicator';
 import { toast } from 'sonner';
 
 interface IProps {
   userId?: string;
   criterias: Criteria[];
-  onAddSuccess: (data: Indicator) => void;
+  onAddSuccess: (data: Indicator & { criteria: Criteria }) => void;
   onEditSuccess: (data: Indicator) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -44,7 +44,7 @@ interface IProps {
 function AddEditIndicatorDialog({
   criterias,
   onAddSuccess,
-  // onEditSuccess,
+  onEditSuccess,
   onOpenChange,
   open,
   selectedIndicator,
@@ -82,17 +82,17 @@ function AddEditIndicatorDialog({
           })
           .catch((err) => toast.error((err as Error).message))
       } else if (selectedIndicator?.id) {
-        // updateAccess(values)
-        //   .then((res) => {
-        //     if (res.success) {
-        //       onEditSuccess(res.data);
-        //       form.reset();
-        //       onOpenChange(false);
-        //     } else {
-        //       setError(res.message!);
-        //     }
-        //   })
-        //   .catch((err) => toast.error((err as Error).message))
+        updateIndicator({ ...values, id: selectedIndicator.id, updatedBy: userId })
+          .then((res) => {
+            if (res.success) {
+              onEditSuccess(res.data);
+              form.reset();
+              onOpenChange(false);
+            } else {
+              setError(res.message!);
+            }
+          })
+          .catch((err) => toast.error((err as Error).message))
       }
     })
   };

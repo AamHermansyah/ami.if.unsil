@@ -23,6 +23,7 @@ import axios, { CancelTokenSource, isAxiosError } from "axios";
 import { toast } from 'sonner';
 import { BarsLoader } from '@/components/core/loader';
 import { useRouter, useSearchParams } from 'next/navigation';
+import DeleteCriteriaDialog from '../../_components/delete-criteria-dialog';
 
 interface IProps {
   user: Session['user'];
@@ -34,6 +35,7 @@ function CriteriaLayout({ user }: IProps) {
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
   const [selectedCriteria, setSelectedCriteria] = useState<Criteria | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
@@ -185,6 +187,10 @@ function CriteriaLayout({ user }: IProps) {
                             <Button
                               variant="destructive"
                               size="icon"
+                              onClick={() => {
+                                setSelectedCriteria(item);
+                                setDeleteDialog(true);
+                              }}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -205,6 +211,21 @@ function CriteriaLayout({ user }: IProps) {
           </Table>
         </CardContent>
       </Card>
+      <DeleteCriteriaDialog
+        selectedCriteria={selectedCriteria}
+        open={deleteDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTimeout(() => {
+              setSelectedCriteria(null);
+            }, 200);
+          };
+          setDeleteDialog(open);
+        }}
+        onDeleteSuccess={(id) => {
+          setCriterias((prev) => prev.filter((access) => access.id !== id));
+        }}
+      />
     </div>
   );
 };

@@ -34,13 +34,24 @@ import { MoreVertical, Pencil, Plus, Trash } from 'lucide-react';
 interface IProps {
   criterias: Criteria[];
   onClickEdit: (data: Indicator) => void;
+  onClickDelete: (data: Indicator) => void;
+  lastEditedIndicator: Indicator | null;
+  lastDeletedIndicator: Indicator | null;
+  addIndicatorCb: (cb: (data: IndicatorType) => void) => void;
 }
 
 type IndicatorType = Indicator & {
   criteria: Criteria;
 }
 
-function TableIndicatorLayout({ criterias, onClickEdit }: IProps) {
+function TableIndicatorLayout({
+  criterias,
+  onClickEdit,
+  onClickDelete,
+  lastEditedIndicator,
+  lastDeletedIndicator,
+  addIndicatorCb
+}: IProps) {
   const [data, setData] = useState<IndicatorType[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -105,9 +116,36 @@ function TableIndicatorLayout({ criterias, onClickEdit }: IProps) {
     }
   }
 
+  const handleAddIndicator = (data: IndicatorType) => {
+    setData((prev) => [data, ...prev]);
+  }
+
+  addIndicatorCb(handleAddIndicator);
+
   useEffect(() => {
     fetch(q, page, criteriaId);
   }, [q, page, criteriaId]);
+
+  useEffect(() => {
+    if (!lastEditedIndicator) return;
+
+    setData((prev) =>
+      prev.map((item) =>
+        item.id === lastEditedIndicator.id
+          ? {
+            ...lastEditedIndicator,
+            criteria: item.criteria,
+          }
+          : item
+      )
+    );
+  }, [lastEditedIndicator]);
+
+  useEffect(() => {
+    if (!lastDeletedIndicator) return;
+
+    setData((prev) => prev.filter((item) => item.id !== lastDeletedIndicator.id));
+  }, [lastDeletedIndicator]);
 
   return (
     <Card>
@@ -195,7 +233,7 @@ function TableIndicatorLayout({ criterias, onClickEdit }: IProps) {
                                 <Plus className="w-4 h-4" />
                                 Tambah ke Audit
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => onClickDelete(item)}>
                                 <Trash className="w-4 h-4" />
                                 Hapus
                               </DropdownMenuItem>

@@ -39,6 +39,7 @@ export default function DeletePeriodDialog({ data, onOpenChange, open, onDeleteS
             if (res.success) {
               toast.warning(res.message);
               onDeleteSuccess(data.id);
+              setInputValue('');
               onOpenChange(false);
             } else {
               toast.error(res.message);
@@ -51,6 +52,7 @@ export default function DeletePeriodDialog({ data, onOpenChange, open, onDeleteS
 
   return (
     <Dialog open={open} onOpenChange={(open) => {
+      if (!open) setInputValue('');
       if (!loading) onOpenChange(open);
     }}>
       <DialogContent>

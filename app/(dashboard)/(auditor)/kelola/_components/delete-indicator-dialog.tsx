@@ -15,36 +15,39 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BarsLoader } from '@/components/core/loader';
-import { removeAccess } from '@/actions/access';
 import { toast } from 'sonner';
+import { Indicator } from '@/lib/generated/prisma';
+import { deleteIndicator } from '@/actions/indicator';
 
 interface IProps {
-  email: string;
+  selectedIndicator: (Indicator) | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onDeleteSuccess: (email: string) => void;
+  onDeleteSuccess: (data: Indicator) => void;
 }
 
-export default function DeleteAccessDialog({ email, onOpenChange, open, onDeleteSuccess }: IProps) {
+export default function DeleteIndicatorDialog({ selectedIndicator, onOpenChange, open, onDeleteSuccess }: IProps) {
   const id = useId();
   const [inputValue, setInputValue] = useState('');
   const [loading, startAction] = useTransition();
 
   const handleDelete = () => {
-    startAction(() => {
-      removeAccess(email)
-        .then((res) => {
-          if (res.success) {
-            toast.warning(res.message);
-            onDeleteSuccess(email);
-            setInputValue('');
-            onOpenChange(false);
-          } else {
-            toast.error(res.message);
-          }
-        })
-        .catch((err) => toast.error((err as Error).message))
-    })
+    if (selectedIndicator) {
+      startAction(() => {
+        deleteIndicator(selectedIndicator.id)
+          .then((res) => {
+            if (res.success) {
+              toast.warning(res.message);
+              onDeleteSuccess(selectedIndicator);
+              setInputValue('');
+              onOpenChange(false);
+            } else {
+              toast.error(res.message);
+            }
+          })
+          .catch((err) => toast.error((err as Error).message))
+      })
+    }
   }
 
   return (
@@ -65,18 +68,18 @@ export default function DeleteAccessDialog({ email, onOpenChange, open, onDelete
               Peringatan Konfirmasi
             </DialogTitle>
             <DialogDescription className="sm:text-center">
-              Akses email bisa dihapus hanya ketika <span className="text-primary dark:text-secondary">{email}</span> belum pernah login ke website.
+              Setelah di hapus data indikator tidak bisa di kembalikan
             </DialogDescription>
           </DialogHeader>
         </div>
 
         <form className="space-y-5">
           <div className="*:not-first:mt-2">
-            <Label htmlFor={id}>Email</Label>
+            <Label htmlFor={id}>Kode Indikator</Label>
             <Input
               id={id}
               type="text"
-              placeholder={`Tulis "${email}" untuk konfirmasi`}
+              placeholder={`Tulis "${selectedIndicator?.code}" untuk konfirmasi`}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
@@ -91,7 +94,7 @@ export default function DeleteAccessDialog({ email, onOpenChange, open, onDelete
               type="button"
               variant="destructive"
               className="flex-1"
-              disabled={loading || (inputValue !== email)}
+              disabled={loading || (inputValue !== selectedIndicator?.code)}
               onClick={handleDelete}
             >
               {loading && <BarsLoader className="h-4 w-auto" />}

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { ThemeProvider } from "@/components/shared/theme-provider";
+
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/shared/theme-provider";
 
 const inter = Plus_Jakarta_Sans({
   subsets: ["latin"],

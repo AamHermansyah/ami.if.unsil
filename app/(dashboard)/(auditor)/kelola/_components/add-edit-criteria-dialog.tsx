@@ -139,7 +139,7 @@ function AddEditCriteriaDialog({
                 <FormItem>
                   <FormLabel htmlFor="code">Kode</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukkan kode (contoh: K001)" {...field} />
+                    <Input placeholder="Masukkan kode (contoh: MHS)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

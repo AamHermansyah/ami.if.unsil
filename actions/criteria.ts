@@ -2,6 +2,7 @@
 
 import db from "@/lib/prisma"
 import { criteriaSchema, CriteriaValues } from "@/lib/schemas/criteria"
+import { randomBytes } from "crypto"
 import z from "zod"
 
 type CreateCriteriaInput = CriteriaValues & {
@@ -128,5 +129,40 @@ export async function updateCriteria(input: UpdateCriteriaInput) {
       error: true,
       message: (error as Error).message
     }
+  }
+}
+
+export async function deleteCriteria(id: string) {
+  try {
+    const existing = await db.criteria.findUnique({
+      where: { id },
+    });
+
+    if (!existing || existing.deletedAt) {
+      return {
+        error: true,
+        message: 'Kriteria tidak ditemukan.',
+      };
+    }
+
+    const randomCode = `deleted-${randomBytes(4).toString('hex')}`;
+
+    await db.criteria.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        code: randomCode
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Kriteria telah dihapus.',
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
   }
 }

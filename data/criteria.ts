@@ -7,46 +7,51 @@ interface ConfigGet {
 }
 
 export async function getAllCriteriaWithIndicatorCount(config?: ConfigGet) {
-  const { q } = config || {}
+  const { q } = config || {};
 
   try {
     const criterias = await db.criteria.findMany({
-      where: q
-        ? {
+      where: {
+        deletedAt: null,
+        ...(q && {
           OR: [
             { code: { contains: q, mode: 'insensitive' } },
-            { title: { contains: q, mode: 'insensitive' } }
-          ]
-        }
-        : undefined,
+            { title: { contains: q, mode: 'insensitive' } },
+          ],
+        }),
+      },
       include: {
         _count: {
-          select: { indicators: true }
-        }
+          select: {
+            indicators: {
+              where: { deletedAt: null }
+            }
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
-      }
-    })
+        createdAt: 'desc',
+      },
+    });
 
-    const result = criterias.map(criteria => {
+    const result = criterias.map((criteria) => {
       const { _count, ...others } = criteria;
 
       return {
         ...others,
-        totalIndicator: criteria._count.indicators
-      }
+        totalIndicator: _count.indicators,
+      };
     });
 
     return {
       success: true,
-      data: result
-    }
-
+      data: result,
+    };
   } catch (error) {
     return {
       error: true,
-      message: (error as Error).message
-    }
+      message: (error as Error).message,
+    };
   }
 }
+

@@ -65,8 +65,8 @@ async function ProfileDisplay() {
             </Button>
           </Link>
           <CardContent>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-muted-foreground/10 rounded-full -translate-y-16 translate-x-16" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-muted-foreground/10 rounded-full translate-y-12 -translate-x-12" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/50 rounded-full -translate-y-16 translate-x-16" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/50 rounded-full translate-y-12 -translate-x-12" />
             <div className="relative z-10">
               <div className="flex items-center space-x-4 mb-4">
                 <Avatar className="w-20 h-20">
@@ -206,7 +206,7 @@ async function ProfileDisplay() {
                     <Calendar className="h-5 w-5 text-primary dark:text-secondary mx-auto mb-1" />
                     <p className="text-xs text-muted-foreground">Usia</p>
                     <p className="text-sm font-semibold">
-                      {user.dateOfBirth ? `${differenceInYears(new Date(), new Date(user.dateOfBirth))}` : '-'}
+                      {user.dateOfBirth ? `${differenceInYears(new Date(), new Date(user.dateOfBirth))} Tahun` : '-'}
                     </p>
                   </div>
                   <div className="text-center p-3 border rounded-lg">
