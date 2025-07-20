@@ -34,7 +34,7 @@ export default function DeleteAccessDialog({ email, onOpenChange, open, onDelete
     startAction(() => {
       removeAccess(email)
         .then((res) => {
-          if (res.success) {
+          if ('success' in res && res.success) {
             toast.warning(res.message);
             onDeleteSuccess(email);
             setInputValue('');

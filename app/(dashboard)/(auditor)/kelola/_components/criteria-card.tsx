@@ -5,9 +5,9 @@ import {
   Target,
   MoreVertical,
   Pencil,
-  Delete,
   RefreshCcw,
-  Plus
+  Plus,
+  Trash
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -22,6 +22,9 @@ import { Criteria, Indicator } from '@/lib/generated/prisma';
 import { BarsLoader } from '@/components/core/loader';
 import axios, { isAxiosError } from 'axios';
 import { toast } from 'sonner';
+import { addIndicatorAuditToCurrentPeriod, addIndicatorsAuditByCriteria } from '@/actions/indicator-audit';
+import { BulkResultDialog } from '@/components/shared/bulk-result-dialog';
+import { BulkResult } from '@/lib/types';
 
 interface IProps {
   item: Criteria & { totalIndicator: number };
@@ -41,6 +44,53 @@ function CriteriaCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<Indicator[]>([]);
+  const [resultDialogOpen, setResultDialogOpen] = useState(false);
+  const [bulkResult, setBulkResult] = useState<BulkResult | null>(null);
+
+  const handleAddAudit = (item: Indicator) => {
+    const loadingId = toast.loading('Menambahkan data audit...');
+
+    addIndicatorAuditToCurrentPeriod(item)
+      .then((res) => {
+        toast.dismiss(loadingId);
+
+        if (res?.error) toast.error(res.message);
+        else if (res?.isExist) toast.warning(res.message);
+        else toast.success(res.message);
+      })
+      .catch((err) => {
+        toast.dismiss(loadingId);
+        toast.error((err as Error).message);
+      });
+  }
+
+  const handleBulkAdd = async () => {
+    try {
+      const loadingId = toast.loading('Menambahkan banyak data audit...');
+      const res = await addIndicatorsAuditByCriteria(item.id);
+
+      if ('success' in res && res.success) {
+        const successCount = res.results.filter(r => r.status === 'success').length;
+        const failedCount = res.results.filter(r => r.status === 'failed').length;
+        const skippedCount = res.results.filter(r => r.status === 'skipped').length;
+
+        toast.dismiss(loadingId);
+        toast.success(res.message);
+        setBulkResult({
+          success: successCount,
+          failed: failedCount,
+          skipped: skippedCount,
+          details: res.results
+        });
+        setResultDialogOpen(true);
+      } else {
+        toast.dismiss(loadingId);
+        toast.error(res.message);
+      }
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
 
   const fetch = useCallback((signal?: AbortSignal) => {
     setLoading(true);
@@ -53,7 +103,7 @@ function CriteriaCard({
 
         setData([]);
         if (isAxiosError(error)) {
-          toast.error(error.response?.data || error.message);
+          toast.error(JSON.stringify(error.response?.data) || error.message);
         } else {
           toast.error(error.message || 'Internal Error');
         }
@@ -120,7 +170,7 @@ function CriteriaCard({
                         <RefreshCcw className="w-4 h-4" />
                         Refresh
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem disabled={item.totalIndicator === 0} onClick={handleBulkAdd}>
                         <Plus className="w-4 h-4" />
                         Tambah ke Audit (Semua)
                       </DropdownMenuItem>
@@ -148,7 +198,7 @@ function CriteriaCard({
                   <RefreshCcw className="w-4 h-4" />
                   Refresh
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem disabled={item.totalIndicator === 0} onClick={handleBulkAdd}>
                   <Plus className="w-4 h-4" />
                   Tambah ke Audit (Semua)
                 </DropdownMenuItem>
@@ -197,13 +247,16 @@ function CriteriaCard({
                         <Pencil className="w-4 h-4" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => onClickDelete(item)}>
-                        <Delete className="w-4 h-4" />
-                        Hapus
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleAddAudit(item)}>
                         <Plus className="w-4 h-4" />
                         Tambah ke Audit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => onClickDelete(item)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash className="w-4 h-4 text-destructive" />
+                        Hapus
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -217,6 +270,13 @@ function CriteriaCard({
           )}
         </CardContent>
       )}
+
+      <BulkResultDialog
+        open={resultDialogOpen}
+        onOpenChange={setResultDialogOpen}
+        bulkResult={bulkResult}
+        description="Ringkasan penambahan indikator audit ke periode aktif."
+      />
     </Card>
   )
 }

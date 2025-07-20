@@ -4,14 +4,13 @@ import { getAllCriteriaWithIndicatorCount } from '@/data/criteria';
 import { auth } from '@/lib/auth';
 
 async function IndicatorManagementPage() {
-  const criterias = await getAllCriteriaWithIndicatorCount();
-  if (criterias.error) throw Error(criterias.message);
-
   const session = await auth();
-
   if (!session?.user) {
     throw new Error("User tidak ditemukan di session.");
   }
+
+  const criterias = await getAllCriteriaWithIndicatorCount();
+  if (criterias.error) throw Error(criterias.message);
 
   return (
     <IndicatorLayout

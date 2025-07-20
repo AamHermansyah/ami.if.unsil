@@ -69,7 +69,7 @@ function EditProfileLayout({ access, user: userSession }: IProps) {
     startAction(() => {
       updateUser(data, userSession.id!)
         .then((res) => {
-          if (res.success) {
+          if ('success' in res && res.success) {
             navigate.push('/profil');
             toast.info('Profil berhasil di perbarui.');
           } else {

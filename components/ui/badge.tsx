@@ -17,6 +17,8 @@ const badgeVariants = cva(
           "bg-blue-100 text-blue-800 [a&]:hover:bg-blue-100/90",
         success:
           "bg-green-100 text-green-800 [a&]:hover:bg-green-100/90",
+        warning:
+          "bg-orange-100 text-orange-800 [a&]:hover:bg-orange-100/90",
         destructive:
           "bg-red-100 text-red-800 [a&]:hover:bg-red-100/90",
         outline:

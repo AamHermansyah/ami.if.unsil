@@ -105,7 +105,7 @@ function AccessLayout({ user }: IProps) {
           setData([]);
           setLoading(false)
           if (isAxiosError(error)) {
-            toast.error(error.response?.data || error.message);
+            toast.error(JSON.stringify(error.response?.data) || error.message);
           } else {
             toast.error(error.message || 'Internal Error');
           }
@@ -125,7 +125,7 @@ function AccessLayout({ user }: IProps) {
       loading: 'Mengubah status...',
       error: (error) => error?.message || 'Internal server error',
       success: (res) => {
-        if (res.success) {
+        if ('success' in res && res.success) {
           setData((prev) => {
             return prev.map((item) => {
               if (item.email === email) return { ...item, status: value as Status };

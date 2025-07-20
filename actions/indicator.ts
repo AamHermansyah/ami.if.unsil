@@ -1,5 +1,6 @@
 'use server'
 
+import { IndicatorType } from "@/lib/generated/prisma"
 import db from "@/lib/prisma"
 import { indicatorSchema, IndicatorValues } from "@/lib/schemas/indicator"
 import { randomBytes } from "crypto"
@@ -36,8 +37,8 @@ export async function createIndicator(input: CreateIndicatorInput) {
       };
     }
 
-    const { codeLetter, codeNumber, description, criteriaId } = parsed.data
-    const code = `${criteria.code}/${codeLetter.trim()}/${codeNumber.trim()}`;
+    const { type, numberCode, description, criteriaId } = parsed.data
+    const code = `${criteria.code}/${type[0]}/${numberCode.trim()}`;
 
     const existing = await db.indicator.findUnique({
       where: { code },
@@ -56,6 +57,7 @@ export async function createIndicator(input: CreateIndicatorInput) {
         criteriaId,
         title: description,
         createdBy,
+        type: type as IndicatorType
       },
       include: { criteria: true }
     });
@@ -115,9 +117,9 @@ export async function updateIndicator(input: UpdateIndicatorInput) {
       }
     }
 
-    const { codeLetter, codeNumber, description } = parsed.data
+    const { numberCode, description, type } = parsed.data
     const criteriaCode = existing.code.split('/')[0];
-    const code = `${criteriaCode}/${codeLetter.trim()}/${codeNumber.trim()}`;
+    const code = `${criteriaCode}/${type[0]}/${numberCode.trim()}`;
 
     const othersIndicator = await db.indicator.findUnique({
       where: { code }
@@ -126,7 +128,7 @@ export async function updateIndicator(input: UpdateIndicatorInput) {
     if (othersIndicator && (othersIndicator.id !== id)) {
       return {
         error: true,
-        message: "Kode indikator telah digunakan",
+        message: `Kode indikator ${code} telah digunakan`,
       };
     }
 

@@ -21,7 +21,7 @@ import Header from "./header"
 import InputSearch from "@/components/shared/input-search"
 import AddEditPeriodDialog from "../../_components/add-edit-period-dialog"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Period } from "@/lib/generated/prisma"
+import { Period, Status } from "@/lib/generated/prisma"
 import { useRouter, useSearchParams } from "next/navigation"
 import axios, { CancelTokenSource, isAxiosError } from "axios"
 import { toast } from "sonner"
@@ -88,7 +88,7 @@ export default function PeriodLayout({ lastData }: IProps) {
           setData([]);
           setLoading(false)
           if (isAxiosError(error)) {
-            toast.error(error.response?.data || error.message);
+            toast.error(JSON.stringify(error.response?.data) || error.message);
           } else {
             toast.error(error.message || 'Internal Error');
           }
@@ -164,8 +164,18 @@ export default function PeriodLayout({ lastData }: IProps) {
                         <TableCell>{format(period.startDate, 'eeee, d MMMM y', { locale: id })}</TableCell>
                         <TableCell>{format(period.endDate, 'eeee, d MMMM y', { locale: id })}</TableCell>
                         <TableCell>
-                          <Badge variant={period.status === 'ACTIVE' ? 'success' : 'destructive'}>
-                            {period.status}
+                          <Badge
+                            variant={
+                              period.status === 'ACTIVE' && new Date(period.endDate) < new Date()
+                                ? 'destructive'
+                                : period.status === 'ACTIVE'
+                                  ? 'success'
+                                  : 'warning'
+                            }
+                          >
+                            {period.status === 'ACTIVE' && new Date(period.endDate) < new Date()
+                              ? 'EXPIRED'
+                              : period.status}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -233,7 +243,9 @@ export default function PeriodLayout({ lastData }: IProps) {
           if (!page || (page === '1')) {
             setData((prev) => {
               if (prev.length === 0) setLastPeriod(item);
-              return [item, ...prev]
+              const mapPeriod = prev.map((period) => ({ ...period, status: 'NONACTIVE' as Status }));
+
+              return [item, ...mapPeriod];
             });
           } else navigate.push('?page=1');
         }}

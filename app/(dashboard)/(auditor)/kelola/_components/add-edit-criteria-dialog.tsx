@@ -64,7 +64,7 @@ function AddEditCriteriaDialog({
       if (type === 'add') {
         createCriteria({ ...values, createdBy: userId })
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onAddSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -76,7 +76,7 @@ function AddEditCriteriaDialog({
       } else if (selectedCriteria?.id) {
         updateCriteria({ ...values, updatedBy: userId, id: selectedCriteria.id })
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onEditSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -100,6 +100,7 @@ function AddEditCriteriaDialog({
     <AlertDialog open={open} onOpenChange={(open) => {
       if (!open) {
         setTimeout(() => {
+          setError('');
           form.reset();
         }, 200);
       };

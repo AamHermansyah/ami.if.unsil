@@ -68,7 +68,7 @@ function CriteriaLayout({ user }: IProps) {
           setCriterias([]);
           setLoading(false);
           if (isAxiosError(error)) {
-            toast.error(error.response?.data || error.message);
+            toast.error(JSON.stringify(error.response?.data) || error.message);
           } else {
             toast.error(error.message || 'Internal Error');
           }

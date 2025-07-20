@@ -36,7 +36,7 @@ export async function GET(req: Request) {
       limit,
     });
 
-    if (res.error) {
+    if (res?.error) {
       return new NextResponse(res.message, { status: 500 });
     }
 

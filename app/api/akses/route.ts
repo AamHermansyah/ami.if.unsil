@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 
     const res = await getAllEmailAccess({ ...parsed.data });
 
-    if (res.error) {
+    if (res?.error) {
       return new NextResponse(res.message, { status: 500 });
     }
 

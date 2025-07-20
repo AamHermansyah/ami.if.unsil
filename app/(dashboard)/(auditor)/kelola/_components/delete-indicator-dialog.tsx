@@ -36,7 +36,7 @@ export default function DeleteIndicatorDialog({ selectedIndicator, onOpenChange,
       startAction(() => {
         deleteIndicator(selectedIndicator.id)
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               toast.warning(res.message);
               onDeleteSuccess(selectedIndicator);
               setInputValue('');

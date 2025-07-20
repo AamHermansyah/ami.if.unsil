@@ -24,6 +24,7 @@ export async function createPeriod(input: OutputPeriodValues) {
     const period = await db.period.create({
       data: {
         ...input,
+        name: input.name.trim(),
         status: 'ACTIVE'
       },
     })
@@ -57,7 +58,7 @@ export async function updatePeriod(input: OutputPeriodValues & { id: string }) {
     const updatedAccess = await db.period.update({
       where: { id: input.id },
       data: {
-        name: input.name,
+        name: input.name.trim(),
         startDate: input.startDate,
         endDate: input.endDate
       }

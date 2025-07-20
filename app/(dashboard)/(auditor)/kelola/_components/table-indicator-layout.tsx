@@ -30,6 +30,7 @@ import InputSearch from '@/components/shared/input-search';
 import { Pagination } from '@/components/ui/pagination';
 import { BarsLoader } from '@/components/core/loader';
 import { MoreVertical, Pencil, Plus, Trash } from 'lucide-react';
+import { addIndicatorAuditToCurrentPeriod } from '@/actions/indicator-audit';
 
 interface IProps {
   criterias: Criteria[];
@@ -101,7 +102,7 @@ function TableIndicatorLayout({
           setData([]);
           setLoading(false)
           if (isAxiosError(error)) {
-            toast.error(error.response?.data || error.message);
+            toast.error(JSON.stringify(error.response?.data) || error.message);
           } else {
             toast.error(error.message || 'Internal Error');
           }
@@ -114,6 +115,23 @@ function TableIndicatorLayout({
     if (q !== value) {
       navigate.push(`?q=${value}&criteriaId=${criteriaId}`);
     }
+  }
+
+  const handleAddAudit = (item: Indicator) => {
+    const loadingId = toast.loading('Menambahkan data audit...');
+
+    addIndicatorAuditToCurrentPeriod(item)
+      .then((res) => {
+        toast.dismiss(loadingId);
+
+        if (res?.error) toast.error(res.message);
+        else if (res?.isExist) toast.warning(res.message);
+        else toast.success(res.message);
+      })
+      .catch((err) => {
+        toast.dismiss(loadingId);
+        toast.error((err as Error).message);
+      });
   }
 
   const handleAddIndicator = (data: IndicatorType) => {
@@ -150,7 +168,7 @@ function TableIndicatorLayout({
   return (
     <Card>
       <CardHeader>
-        <div className="flex flex-col sm:flex-row gap-4 flex-1">
+        <div className="flex gap-4 flex-1">
           <InputSearch
             defaultValue={q}
             placeholder="Cari indikator atau kode..."
@@ -162,11 +180,11 @@ function TableIndicatorLayout({
               navigate.push(`?q=${q}${value !== 'all' ? `&criteriaId=${value}` : ''}`);
             }}
           >
-            <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Filter by Kriteria" />
+            <SelectTrigger className="w-24">
+              <SelectValue placeholder="Kriteria" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Semua Kriteria</SelectItem>
+              <SelectItem value="all">Semua</SelectItem>
               {criterias.map(item => (
                 <SelectItem key={item.code} value={item.id}>
                   {item.code}
@@ -184,7 +202,7 @@ function TableIndicatorLayout({
               <TableHead className="w-32">Kode Indikator</TableHead>
               <TableHead className="w-32">Kode Kriteria</TableHead>
               <TableHead className="min-w-64">Nama Kriteria</TableHead>
-              <TableHead className="min-w-24 text-center">Aksi</TableHead>
+              <TableHead className="text-center">Aksi</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -212,7 +230,7 @@ function TableIndicatorLayout({
                         </code>
                       </TableCell>
                       <TableCell>
-                        <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                        <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                           <div dangerouslySetInnerHTML={{ __html: item.title }} />
                         </div>
                       </TableCell>
@@ -229,12 +247,12 @@ function TableIndicatorLayout({
                                 <Pencil className="w-4 h-4" />
                                 Edit
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleAddAudit(item)}>
                                 <Plus className="w-4 h-4" />
                                 Tambah ke Audit
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => onClickDelete(item)}>
-                                <Trash className="w-4 h-4" />
+                              <DropdownMenuItem onClick={() => onClickDelete(item)} className="text-destructive focus:text-destructive">
+                                <Trash className="w-4 h-4 text-destructive" />
                                 Hapus
                               </DropdownMenuItem>
                             </DropdownMenuContent>

@@ -9,8 +9,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from '@/components/ui/card';
+import { Period } from '@/lib/generated/prisma';
+import { useSearchParams } from 'next/navigation';
 
-function Header() {
+interface IProps {
+  periods: Period[];
+}
+
+function Header({ periods }: IProps) {
+  const searchParams = useSearchParams();
+  const period = searchParams.get('periode');
+  const decodePeriod = period ? decodeURIComponent(period) : null;
+
   return (
     <Card>
       <CardContent>
@@ -22,13 +32,26 @@ function Header() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Select defaultValue="2020/2021">
+            <Select
+              defaultValue={periods.length > 0 ? decodePeriod || periods[0].name : 'null'}
+              onValueChange={(period) => {
+                window.location.replace(`/audit?period=${encodeURIComponent(period)}`);
+              }}
+            >
               <SelectTrigger className="w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2020/2021">Tahun 2020/2021</SelectItem>
-                <SelectItem value="2021/2022">Tahun 2021/2022</SelectItem>
+                {periods.length > 0 ? periods.map((period, index) => (
+                  <SelectItem
+                    key={`period-${index}`}
+                    value={period.name}
+                  >
+                    {period.name}
+                  </SelectItem>
+                )) : (
+                  <SelectItem value="null" disabled>Periode masih kosong</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>

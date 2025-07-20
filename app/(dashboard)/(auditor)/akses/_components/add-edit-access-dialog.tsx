@@ -63,7 +63,7 @@ function AddEditAccessDialog({
       if (type === 'add') {
         createAccess(values)
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onAddSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -75,7 +75,7 @@ function AddEditAccessDialog({
       } else if (selectedAccess?.id) {
         updateAccess(values)
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onEditSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -99,6 +99,7 @@ function AddEditAccessDialog({
     <AlertDialog open={open} onOpenChange={(open) => {
       if (!open) {
         setTimeout(() => {
+          setError('');
           form.reset();
         }, 200);
       };

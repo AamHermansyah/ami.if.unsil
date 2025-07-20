@@ -2,8 +2,11 @@ import { z } from "zod";
 
 export const indicatorSchema = z.object({
   criteriaId: z.string().min(1, { message: "Kriteria harus dipilih" }),
-  codeLetter: z.enum(["T", "U"]),
-  codeNumber: z.string().min(1, { message: "Kode angka harus diisi" }),
+  type: z.enum(["UMUM", "TAMBAHAN"]),
+  numberCode: z
+    .string()
+    .min(1, { message: "Kode angka harus diisi" })
+    .regex(/^\d+$/, { message: "Kode angka hanya boleh berisi angka" }),
   description: z
     .string()
     .min(50, { message: "Deskripsi terlalu pendek" }),

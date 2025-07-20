@@ -36,7 +36,7 @@ export default function DeletePeriodDialog({ data, onOpenChange, open, onDeleteS
       startAction(() => {
         removePeriod(data.id)
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               toast.warning(res.message);
               onDeleteSuccess(data.id);
               setInputValue('');

@@ -17,9 +17,10 @@ interface DatePickerProps {
   value?: Date;
   onChange?: (date: Date | undefined) => void;
   disabled?: boolean;
+  disabledDate?: (date: Date) => boolean;
 }
 
-export default function DatePicker({ id, value, onChange, disabled }: DatePickerProps) {
+export default function DatePicker({ id, value, onChange, disabled, disabledDate }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -45,6 +46,7 @@ export default function DatePicker({ id, value, onChange, disabled }: DatePicker
           selected={value}
           onSelect={onChange}
           captionLayout="dropdown"
+          disabled={disabledDate}
         />
       </PopoverContent>
     </Popover>

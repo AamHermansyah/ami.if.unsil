@@ -60,13 +60,15 @@ function AddEditPeriodDialog({
     },
   });
 
+  const startDate = form.watch('startDate');
+
   const onSubmit = (values: OutputPeriodValues) => {
     setError('');
     startAction(() => {
       if (type === 'add') {
         createPeriod(values)
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onAddSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -78,7 +80,7 @@ function AddEditPeriodDialog({
       } else if (selectedPeriod?.id) {
         updatePeriod({ ...values, id: selectedPeriod.id })
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onEditSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -103,6 +105,7 @@ function AddEditPeriodDialog({
     <AlertDialog open={open} onOpenChange={(open) => {
       if (!open) {
         setTimeout(() => {
+          setError('');
           form.reset();
         }, 200);
       };
@@ -159,6 +162,7 @@ function AddEditPeriodDialog({
                         selectedPeriod?.startDate &&
                         new Date(selectedPeriod.startDate) <= new Date()
                       }
+                      disabledDate={(date) => new Date(date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)}
                     />
                     <FormMessage />
                   </FormItem>
@@ -175,7 +179,11 @@ function AddEditPeriodDialog({
                       id={field.name}
                       onChange={field.onChange}
                       value={field.value as Date}
-                      disabled={selectedPeriod?.status === 'NONACTIVE'}
+                      disabled={selectedPeriod?.status === 'NONACTIVE' || !startDate}
+                      disabledDate={(date) => {
+                        if (startDate) return new Date(date).getTime() <= new Date(startDate as string).getTime();
+                        return false;
+                      }}
                     />
                     <FormMessage />
                   </FormItem>

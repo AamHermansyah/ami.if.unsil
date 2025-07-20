@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Plus } from 'lucide-react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,10 +56,9 @@ function AddEditIndicatorDialog({
   const form = useForm<IndicatorValues>({
     resolver: zodResolver(indicatorSchema),
     defaultValues: {
-      codeLetter: 'T',
-      codeNumber: '',
       criteriaId: '',
-      description: ''
+      description: '',
+      numberCode: ''
     },
   });
 
@@ -72,7 +70,7 @@ function AddEditIndicatorDialog({
       if (type === 'add') {
         createIndicator({ ...values, createdBy: userId })
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onAddSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -84,7 +82,7 @@ function AddEditIndicatorDialog({
       } else if (selectedIndicator?.id) {
         updateIndicator({ ...values, id: selectedIndicator.id, updatedBy: userId })
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               onEditSuccess(res.data);
               form.reset();
               onOpenChange(false);
@@ -99,11 +97,12 @@ function AddEditIndicatorDialog({
 
   useEffect(() => {
     if (type === 'edit' && selectedIndicator) {
-      const [, letter, number] = selectedIndicator.code.split('/');
-      form.setValue('codeLetter', letter as 'T' | 'U');
-      form.setValue('codeNumber', number);
+      const numberCode = selectedIndicator.code.split('/')[2];
+
+      form.setValue('type', selectedIndicator.type as 'UMUM' | 'TAMBAHAN');
       form.setValue('description', selectedIndicator.title);
       form.setValue('criteriaId', selectedIndicator.criteriaId);
+      form.setValue('numberCode', numberCode);
     }
   }, [type]);
 
@@ -111,6 +110,7 @@ function AddEditIndicatorDialog({
     <AlertDialog open={open} onOpenChange={(open) => {
       if (!open) {
         setTimeout(() => {
+          setError('');
           form.reset();
         }, 200);
       };
@@ -158,50 +158,39 @@ function AddEditIndicatorDialog({
                 </FormItem>
               )}
             />
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Kode Indikator</Label>
-              <div className="w-full flex items-center gap-4">
-                <FormField
-                  control={form.control}
-                  name="codeLetter"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-24">
-                            <SelectValue placeholder="Huruf" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="T">T</SelectItem>
-                          <SelectItem value="U">U</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="codeNumber"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input
-                          placeholder="Masukkan angka"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              {form.formState.errors.codeLetter && (
-                <p className="text-destructive text-sm">{form.formState.errors.codeLetter.message}</p>
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Jenis Indikator</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih Jenis Indikator" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="TAMBAHAN">Tambahan (T)</SelectItem>
+                      <SelectItem value="UMUM">Umum (U)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
               )}
-              {form.formState.errors.codeNumber && (
-                <p className="text-destructive text-sm">{form.formState.errors.codeNumber.message}</p>
+            />
+            <FormField
+              control={form.control}
+              name="numberCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nomor Urut Indikator</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nomor urut indikator" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
+            />
             <FormField
               control={form.control}
               name="description"

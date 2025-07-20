@@ -20,15 +20,27 @@ import {
   BellOff,
   Trash2,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const NotificationSheet: React.FC = () => {
+interface IProps {
+  isScrolled: boolean;
+}
+
+function NotificationSheet({ isScrolled }: IProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('all');
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative text-white">
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            'relative',
+            isScrolled && 'text-white'
+          )}
+        >
           <Bell className="h-5 w-5" />
           <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
             9+

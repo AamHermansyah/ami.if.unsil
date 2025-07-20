@@ -92,7 +92,7 @@ function Navbar() {
         </div>
         <div className="text-foreground flex items-center gap-2">
           <ModeToggle />
-          <NotificationSheet />
+          <NotificationSheet isScrolled={isScrolled} />
         </div>
       </div>
     </header>

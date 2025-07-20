@@ -36,7 +36,7 @@ export default function DeleteCriteriaDialog({ selectedCriteria, onOpenChange, o
       startAction(() => {
         deleteCriteria(selectedCriteria.id)
           .then((res) => {
-            if (res.success) {
+            if ('success' in res && res.success) {
               toast.warning(res.message);
               onDeleteSuccess(selectedCriteria.id);
               setInputValue('');
