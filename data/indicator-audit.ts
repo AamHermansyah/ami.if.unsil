@@ -210,3 +210,50 @@ export async function getIndicatorAuditLogs(indicatorAuditId: string) {
   }
 }
 
+export async function getAchievementPerCriteriaAudit(periodId: string) {
+  try {
+    const criteriaAudits = await db.criteriaAudit.findMany({
+      where: {
+        periodId,
+        indicatorAudits: {
+          some: {
+            deletedAt: null,
+          },
+        },
+      },
+      include: {
+        criteria: true,
+        indicatorAudits: {
+          where: {
+            deletedAt: null,
+          },
+          include: {
+            Indicator: true,
+          },
+        },
+      },
+    });
+
+    const results = criteriaAudits.map((criteriaAudit) => ({
+      criteriaAuditId: criteriaAudit.id,
+      criteriaCode: criteriaAudit.criteria.code,
+      criteriaTitle: criteriaAudit.criteria.title,
+      indicators: criteriaAudit.indicatorAudits.map((indicatorAudit) => ({
+        indicatorAuditId: indicatorAudit.id,
+        indicatorCode: indicatorAudit.Indicator.code,
+        indicatorTitle: indicatorAudit.Indicator.title,
+        achievement: indicatorAudit.achievement,
+      })),
+    }))
+
+    return {
+      success: true,
+      data: results
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message
+    }
+  }
+}

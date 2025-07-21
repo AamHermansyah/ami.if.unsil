@@ -1,9 +1,10 @@
 import React from 'react'
 import Header from '../_layouts/header'
-import { ChartExample } from './_components/chart-example'
 import { auth } from '@/lib/auth';
 import { getAllPeriods, getPeriodByName } from '@/data/period';
 import NoPeriodAvailable from '../_layouts/no-period-available';
+import { getAchievementPerCriteriaAudit } from '@/data/indicator-audit';
+import ReportLayout from './_layouts/report-layout';
 
 interface IProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -31,15 +32,13 @@ async function LaporanPage({ searchParams }: IProps) {
     )
   }
 
+  const reports = await getAchievementPerCriteriaAudit(lastPeriod.id);
+  if (reports?.error) throw Error(reports.message);
+
   return (
     <div className="space-y-4">
       <Header periods={res.data!.items} periodId={lastPeriod.id} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ChartExample />
-        <ChartExample />
-        <ChartExample />
-        <ChartExample />
-      </div>
+      <ReportLayout data={reports.data!} />
     </div>
   )
 }
