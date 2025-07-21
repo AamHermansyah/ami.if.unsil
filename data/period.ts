@@ -42,3 +42,26 @@ export async function getAllPeriods(config?: ConfigGet) {
     };
   }
 }
+
+export async function getPeriodByName(periodName: string) {
+  if (!periodName) return {
+    success: true,
+    data: null
+  }
+
+  try {
+    const period = await db.period.findUnique({
+      where: { name: periodName }
+    });
+
+    return {
+      success: true,
+      data: period
+    }
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
+  }
+}

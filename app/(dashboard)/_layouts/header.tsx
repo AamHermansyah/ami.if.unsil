@@ -9,8 +9,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from '@/components/ui/card';
+import { Period } from '@/lib/generated/prisma';
 
-function Header() {
+interface IProps {
+  periods: Period[];
+  periodId: string;
+}
+
+function Header({ periods, periodId }: IProps) {
   return (
     <Card>
       <CardContent>
@@ -22,13 +28,26 @@ function Header() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Select defaultValue="2020/2021">
+            <Select
+              defaultValue={periods.find((i) => i.id === periodId)?.name || 'null'}
+              onValueChange={(period) => {
+                window.location.replace(`/?period=${encodeURIComponent(period)}`);
+              }}
+            >
               <SelectTrigger className="w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2020/2021">Tahun 2020/2021</SelectItem>
-                <SelectItem value="2021/2022">Tahun 2021/2022</SelectItem>
+                {periods.length > 0 ? periods.map((period, index) => (
+                  <SelectItem
+                    key={`period-${index}`}
+                    value={period.name}
+                  >
+                    {period.name}
+                  </SelectItem>
+                )) : (
+                  <SelectItem value="null" disabled>Periode masih kosong</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>

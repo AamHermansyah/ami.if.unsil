@@ -8,10 +8,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import React from 'react'
-import { AchievementLabel, Criteria, FindingStatus } from '@/lib/generated/prisma';
+import { AchievementLabel, Criteria, CriteriaAudit, FindingStatus } from '@/lib/generated/prisma';
 
 interface IProps {
-  criterias: Criteria[];
+  criterias: (CriteriaAudit & { criteria: Criteria })[];
 }
 
 const achievementOpts = Object.values(AchievementLabel);
@@ -57,8 +57,8 @@ function Filter({ criterias }: IProps) {
         <SelectContent>
           <SelectItem value="all">Semua</SelectItem>
           {criterias.map(item => (
-            <SelectItem key={item.code} value={item.id}>
-              {item.code}
+            <SelectItem key={item.criteria.code} value={item.id}>
+              {item.criteria.code} - {item.criteria.title}
             </SelectItem>
           ))}
         </SelectContent>

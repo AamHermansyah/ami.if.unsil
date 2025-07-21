@@ -2,7 +2,10 @@
 
 import { Indicator } from "@/lib/generated/prisma"
 import db from "@/lib/prisma"
+import { indicatorAuditReviewSchema, IndicatorAuditReviewValues, indicatorAuditSchema, IndicatorAuditValues } from "@/lib/schemas/indicator-audit";
 import { BulkResultItem } from "@/lib/types";
+import { getAchievmentLabel } from "@/lib/utils";
+import z from "zod";
 
 export const addIndicatorAuditToCurrentPeriod = async (item: Indicator) => {
   try {
@@ -195,3 +198,210 @@ export const addIndicatorsAuditByCriteria = async (criteriaId: string) => {
     };
   }
 };
+
+type UpdateIndicatorAuditInput = IndicatorAuditValues & {
+  id: string;
+  updatedBy: string;
+}
+
+export async function updateIndicatorAudit(input: UpdateIndicatorAuditInput) {
+  const { id, updatedBy, ...others } = input;
+
+  const parsed = indicatorAuditSchema.safeParse(others);
+
+  if (!parsed.success) {
+    const tree = z.treeifyError(parsed.error);
+    return {
+      error: true,
+      message: tree.errors.join(", "),
+    };
+  }
+
+  try {
+    const existing = await db.indicatorAudit.findUnique({
+      where: {
+        id,
+        deletedAt: null
+      },
+      include: {
+        period: true
+      }
+    });
+
+    if (!existing) {
+      return {
+        error: true,
+        message: "Data indikator audit tidak ditemukan.",
+      };
+    }
+
+    const { startDate, endDate, status } = existing.period;
+    const now = new Date();
+
+    if (status === 'NONACTIVE' || new Date(endDate) < now) {
+      return {
+        error: true,
+        message: "Periode sudah berakhir, data audit tidak bisa diperbarui.",
+      };
+    }
+
+    if (new Date(startDate) > now) {
+      return {
+        error: true,
+        message: "Periode belum dimulai, data audit belum bisa diperbarui.",
+      };
+    }
+
+    const updatedAudit = await db.indicatorAudit.update({
+      where: { id },
+      data: {
+        ...parsed.data,
+        achievement: +parsed.data.achievement,
+        achievementLabel: getAchievmentLabel(+parsed.data.achievement)
+      },
+    });
+
+    await db.userActivityLog.create({
+      data: {
+        userId: updatedBy,
+        action: "UPDATE",
+        table: "INDICATOR_AUDIT",
+        recordId: updatedAudit.id,
+        note: `Memperbarui data audit`,
+      },
+    });
+
+    return {
+      success: true,
+      data: updatedAudit,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
+  }
+}
+
+type UpdateIndicatorAuditReviewInput = IndicatorAuditReviewValues & {
+  id: string;
+  updatedBy: string;
+}
+
+export async function updateIndicatorAuditReview(input: UpdateIndicatorAuditReviewInput) {
+  const { id, updatedBy, ...others } = input;
+
+  const parsed = indicatorAuditReviewSchema.safeParse(others);
+
+  if (!parsed.success) {
+    const tree = z.treeifyError(parsed.error);
+    return {
+      error: true,
+      message: tree.errors.join(", "),
+    };
+  }
+
+  try {
+    const existing = await db.indicatorAudit.findUnique({
+      where: {
+        id,
+        deletedAt: null
+      },
+      include: {
+        period: true
+      }
+    });
+
+    if (!existing) {
+      return {
+        error: true,
+        message: "Data indikator audit tidak ditemukan.",
+      };
+    }
+
+    const { startDate, endDate, status } = existing.period;
+    const now = new Date();
+
+    if (status === 'NONACTIVE' || new Date(endDate) < now) {
+      return {
+        error: true,
+        message: "Periode sudah berakhir, data audit tidak bisa diperbarui.",
+      };
+    }
+
+    if (new Date(startDate) > now) {
+      return {
+        error: true,
+        message: "Periode belum dimulai, data audit belum bisa diperbarui.",
+      };
+    }
+
+    const updatedAudit = await db.indicatorAudit.update({
+      where: { id },
+      data: { ...parsed.data },
+    });
+
+    await db.userActivityLog.create({
+      data: {
+        userId: updatedBy,
+        action: "UPDATE",
+        table: "INDICATOR_AUDIT",
+        recordId: updatedAudit.id,
+        note: `Auditor memberikan review`,
+      },
+    });
+
+    return {
+      success: true,
+      data: updatedAudit,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
+  }
+}
+
+export async function deleteIndicatorAudit(id: string, deletedBy: string) {
+  try {
+    const existing = await db.indicatorAudit.findUnique({
+      where: {
+        id,
+        deletedAt: null
+      },
+    });
+
+    if (!existing || existing.deletedAt) {
+      return {
+        error: true,
+        message: 'Indikator audit tidak ditemukan.',
+      };
+    }
+
+    const deletedData = await db.indicatorAudit.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
+
+    await db.userActivityLog.create({
+      data: {
+        userId: deletedBy,
+        action: "DELETE",
+        table: "INDICATOR_AUDIT",
+        recordId: deletedData.id,
+        note: `User dengan id "${deletedBy}" telah menghapus data audit`,
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Indikator audit berhasil dihapus.',
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
+  }
+}

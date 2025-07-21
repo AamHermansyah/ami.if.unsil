@@ -7,11 +7,11 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import FormEdit from '../../_components/form-edit';
 import { redirect, RedirectType } from 'next/navigation';
 import { getIndicatorAuditByIndicatorCodeAndPeriod } from '@/data/indicator-audit';
 import { getStatusVariant } from '@/lib/utils';
 import { auth } from '@/lib/auth';
+import FormReview from '../../_components/form-review';
 
 interface IProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -124,11 +124,12 @@ async function AuditEditPage({ searchParams, params }: IProps) {
         </Card>
       </div>
 
-      <FormEdit
+      <FormReview
         data={audit}
         userId={session.user.id!}
         code={code.replaceAll('/', '-')}
         period={encodeURIComponent(period as string)}
+        disabled={audit.achievementLabel === 'BELUM_DI_AUDIT'}
       />
     </div>
   );

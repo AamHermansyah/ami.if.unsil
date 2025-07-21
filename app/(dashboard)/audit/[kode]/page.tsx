@@ -1,13 +1,7 @@
-'use client'
-
 import React from 'react';
 import {
   ExternalLink,
   FileText,
-  User,
-  Calendar,
-  MoreVertical,
-  Pencil
 } from 'lucide-react';
 import {
   Card,
@@ -17,49 +11,48 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from '@/components/ui/alert';
+import { AlertTriangle, Info, Ban } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { redirect, RedirectType } from 'next/navigation';
+import { getIndicatorAuditByIndicatorCodeAndPeriod } from '@/data/indicator-audit';
+import { getStatusVariant } from '@/lib/utils';
+import { auth } from '@/lib/auth';
+import SidebarDetail from '../_layouts/sidebar-detail';
+import MenuDetailDropdown from '../_components/menu-detail-dropdown';
 
-interface AuditDetailData {
-  id: number;
-  indikator: string;
-  capaian: string;
-  sebutan: string;
-  namaDokumen: string;
-  linkBukti: string;
-  akarPenyebab: string;
-  rencanaAction: string;
-  // Review Auditor
-  temuan: 'Sesuai' | 'Observasi' | 'KTS Minor' | 'KTS Mayor';
-  catatanAuditor: string;
-  rekomendasi: string;
-  auditor: string;
-  tanggalReview: string;
+interface IProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ kode: string }>
 }
 
-const auditDetailData: AuditDetailData = {
-  id: 1,
-  indikator: "UPPS memiliki tendik dalam jumlah yang sangat memadai dan sangat relevan dengan kebutuhan UPPS dan PS, yang terdiri atas pustakawan, laboran /teknisi/operator yang sesuai bidang pendidikannya",
-  capaian: "85%",
-  sebutan: "Baik",
-  namaDokumen: "Dokumen Standar Kompetensi Lulusan 2024",
-  linkBukti: "https://docs.google.com/document/d/example1",
-  akarPenyebab: "Kurikulum belum sepenuhnya disesuaikan dengan kebutuhan industri",
-  rencanaAction: "Melakukan review kurikulum dan kerjasama dengan industri",
-  temuan: "Observasi",
-  catatanAuditor: "Dokumen standar kompetensi lulusan sudah lengkap dan sesuai dengan standar nasional. Namun, masih perlu peningkatan dalam hal kesesuaian dengan kebutuhan industri terkini. Profil lulusan sudah jelas namun perlu diperkuat dengan data tracer study yang lebih komprehensif.",
-  rekomendasi: "1. Melakukan review berkala terhadap profil lulusan dengan melibatkan stakeholder industri\n2. Memperkuat sistem tracer study untuk mendapatkan feedback dari alumni dan pengguna lulusan\n3. Mengintegrasikan soft skills dan hard skills yang dibutuhkan industri 4.0 dalam profil lulusan",
-  auditor: "Dr. Ahmad Fauzi, M.Kom",
-  tanggalReview: "2024-03-15"
-};
+async function AuditDetailPage({ searchParams, params }: IProps) {
+  const session = await auth();
+  if (!session?.user) throw new Error("User tidak ditemukan di session.");
 
-export default function AuditDetailPage() {
+  const period = (await searchParams).period;
+  const code = (await params).kode.replaceAll('-', '/');
+  if (!period) return redirect('/404', 'replace' as RedirectType);
+
+  const res = await getIndicatorAuditByIndicatorCodeAndPeriod(code, period as string);
+  if (res?.error) throw Error(res.message);
+  if (!res?.data) return redirect('/404', 'replace' as RedirectType);
+
+  const data = res.data;
+  const hrefCode = data.Indicator.code.replaceAll('/', '-');
+
+  const { startDate, endDate, status } = data.period;
+  const now = new Date();
+  const isNonActive = status === 'NONACTIVE';
+  const isExpired = new Date(endDate) < now;
+  const isNotStarted = new Date(startDate) > now;
+  const disabledOptions = isNonActive || isExpired || isNotStarted;
+
   return (
     <div className="h-full space-y-4">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -71,38 +64,66 @@ export default function AuditDetailPage() {
                   <CardTitle>Informasi Dasar</CardTitle>
                   <CardDescription>Tahun Akademik 2024/2025</CardDescription>
                 </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <Link href={`/audit/${encodeURIComponent('VIS/U/03')}/edit?tahun=2023/2024`}>
-                      <DropdownMenuItem>
-                        <Pencil className="w-4 h-4" />
-                        Edit
-                      </DropdownMenuItem>
-                    </Link>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <MenuDetailDropdown
+                  user={session.user}
+                  disabled={disabledOptions}
+                  hrefCode={hrefCode}
+                  period={period as string}
+                  data={res.data}
+                />
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {isNonActive && (
+                <Alert variant="warning">
+                  <Ban className="h-4 w-4" />
+                  <AlertTitle>Periode Sudah Berakhir</AlertTitle>
+                  <AlertDescription>
+                    Periode ini sudah ditandai sebagai <strong>NONAKTIF</strong>. Data audit tidak dapat diperbarui.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {isExpired && !isNonActive && (
+                <Alert variant="warning">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Periode Kadaluarsa</AlertTitle>
+                  <AlertDescription>
+                    Tanggal akhir periode sudah lewat. Anda tidak dapat lagi melakukan perubahan data audit. Auditor dapat memperpanjang tanggal audit!
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {isNotStarted && (
+                <Alert variant="info">
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>Periode Belum Dimulai</AlertTitle>
+                  <AlertDescription>
+                    Periode ini belum dimulai. Anda belum bisa melakukan input data audit.
+                  </AlertDescription>
+                </Alert>
+              )}
+
               <div>
-                <h3 className="text-lg font-medium mb-2">
-                  {auditDetailData.indikator}
-                </h3>
-                <div className="bg-muted/50 p-4 rounded-lg border">
-                  <div className="w-full flex items-center justify-between gap-4">
-                    <div className="flex flex-col">
-                      <span className="text-sm text-muted-foreground">Capaian</span>
-                      <span className="text-3xl font-bold text-primary dark:text-secondary">{auditDetailData.capaian}</span>
-                    </div>
-                    <Badge variant="success">
-                      {auditDetailData.sebutan}
-                    </Badge>
+                <h4 className="text-sm font-medium mb-2">
+                  Kriteria
+                </h4>
+                <p className="text-muted-foreground">
+                  {data.Indicator.criteria.code} - {data.Indicator.criteria.title}
+                </p>
+              </div>
+              <div className="prose prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                <div dangerouslySetInnerHTML={{ __html: data.Indicator.title }} />
+              </div>
+              <div className="bg-muted/50 p-4 rounded-lg border">
+                <div className="w-full flex items-center justify-between gap-4">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-muted-foreground">Capaian</span>
+                    <span className="text-3xl font-bold text-primary dark:text-secondary">{data.achievement}</span>
                   </div>
+                  <Badge variant={getStatusVariant(data.achievementLabel)} className="capitalize">
+                    {data.achievementLabel.toLowerCase().replaceAll('_', ' ')}
+                  </Badge>
                 </div>
               </div>
 
@@ -113,41 +134,49 @@ export default function AuditDetailPage() {
                   </h4>
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <FileText className="w-4 h-4" />
-                    <span>{auditDetailData.namaDokumen}</span>
+                    <span>{data.documentName || 'Tidak ada dokumen'}</span>
                   </div>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium mb-2">
                     Link Bukti Fisik
                   </h4>
-                  <Link
-                    href={auditDetailData.linkBukti}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm inline-flex items-center space-x-2 text-primary hover:text-primary/80 dark:text-secondary dark:hover:text-secondary/80"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>Lihat Dokumen</span>
-                  </Link>
+                  {data.documentLink ? (
+                    <Link
+                      href={data.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button size="sm">
+                        <ExternalLink className="h-4 w-4" />
+                        Buka Dokumen
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button size="sm" disabled>
+                      <ExternalLink className="h-4 w-4" />
+                      Buka Dokumen
+                    </Button>
+                  )}
                 </div>
               </div>
 
-              <div>
-                <h4 className="text-sm font-medium mb-2">
-                  Akar Penyebab
-                </h4>
-                <p className="text-sm text-muted-foreground border p-3 rounded-md">
-                  {auditDetailData.akarPenyebab}
-                </p>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Rencana Tindak Lanjut</label>
+                <div className="text-sm bg-blue-500/10 p-3 rounded border-l-4 border-blue-500">
+                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                    <div dangerouslySetInnerHTML={{ __html: data.plan || 'Tidak ada' }} />
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <h4 className="text-sm font-medium mb-2">
-                  Rencana Tindak Lanjut
-                </h4>
-                <p className="text-sm text-muted-foreground border p-3 rounded-md">
-                  {auditDetailData.rencanaAction}
-                </p>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Akar Penyebab</label>
+                <div className="text-sm bg-red-500/10 p-3 rounded border-l-4 border-red-500">
+                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                    <div dangerouslySetInnerHTML={{ __html: data.rootCause || 'Tidak ada' }} />
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -164,94 +193,41 @@ export default function AuditDetailPage() {
                 <h4 className="text-sm font-medium mb-2">
                   Status Temuan
                 </h4>
-                <Badge>Observasi</Badge>
+                <Badge variant={getStatusVariant(data.findingStatus)} className="capitalize">
+                  {data.findingStatus.toLowerCase().replaceAll('_', ' ')}
+                </Badge>
               </div>
 
-              <div>
-                <h4 className="text-sm font-medium mb-2">
-                  Catatan Auditor
-                </h4>
-                <div className="p-4 rounded-md bg-card border">
-                  <p className="text-sm">
-                    {auditDetailData.catatanAuditor}
-                  </p>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Rekomendasi</label>
+                <div className="text-sm bg-green-500/10 p-3 rounded border-l-4 border-green-500">
+                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                    <div dangerouslySetInnerHTML={{ __html: data.recomendation || 'Tidak ada' }} />
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <h4 className="text-sm font-medium mb-2">
-                  Rekomendasi
-                </h4>
-                <div className="p-4 rounded-md border bg-green-500/10">
-                  <pre className="text-sm whitespace-pre-wrap font-sans">
-                    {auditDetailData.rekomendasi}
-                  </pre>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Catatan</label>
+                <div className="text-sm bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
+                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                    <div dangerouslySetInnerHTML={{ __html: data.note || 'Tidak ada' }} />
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="space-y-4">
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle>Informasi Auditor</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 border rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">
-                    {auditDetailData.auditor}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Auditor Internal</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 border rounded-full flex items-center justify-center">
-                  <Calendar className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">
-                    {new Date(auditDetailData.tanggalReview).toLocaleDateString('id-ID', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Tanggal Review</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Status Summary */}
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle>
-                Ringkasan Status
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Tingkat Capaian</span>
-                <span className="text-sm font-medium">{auditDetailData.capaian}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Kategori</span>
-                <Badge>{auditDetailData.sebutan}</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Status Audit</span>
-                <Badge>{auditDetailData.temuan}</Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <SidebarDetail
+          achievement={data.achievement}
+          achievementLabel={data.achievementLabel}
+          findingStatus={data.findingStatus}
+          indicatorAuditId={data.id}
+        />
       </div>
     </div>
   );
 }
+
+export default AuditDetailPage;

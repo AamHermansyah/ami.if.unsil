@@ -10,17 +10,13 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from '@/components/ui/card';
 import { Period } from '@/lib/generated/prisma';
-import { useSearchParams } from 'next/navigation';
 
 interface IProps {
   periods: Period[];
+  periodId: string;
 }
 
-function Header({ periods }: IProps) {
-  const searchParams = useSearchParams();
-  const period = searchParams.get('periode');
-  const decodePeriod = period ? decodeURIComponent(period) : null;
-
+function Header({ periods, periodId }: IProps) {
   return (
     <Card>
       <CardContent>
@@ -33,7 +29,7 @@ function Header({ periods }: IProps) {
           </div>
           <div className="flex items-center gap-3">
             <Select
-              defaultValue={periods.length > 0 ? decodePeriod || periods[0].name : 'null'}
+              defaultValue={periods.find((i) => i.id === periodId)?.name || 'null'}
               onValueChange={(period) => {
                 window.location.replace(`/audit?period=${encodeURIComponent(period)}`);
               }}

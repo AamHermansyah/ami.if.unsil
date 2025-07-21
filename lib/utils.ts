@@ -36,3 +36,19 @@ export const getStatusVariant = (status: FindingStatus | AchievementLabel) => {
       return 'default';
   }
 }
+
+export const getAchievmentLabel = (value: number): AchievementLabel => {
+  switch (value) {
+    case 4:
+      return 'SANGAT_BAIK';
+    case 3:
+      return 'BAIK';
+    case 2:
+      return 'CUKUP';
+    case 1:
+      return 'KURANG';
+    case 0:
+    default:
+      return 'SANGAT_KURANG';
+  }
+}

@@ -79,7 +79,9 @@ export async function getAllIndicatorAudits(config?: ConfigIndicatorAuditGet) {
         skip: (page - 1) * limit,
         take: limit,
         include: {
-          Indicator: true,
+          Indicator: {
+            include: { criteria: true }
+          },
           period: true,
         },
       }),
@@ -108,23 +110,34 @@ export async function getAllIndicatorAudits(config?: ConfigIndicatorAuditGet) {
 
 export async function getIndicatorAuditByIndicatorCodeAndPeriod(
   code: string,
-  periodId: string
+  periodName: string
 ) {
   try {
+    const period = await db.period.findUnique({
+      where: { name: periodName }
+    });
+
+    if (!period) {
+      return {
+        success: true,
+        message: 'Periode tidak ditemukan',
+        data: null
+      }
+    }
+
     const audit = await db.indicatorAudit.findFirst({
       where: {
         deletedAt: null,
         Indicator: {
           code: code,
         },
-        periodId: periodId,
+        periodId: period.id,
       },
       include: {
-        Indicator: true,
-        period: true,
-        criteriaAudit: {
-          include: { criteria: true },
+        Indicator: {
+          include: { criteria: true }
         },
+        period: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -134,7 +147,8 @@ export async function getIndicatorAuditByIndicatorCodeAndPeriod(
     if (!audit) {
       return {
         success: false,
-        message: "IndicatorAudit not found for given code and period.",
+        message: "Indikator audit tidak ditemukan",
+        data: null
       };
     }
 
@@ -149,3 +163,50 @@ export async function getIndicatorAuditByIndicatorCodeAndPeriod(
     };
   }
 }
+
+export async function getIndicatorAuditLogs(indicatorAuditId: string) {
+  try {
+    // Ambil total log
+    const totalLogs = await db.userActivityLog.count({
+      where: {
+        recordId: indicatorAuditId,
+      },
+    });
+
+    // Ambil 10 log terbaru
+    const logs = await db.userActivityLog.findMany({
+      where: {
+        recordId: indicatorAuditId,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+            access: true
+          },
+        }
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 10,
+    });
+
+    const remaining = totalLogs > 10 ? totalLogs - 10 : 0;
+
+    return {
+      success: true,
+      data: {
+        logs,
+        remaining,
+      },
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
+  }
+}
+

@@ -167,7 +167,10 @@ export async function updateIndicator(input: UpdateIndicatorInput) {
 export async function deleteIndicator(id: string) {
   try {
     const existing = await db.indicator.findUnique({
-      where: { id },
+      where: {
+        id,
+        deletedAt: null
+      },
     });
 
     if (!existing || existing.deletedAt) {

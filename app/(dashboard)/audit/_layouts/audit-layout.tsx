@@ -23,10 +23,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Eye, MoreVertical, Pencil } from 'lucide-react';
+import { ExternalLink, Eye, FastForward, MessageSquareReply, MoreVertical, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { Session } from 'next-auth';
-import { Criteria, Indicator, IndicatorAudit, Period } from '@/lib/generated/prisma';
+import { Criteria, CriteriaAudit, Indicator, IndicatorAudit, Period } from '@/lib/generated/prisma';
 import Filter from '../_components/filter';
 import { useSearchParams } from 'next/navigation';
 import axios, { CancelTokenSource, isAxiosError } from 'axios';
@@ -34,20 +34,28 @@ import { toast } from 'sonner';
 import { BarsLoader } from '@/components/core/loader';
 import { Badge } from '@/components/ui/badge';
 import { getStatusVariant } from '@/lib/utils';
+import DetailDialog from '../_components/detail-dialog';
+import DeleteAuditDialog from '../_components/delete-audit-dialog';
 
 type IndicatorAuditType = IndicatorAudit & {
-  Indicator: Indicator;
+  Indicator: Indicator & {
+    criteria: Criteria;
+  };
   period: Period;
 }
 
 interface IProps {
   user: Session['user'];
-  criterias: Criteria[];
+  criterias: (CriteriaAudit & { criteria: Criteria })[];
   periods: Period[];
+  lastPeriod: Period | null;
 }
 
-function AuditLayout({ criterias, periods }: IProps) {
+function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
   const [data, setData] = useState<IndicatorAuditType[]>([]);
+  const [selectedData, setSelectedData] = useState<IndicatorAuditType | null>(null);
+  const [detailDialog, setDetailDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -62,9 +70,38 @@ function AuditLayout({ criterias, periods }: IProps) {
   const page = searchParams.get('page') || '1';
   const achievementLabel = searchParams.get('achievementLabel') || '';
   const findingStatus = searchParams.get('findingStatus') || '';
-  const period = decodeURIComponent(searchParams.get('period') || '');
-
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
+
+  const getPeriodLabel = useCallback(() => {
+    if (!lastPeriod) return '-';
+
+    const { startDate, endDate, status } = lastPeriod;
+    const now = new Date();
+
+    if (status === 'NONACTIVE') {
+      return `${lastPeriod.name} (Tidak Aktif)`
+    } else if (new Date(endDate) < now) {
+      return `${lastPeriod.name} (Kadaluarsa)`;
+    } else if (new Date(startDate) > now) {
+      return `${lastPeriod.name} (Belum Mulai)`;
+    } else {
+      return `${lastPeriod.name} (Aktif)`;
+    }
+  }, [lastPeriod]);
+
+  const isDisabledOptions = useCallback(() => {
+    if (!lastPeriod) return true;
+
+    const { startDate, endDate, status } = lastPeriod;
+    const now = new Date();
+    const isNonActive = status === 'NONACTIVE';
+    const isExpired = new Date(endDate) < now;
+    const isNotStarted = new Date(startDate) > now;
+
+    return isNonActive || isExpired || isNotStarted;
+  }, [lastPeriod]);
+
+  const disabledOptions = isDisabledOptions();
 
   const fetch = useCallback((
     q: string,
@@ -83,7 +120,7 @@ function AuditLayout({ criterias, periods }: IProps) {
 
     setLoading(true);
 
-    const findPeriod = periods.find((i) => i.name === (period || periods[0]?.name))?.id
+    const findPeriod = periods.find((i) => i.name === period)?.id
 
     axios
       .get(`/api/indikator-audit`, {
@@ -120,14 +157,16 @@ function AuditLayout({ criterias, periods }: IProps) {
   }, []);
 
   useEffect(() => {
-    fetch(q, page, criteriaId, achievementLabel, findingStatus, period);
-  }, [q, page, criteriaId, achievementLabel, findingStatus, period]);
+    fetch(q, page, criteriaId, achievementLabel, findingStatus, lastPeriod?.name || '');
+  }, [q, page, criteriaId, achievementLabel, findingStatus]);
 
   return (
     <Card>
       <CardHeader className="border-b">
         <CardTitle className="text-lg">Data Audit Mutu Internal</CardTitle>
-        <CardDescription>Periode: 2024/2025</CardDescription>
+        <CardDescription>
+          Periode: {getPeriodLabel()}
+        </CardDescription>
         <Filter criterias={criterias} />
       </CardHeader>
 
@@ -157,81 +196,115 @@ function AuditLayout({ criterias, periods }: IProps) {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  data.map((item, index) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium text-center">{index + 1}</TableCell>
-                      <TableCell className="font-medium">{item.Indicator.code}</TableCell>
-                      <TableCell>
-                        <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
-                          <div dangerouslySetInnerHTML={{ __html: item.Indicator.title }} />
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">{item.achievement}</TableCell>
-                      <TableCell>
-                        <div className="flex justify-center capitalize">
-                          <Badge variant={getStatusVariant(item.achievementLabel)}>
-                            {item.achievementLabel.toLowerCase().replaceAll('_', ' ')}
-                          </Badge>
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.documentName || '-'}</TableCell>
-                      <TableCell>
-                        <div className="flex justify-center items-center">
-                          {item.documentLink ? (
-                            <Link
-                              href={item.documentLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Button variant="outline" size="icon">
+                  data.map((item, index) => {
+                    const query = `period=${encodeURIComponent(lastPeriod?.name || '')}`;
+
+                    return (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium text-center">{index + 1}</TableCell>
+                        <TableCell className="font-medium">{item.Indicator.code}</TableCell>
+                        <TableCell>
+                          <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                            <div dangerouslySetInnerHTML={{ __html: item.Indicator.title }} />
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center">{item.achievement}</TableCell>
+                        <TableCell>
+                          <div className="flex justify-center capitalize">
+                            <Badge variant={getStatusVariant(item.achievementLabel)}>
+                              {item.achievementLabel.toLowerCase().replaceAll('_', ' ')}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                        <TableCell>{item.documentName || 'Tidak ada'}</TableCell>
+                        <TableCell>
+                          <div className="flex justify-center items-center">
+                            {item.documentLink ? (
+                              <Link
+                                href={item.documentLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button variant="outline" size="icon">
+                                  <ExternalLink className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                            ) : (
+                              <Button variant="outline" size="icon" disabled>
                                 <ExternalLink className="w-4 h-4" />
                               </Button>
-                            </Link>
-                          ) : (
-                            <Button variant="outline" size="icon" disabled>
-                              <ExternalLink className="w-4 h-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex justify-center capitalize">
-                          <Badge variant={getStatusVariant(item.findingStatus)}>
-                            {item.findingStatus.toLowerCase().replaceAll('_', ' ')}
-                          </Badge>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="w-full flex justify-center">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="mx-auto">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <Link
-                                href={`/audit/${encodeURIComponent(item.Indicator.code)}?period=${encodeURIComponent(period || periods[0]?.name || '')}`}
-                              >
-                                <DropdownMenuItem>
-                                  <Eye className="w-4 h-4 mr-2" />
-                                  Detail
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex justify-center capitalize">
+                            <Badge variant={getStatusVariant(item.findingStatus)}>
+                              {item.findingStatus.toLowerCase().replaceAll('_', ' ')}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="w-full flex justify-center">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="mx-auto">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <Link
+                                  href={`/audit/${item.Indicator.code.replaceAll('/', '-')}?${query}`}
+                                >
+                                  <DropdownMenuItem>
+                                    <Eye className="w-4 h-4" />
+                                    Detail
+                                  </DropdownMenuItem>
+                                </Link>
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedData(item);
+                                    setDetailDialog(true);
+                                  }}
+                                >
+                                  <FastForward className="w-4 h-4" />
+                                  Detail Cepat
                                 </DropdownMenuItem>
-                              </Link>
-                              <Link
-                                href={`/audit/${encodeURIComponent(item.Indicator.code)}/edit?period=${encodeURIComponent(period || periods[0]?.name || '')}`}
-                              >
-                                <DropdownMenuItem>
-                                  <Pencil className="w-4 h-4 mr-2" />
-                                  Edit
-                                </DropdownMenuItem>
-                              </Link>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                                <Link
+                                  href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/edit?${query}`}
+                                >
+                                  <DropdownMenuItem disabled={disabledOptions}>
+                                    <Pencil className="w-4 h-4" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                </Link>
+                                {user.role === 'AUDITOR' && (
+                                  <>
+                                    <Link href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/review?${query}`}>
+                                      <DropdownMenuItem disabled={disabledOptions}>
+                                        <MessageSquareReply className="w-4 h-4" />
+                                        Beri Review (Auditor)
+                                      </DropdownMenuItem>
+                                    </Link>
+                                    <DropdownMenuItem
+                                      disabled={disabledOptions}
+                                      className="text-destructive focus:text-destructive"
+                                      onClick={() => {
+                                        setSelectedData(item);
+                                        setDeleteDialog(true);
+                                      }}
+                                    >
+                                      <Trash className="w-4 h-4 text-destructive" />
+                                      Hapus Indikator Audit
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
                 )}
               </>
             ) : (
@@ -244,6 +317,29 @@ function AuditLayout({ criterias, periods }: IProps) {
           </TableBody>
         </Table>
       </CardContent>
+      <DetailDialog
+        open={detailDialog}
+        onOpenChange={setDetailDialog}
+        data={selectedData}
+        hrefPeriod={encodeURIComponent(lastPeriod?.name || '')}
+        disabled={disabledOptions}
+      />
+      <DeleteAuditDialog
+        open={deleteDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTimeout(() => {
+              setSelectedData(null);
+            }, 200);
+          };
+          setDeleteDialog(open);
+        }}
+        selectedAudit={selectedData}
+        onDeleteSuccess={(data) => {
+          setData((prev) => prev.filter((item) => item.id !== data.id));
+        }}
+        userId={user.id!}
+      />
     </Card>
   );
 }

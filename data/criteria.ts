@@ -55,3 +55,32 @@ export async function getAllCriteriaWithIndicatorCount(config?: ConfigGet) {
   }
 }
 
+export async function getAllCriteriaAudit(periodId?: string) {
+  if (!periodId) {
+    return {
+      success: true,
+      data: []
+    }
+  }
+
+  try {
+    const criteriasAudit = await db.criteriaAudit.findMany({
+      where: { periodId },
+      include: { criteria: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return {
+      success: true,
+      data: criteriasAudit,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: (error as Error).message,
+    };
+  }
+}
+
