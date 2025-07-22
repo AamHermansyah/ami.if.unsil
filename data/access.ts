@@ -33,6 +33,14 @@ export async function getAllEmailAccess(config?: ConfigGet) {
         orderBy: { createdAt: "desc" },
         skip,
         take: limit,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
       }),
       db.access.count({ where }),
     ]);

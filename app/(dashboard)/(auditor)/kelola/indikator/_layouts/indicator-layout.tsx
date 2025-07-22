@@ -9,6 +9,7 @@ import AddEditIndicatorDialog from '../../_components/add-edit-indicator-dialog'
 import { Criteria, Indicator } from '@/lib/generated/prisma';
 import { Session } from 'next-auth';
 import DeleteIndicatorDialog from '../../_components/delete-indicator-dialog';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const GroupedIndicatorLayout = dynamic(() => import('../../_components/grouped-indicator-layout'))
 const TableIndicatorLayout = dynamic(() => import('../../_components/table-indicator-layout'))
@@ -16,11 +17,11 @@ const TableIndicatorLayout = dynamic(() => import('../../_components/table-indic
 interface IProps {
   data: (Criteria & { totalIndicator: number })[];
   user: Session['user'];
+  viewMode: 'grouped' | 'table';
 }
 
-function IndicatorLayout({ data, user }: IProps) {
+function IndicatorLayout({ data, user, viewMode }: IProps) {
   const [criterias, setCriterias] = useState(data);
-  const [viewMode, setViewMode] = useState<'table' | 'grouped'>('grouped');
   const [addEditDialog, setAddEditDialog] = useState(false);
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
   const [selectedIndicator, setSelectedIndicator] = useState<Indicator | null>(null);
@@ -28,6 +29,16 @@ function IndicatorLayout({ data, user }: IProps) {
   const [lastDeletedIndicator, setLastDeletedIndicator] = useState<Indicator | null>(null);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const addIndicatorRef = useRef<((indicator: Indicator & { criteria: Criteria }) => void) | null>(null);
+
+  const navigate = useRouter();
+  const searchParams = useSearchParams()
+
+  const handleChangeView = (view: 'grouped' | 'table') => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("view", view)
+
+    navigate.push(`/kelola/indikator?${params.toString()}`)
+  }
 
   return (
     <div className="h-full space-y-4">
@@ -43,7 +54,7 @@ function IndicatorLayout({ data, user }: IProps) {
           <Button
             variant={viewMode === 'grouped' ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setViewMode('grouped')}
+            onClick={() => handleChangeView("grouped")}
             className="rounded-md"
           >
             <Group className="h-4 w-4" />
@@ -52,7 +63,7 @@ function IndicatorLayout({ data, user }: IProps) {
           <Button
             variant={viewMode === 'table' ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setViewMode('table')}
+            onClick={() => handleChangeView("table")}
             className="rounded-md"
           >
             <Table2 className="h-4 w-4" />

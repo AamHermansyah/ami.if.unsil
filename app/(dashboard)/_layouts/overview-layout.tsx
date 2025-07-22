@@ -31,7 +31,7 @@ function OverviewLayout({ user, periods, data, periodId }: IProps) {
 
   return (
     <div className="min-h-screen space-y-4">
-      <Header periods={periods} periodId={periodId} />
+      <Header type="dashboard" periods={periods} periodId={periodId} />
 
       <div>
         <h2 className="text-xl font-semibold tracking-wide">Selamat datang, {user.name}!</h2>

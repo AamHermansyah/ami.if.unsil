@@ -26,7 +26,7 @@ async function LaporanPage({ searchParams }: IProps) {
   if (!lastPeriod) {
     return (
       <div className="min-h-screen space-y-4">
-        <Header periods={res.data!.items} periodId="" />
+        <Header type="report" periods={res.data!.items} periodId="" />
         <NoPeriodAvailable user={session.user} />
       </div>
     )
@@ -37,7 +37,7 @@ async function LaporanPage({ searchParams }: IProps) {
 
   return (
     <div className="space-y-4">
-      <Header periods={res.data!.items} periodId={lastPeriod.id} />
+      <Header type="report" periods={res.data!.items} periodId={lastPeriod.id} />
       <ReportLayout data={reports.data!} />
     </div>
   )

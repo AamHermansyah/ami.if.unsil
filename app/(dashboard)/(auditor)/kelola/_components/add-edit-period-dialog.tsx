@@ -179,6 +179,7 @@ function AddEditPeriodDialog({
                       id={field.name}
                       onChange={field.onChange}
                       value={field.value as Date}
+                      endMonth={new Date(new Date().getFullYear() + 2, 11)}
                       disabled={selectedPeriod?.status === 'NONACTIVE' || !startDate}
                       disabledDate={(date) => {
                         if (startDate) return new Date(date).getTime() <= new Date(startDate as string).getTime();

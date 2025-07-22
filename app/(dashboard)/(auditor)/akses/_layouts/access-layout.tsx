@@ -51,12 +51,19 @@ interface IProps {
   user: Session['user'];
 }
 
+type AccessType = Access & {
+  user: {
+    id: string;
+    name: string;
+  } | null;
+}
+
 function AccessLayout({ user }: IProps) {
-  const [data, setData] = useState<Access[]>([]);
+  const [data, setData] = useState<AccessType[]>([]);
   const [addEditDialog, setAddEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
-  const [selectedAccess, setSelectedAccess] = useState<Access | null>(null);
+  const [selectedAccess, setSelectedAccess] = useState<AccessType | null>(null);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -185,7 +192,7 @@ function AccessLayout({ user }: IProps) {
                 setAddEditDialog(open);
               }}
               onAddSuccess={(data) => {
-                if (!page || (page === '1')) setData((prev) => [data, ...prev]);
+                if (!page || (page === '1')) setData((prev) => [{ ...data, user: null }, ...prev]);
                 else navigate.push('?page=1');
               }}
               onEditSuccess={(data) => {
@@ -205,6 +212,7 @@ function AccessLayout({ user }: IProps) {
                 <TableHead>Email</TableHead>
                 <TableHead>Peran</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Sudah Login</TableHead>
                 <TableHead>Dibuat</TableHead>
                 <TableHead className="text-center">Aksi</TableHead>
               </TableRow>
@@ -229,6 +237,9 @@ function AccessLayout({ user }: IProps) {
                           <Badge variant={access.status === 'ACTIVE' ? 'success' : 'destructive'}>
                             {access.status}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {access.user ? 'Ya' : 'Tidak'}
                         </TableCell>
                         <TableCell>{format(access.createdAt, 'eeee, d MMMM y', { locale: id })}</TableCell>
                         <TableCell>

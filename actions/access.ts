@@ -72,7 +72,15 @@ export async function updateAccess(input: AccessValues) {
 
     const updatedAccess = await db.access.update({
       where: { email: parsed.data.email },
-      data: { role: parsed.data.role }
+      data: { role: parsed.data.role },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
     });
 
     return {

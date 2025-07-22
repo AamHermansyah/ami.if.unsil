@@ -36,6 +36,7 @@ import { Badge } from '@/components/ui/badge';
 import { getStatusVariant } from '@/lib/utils';
 import DetailDialog from '../_components/detail-dialog';
 import DeleteAuditDialog from '../_components/delete-audit-dialog';
+import { Pagination } from '@/components/ui/pagination';
 
 type IndicatorAuditType = IndicatorAudit & {
   Indicator: Indicator & {
@@ -254,6 +255,8 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                               <DropdownMenuContent align="end">
                                 <Link
                                   href={`/audit/${item.Indicator.code.replaceAll('/', '-')}?${query}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   <DropdownMenuItem>
                                     <Eye className="w-4 h-4" />
@@ -271,6 +274,8 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                                 </DropdownMenuItem>
                                 <Link
                                   href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/edit?${query}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   <DropdownMenuItem disabled={disabledOptions}>
                                     <Pencil className="w-4 h-4" />
@@ -279,7 +284,11 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                                 </Link>
                                 {user.role === 'AUDITOR' && (
                                   <>
-                                    <Link href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/review?${query}`}>
+                                    <Link
+                                      href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/review?${query}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
                                       <DropdownMenuItem disabled={disabledOptions}>
                                         <MessageSquareReply className="w-4 h-4" />
                                         Beri Review (Auditor)
@@ -316,6 +325,15 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
             )}
           </TableBody>
         </Table>
+        {pagination.totalPages > 1 && (
+          <div className="w-full flex justify-end">
+            <Pagination
+              className="w-max mx-0"
+              page={pagination.page}
+              pages={pagination.totalPages}
+            />
+          </div>
+        )}
       </CardContent>
       <DetailDialog
         open={detailDialog}

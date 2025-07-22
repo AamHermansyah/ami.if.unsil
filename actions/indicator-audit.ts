@@ -347,7 +347,7 @@ export async function updateIndicatorAuditReview(input: UpdateIndicatorAuditRevi
         action: "UPDATE",
         table: "INDICATOR_AUDIT",
         recordId: updatedAudit.id,
-        note: `Auditor memberikan review`,
+        note: `Memberikan atau memperbarui review`,
       },
     });
 

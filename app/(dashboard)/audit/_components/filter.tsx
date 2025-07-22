@@ -57,7 +57,7 @@ function Filter({ criterias }: IProps) {
         <SelectContent>
           <SelectItem value="all">Semua</SelectItem>
           {criterias.map(item => (
-            <SelectItem key={item.criteria.code} value={item.id}>
+            <SelectItem key={item.criteria.code} value={item.criteria.id}>
               {item.criteria.code} - {item.criteria.title}
             </SelectItem>
           ))}

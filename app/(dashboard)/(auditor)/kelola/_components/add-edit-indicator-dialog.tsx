@@ -99,7 +99,7 @@ function AddEditIndicatorDialog({
     if (type === 'edit' && selectedIndicator) {
       const numberCode = selectedIndicator.code.split('/')[2];
 
-      form.setValue('type', selectedIndicator.type as 'UMUM' | 'TAMBAHAN');
+      form.setValue('type', selectedIndicator.type as 'UTAMA' | 'TAMBAHAN');
       form.setValue('description', selectedIndicator.title);
       form.setValue('criteriaId', selectedIndicator.criteriaId);
       form.setValue('numberCode', numberCode);
@@ -172,7 +172,7 @@ function AddEditIndicatorDialog({
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="TAMBAHAN">Tambahan (T)</SelectItem>
-                      <SelectItem value="UMUM">Umum (U)</SelectItem>
+                      <SelectItem value="UTAMA">Utama (U)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>

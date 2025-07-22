@@ -29,13 +29,20 @@ import { accessSchema, AccessValues } from '@/lib/schemas/access';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { createAccess, updateAccess } from '@/actions/access';
 
+type AccessType = Access & {
+  user: {
+    id: string;
+    name: string;
+  } | null;
+}
+
 interface IProps {
   onAddSuccess: (data: Access) => void;
-  onEditSuccess: (data: Access) => void;
+  onEditSuccess: (data: AccessType) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   type: 'edit' | 'add';
-  selectedAccess: Access | null;
+  selectedAccess: AccessType | null;
 }
 
 function AddEditAccessDialog({

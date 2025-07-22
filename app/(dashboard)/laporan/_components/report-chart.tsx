@@ -59,7 +59,7 @@ interface IProps {
   type: 'bar' | 'radar';
 }
 
-export function ReportRadarChart({ report, type }: IProps) {
+export function ReportChart({ report, type }: IProps) {
   const chartData = report.indicators.map((criteria) => ({
     code: criteria.indicatorCode,
     indicator: criteria.achievement
@@ -70,7 +70,7 @@ export function ReportRadarChart({ report, type }: IProps) {
   }, [report]);
 
   return (
-    <Card>
+    <Card className="[&:not(:first-child)]:mt-4">
       <CardHeader className="items-center pb-4">
         <CardTitle>{report.criteriaCode}</CardTitle>
         <CardDescription>
@@ -80,7 +80,10 @@ export function ReportRadarChart({ report, type }: IProps) {
       <CardContent className="pb-0">
         <ChartContainer
           config={chartConfig}
-          className="w-full max-w-none mx-auto aspect-square max-h-[250px]"
+          className="w-full max-w-none mx-auto aspect-square"
+          style={{
+            maxHeight: type === 'radar' ? 250 : report.indicators.length * 30
+          }}
         >
           {type === 'radar' ? (
             <RadarChart data={chartData}>
@@ -143,30 +146,30 @@ export function ReportRadarChart({ report, type }: IProps) {
         </ChartContainer>
       </CardContent>
       <CardFooter>
-        <Table className="border [&_tr]:border-b [&_th]:border [&_td]:border max-h-40 overflow-y-auto">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="font-medium">Kode</TableHead>
-              <TableHead className="text-right font-medium">Capaian</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {report.indicators.map((indicator) => (
-              <TableRow key={indicator.indicatorAuditId}>
-                <TableCell>{indicator.indicatorCode}</TableCell>
-                <TableCell className="text-right">{indicator.achievement}</TableCell>
+        <div className="[&>div]:max-h-40 w-full">
+          <Table className="border [&_tr]:border-b [&_th]:border [&_td]:border">
+            <TableHeader className="bg-muted-foreground/20 border sticky top-0 z-[1] backdrop-blur-xs">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="font-medium">Kode</TableHead>
+                <TableHead className="text-right font-medium">Capaian</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell>Rata Rata Capaian</TableCell>
-              <TableCell className="text-right">
-                {getAverage().toFixed(2)}
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {report.indicators.map((indicator) => (
+                <TableRow key={indicator.indicatorAuditId}>
+                  <TableCell>{indicator.indicatorCode}</TableCell>
+                  <TableCell className="text-right">{indicator.achievement}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter className="bg-transparent">
+              <TableRow className="hover:bg-transparent">
+                <TableCell>Rata Rata Capaian</TableCell>
+                <TableCell className="text-right">{getAverage().toFixed(2)}</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </div>
       </CardFooter>
     </Card>
   )

@@ -14,9 +14,10 @@ import { Period } from '@/lib/generated/prisma';
 interface IProps {
   periods: Period[];
   periodId: string;
+  type: 'report' | 'dashboard';
 }
 
-function Header({ periods, periodId }: IProps) {
+function Header({ periods, periodId, type }: IProps) {
   return (
     <Card>
       <CardContent>
@@ -31,7 +32,7 @@ function Header({ periods, periodId }: IProps) {
             <Select
               defaultValue={periods.find((i) => i.id === periodId)?.name || 'null'}
               onValueChange={(period) => {
-                window.location.replace(`/?period=${encodeURIComponent(period)}`);
+                window.location.replace(`/${type === 'report' ? 'laporan' : ''}?period=${encodeURIComponent(period)}`);
               }}
             >
               <SelectTrigger className="w-44">

@@ -26,7 +26,7 @@ async function OverviewPage({ searchParams }: IProps) {
   if (!lastPeriod) {
     return (
       <div className="min-h-screen space-y-4">
-        <Header periods={res.data!.items} periodId="" />
+        <Header type="dashboard" periods={res.data!.items} periodId="" />
         <NoPeriodAvailable user={session.user} />
       </div>
     )

@@ -1,9 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { ReportRadarChart } from '../_components/report-radar-chart';
+import { ReportChart } from '../_components/report-chart';
 import { Button } from '@/components/ui/button';
-import { BarChart, Radar } from 'lucide-react';
+import { BarChart, FileWarning, Radar } from 'lucide-react';
+import Masonry from 'react-masonry-css'
+
+const breakpointColumnsObj = {
+  default: 2,
+  768: 1,
+}
 
 interface IProps {
   data: {
@@ -44,15 +50,21 @@ function ReportLayout({ data }: IProps) {
           Batang
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {data.map((report) => (
-          <ReportRadarChart
-            key={report.criteriaAuditId}
-            report={report}
-            type={viewMode}
-          />
-        ))}
-      </div>
+      {data.length > 0 ? (
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="flex gap-4"
+        >
+          {data.map((report) => (
+            <ReportChart key={report.criteriaAuditId} report={report} type={viewMode} />
+          ))}
+        </Masonry>
+      ) : (
+        <div className="w-full flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
+          <FileWarning className="w-10 h-10 mb-4 text-muted-foreground" />
+          <p className="text-sm">Tidak ada data laporan yang tersedia.</p>
+        </div>
+      )}
     </>
   )
 }
