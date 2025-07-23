@@ -15,7 +15,6 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "@/components/shared/mode-toggle"
-import NotificationSheet from "./notifications-sheet"
 
 // Helper function to convert segment to readable title
 function formatSegment(segment: string) {
@@ -92,7 +91,6 @@ function Navbar() {
         </div>
         <div className="text-foreground flex items-center gap-2">
           <ModeToggle />
-          <NotificationSheet isScrolled={isScrolled} />
         </div>
       </div>
     </header>
