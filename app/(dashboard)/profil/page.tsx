@@ -40,7 +40,7 @@ const InfoItem: React.FC<InfoItemProps> = ({ icon: Icon, label, value }) => (
     </div>
     <div className="flex-1 min-w-0">
       <p className="text-sm font-medium text-muted-foreground">{label}</p>
-      <p className="text-sm font-semibold text-foreground break-words">{value}</p>
+      <p className="text-sm font-semibold text-foreground break-words capitalize">{value}</p>
     </div>
   </div>
 );
@@ -82,11 +82,11 @@ async function ProfileDisplay() {
                   <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                     <span className="flex items-center space-x-1">
                       <MapPin className="h-4 w-4" />
-                      <span>{user.city || '-'}, {user.province || '-'}</span>
+                      <span className="capitalize">{user.city || '-'}, {user.province || '-'}</span>
                     </span>
                     <span className="flex items-center space-x-1">
                       <Globe className="h-4 w-4" />
-                      <span>{user.citizenship || '-'}</span>
+                      <span className="capitalize">{user.citizenship || '-'}</span>
                     </span>
                   </div>
                 </div>
@@ -141,13 +141,13 @@ async function ProfileDisplay() {
               </CardHeader>
               <CardContent>
                 <div className="bg-muted rounded-xl p-6 border border-l-4 border-primary dark:border-secondary">
-                  <p className="text-sm leading-relaxed">
+                  <p className="text-sm leading-relaxed capitalize">
                     {user.address || '-'}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-3 text-sm text-gray-600">
-                    <Badge variant="info">{user.city || '-'}</Badge>
-                    <Badge variant="info">{user.province || '-'}</Badge>
-                    <Badge variant="info">{user.zipCode || '-'}</Badge>
+                    <Badge variant="info" className="capitalize">{user.city || '-'}</Badge>
+                    <Badge variant="info" className="capitalize">{user.province || '-'}</Badge>
+                    <Badge variant="info" className="capitalize">{user.zipCode || '-'}</Badge>
                   </div>
                 </div>
               </CardContent>

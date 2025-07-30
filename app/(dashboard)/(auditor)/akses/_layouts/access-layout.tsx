@@ -309,7 +309,7 @@ function AccessLayout({ user }: IProps) {
                 </>
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8">
+                  <TableCell colSpan={6} className="text-center py-8">
                     <BarsLoader fontSize={20} className="mx-auto" />
                   </TableCell>
                 </TableRow>
