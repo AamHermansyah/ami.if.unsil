@@ -45,7 +45,7 @@ function Navbar() {
           ? 'calc(100% - var(--sidebar-width))' : 'calc(100% - var(--sidebar-width-icon))'
       }}
       className={cn(
-        'fixed top-0 right-0 flex h-14 z-10 shrink-0 items-center gap-2 transition-[width,height,background-color] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
+        'fixed top-0 right-0 flex h-14 z-20 shrink-0 items-center gap-2 transition-[width,height,background-color] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
         isScrolled && 'bg-primary text-primary-foreground shadow-sm'
       )}
     >
