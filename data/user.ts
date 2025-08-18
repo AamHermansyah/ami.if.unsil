@@ -17,3 +17,21 @@ export const getUserByEmail = async (email: string) => {
     return null;
   }
 };
+
+export const getUserByAccessId = async (id: string) => {
+  try {
+    const access = await db.access.findUnique({
+      where: { id },
+      include: { user: true }
+    });
+
+    if (!access || !access.user) return null;
+
+    return {
+      ...access,
+      user: access.user
+    };
+  } catch {
+    return null;
+  }
+};
