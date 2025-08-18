@@ -183,7 +183,8 @@ export async function getIndicatorAuditLogs(indicatorAuditId: string) {
           select: {
             name: true,
             image: true,
-            access: true
+            access: true,
+            nidn: true
           },
         }
       },

@@ -3,7 +3,13 @@ import { ModeToggle } from '@/components/shared/mode-toggle';
 import HeroLogin from '../_components/hero-login';
 import FormLogin from '../_components/form-login';
 
-const LoginPage = () => {
+interface IProps {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}
+
+async function LoginPage({ searchParams }: IProps) {
+  const callbackUrl = (await searchParams).callbackUrl;
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-10 lg:gap-4 px-4 md:px-10 py-10">
       <div className="fixed top-4 right-4 z-10">
@@ -12,7 +18,7 @@ const LoginPage = () => {
       <div className="flex-1 flex justify-center items-center">
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 items-center">
           <HeroLogin />
-          <FormLogin />
+          <FormLogin callbackUrl={callbackUrl} />
         </div>
       </div>
 

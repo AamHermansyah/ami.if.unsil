@@ -35,7 +35,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const chartConfig = {
   indicator: {
@@ -60,6 +61,10 @@ interface IProps {
 }
 
 export function ReportChart({ report, type }: IProps) {
+  const isMobile = useIsMobile();
+
+  const radarChartHeight = useMemo(() => isMobile ? 250 : 350, [isMobile]);
+
   const chartData = report.indicators.map((criteria) => ({
     code: criteria.indicatorCode,
     indicator: criteria.achievement
@@ -70,7 +75,7 @@ export function ReportChart({ report, type }: IProps) {
   }, [report]);
 
   return (
-    <Card className="[&:not(:first-child)]:mt-4">
+    <Card className="print:from-background">
       <CardHeader className="items-center pb-4">
         <CardTitle>{report.criteriaCode}</CardTitle>
         <CardDescription>
@@ -82,11 +87,11 @@ export function ReportChart({ report, type }: IProps) {
           config={chartConfig}
           className="w-full max-w-none mx-auto aspect-square"
           style={{
-            maxHeight: type === 'radar' ? 250 : report.indicators.length * 30
+            maxHeight: type === 'radar' ? radarChartHeight : report.indicators.length * 30
           }}
         >
           {type === 'radar' ? (
-            <RadarChart data={chartData}>
+            <RadarChart data={chartData} className="print:mx-auto">
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <PolarAngleAxis dataKey="code" />
               <PolarGrid />
@@ -146,7 +151,7 @@ export function ReportChart({ report, type }: IProps) {
         </ChartContainer>
       </CardContent>
       <CardFooter>
-        <div className="[&>div]:max-h-40 w-full">
+        <div className="w-full">
           <Table className="border [&_tr]:border-b [&_th]:border [&_td]:border">
             <TableHeader className="bg-muted-foreground/20 border sticky top-0 z-[1] backdrop-blur-xs">
               <TableRow className="hover:bg-transparent">

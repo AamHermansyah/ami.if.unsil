@@ -38,7 +38,11 @@ async function LaporanPage({ searchParams }: IProps) {
   return (
     <div className="space-y-4">
       <Header type="report" periods={res.data!.items} periodId={lastPeriod.id} />
-      <ReportLayout data={reports.data!} />
+      <ReportLayout
+        data={reports.data!}
+        periodName={lastPeriod.name}
+        user={session.user}
+      />
     </div>
   )
 }

@@ -6,7 +6,11 @@ import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { signIn } from '@/lib/auth';
 
-function FormLogin() {
+interface IProps {
+  callbackUrl?: string;
+}
+
+function FormLogin({ callbackUrl }: IProps) {
   return (
     <div className="w-full flex justify-center lg:justify-end">
       <Card className="w-full max-w-md">
@@ -33,7 +37,9 @@ function FormLogin() {
           <form
             action={async () => {
               "use server"
-              await signIn("google")
+              await signIn("google", {
+                redirectTo: callbackUrl || '/'
+              })
             }}
           >
             <Button className="w-full h-12">

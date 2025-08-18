@@ -65,8 +65,8 @@ async function SidebarDetail({
                   <TimelineSeparator className="group-data-[orientation=vertical]/timeline:-left-7 group-data-[orientation=vertical]/timeline:h-[calc(100%-1.5rem-0.25rem)] group-data-[orientation=vertical]/timeline:translate-y-6.5" />
                   <TimelineTitle className="mt-0.5">
                     {item.user.name}{" "}
-                    <span className="text-muted-foreground text-sm font-normal">
-                      {item.user.access?.role}
+                    <span className="text-muted-foreground text-sm font-normal capitalize">
+                      ({item.user.access?.role.toLowerCase()})
                     </span>
                   </TimelineTitle>
                   <TimelineIndicator className="bg-primary/10 group-data-completed/timeline-item:bg-primary group-data-completed/timeline-item:text-primary-foreground flex size-6 items-center justify-center border-none group-data-[orientation=vertical]/timeline:-left-7">
@@ -77,15 +77,21 @@ async function SidebarDetail({
                     />
                   </TimelineIndicator>
                 </TimelineHeader>
-                <TimelineContent className="text-foreground mt-2 rounded-lg border px-4 py-3">
-                  {item.note}
-                  <TimelineDate className="mt-1 mb-0 capitalize">
-                    {formatDistanceToNow(new Date(item.createdAt), {
-                      addSuffix: true,
-                      locale: id,
-                    })}
-                  </TimelineDate>
-                </TimelineContent>
+                <div>
+                  <div className="text-xs space-y-1 text-muted-foreground">
+                    <h4>{item.user.access?.email || '-'}</h4>
+                    <h4>NIDN: {item.user.nidn || '-'}</h4>
+                  </div>
+                  <TimelineContent className="text-foreground mt-2 rounded-lg border px-4 py-3">
+                    {item.note}
+                    <TimelineDate className="mt-1 mb-0 capitalize">
+                      {formatDistanceToNow(new Date(item.createdAt), {
+                        addSuffix: true,
+                        locale: id,
+                      })}
+                    </TimelineDate>
+                  </TimelineContent>
+                </div>
               </TimelineItem>
             ))}
             {remaining > 0 && (
