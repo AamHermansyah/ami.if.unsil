@@ -51,15 +51,15 @@ function ProfileLayout({ access, hiddenEdit }: IProps) {
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/50 rounded-full -translate-y-16 translate-x-16" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/50 rounded-full translate-y-12 -translate-x-12" />
             <div className="relative z-10">
-              <div className="flex items-center space-x-4 mb-4">
+              <div className="flex flex-col sm:flex-row items-center space-x-4 mb-4">
                 <Avatar className="w-20 h-20">
                   <AvatarImage src={user.image || ""} alt="profil" className="object-cover" />
                   <AvatarFallback>
                     {user.name?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <h1 className="text-3xl font-bold mb-1">{user.name}</h1>
+                <div className="text-center sm:text-left">
+                  <h1 className="text-xl sm:text-3xl font-bold mb-1">{user.name}</h1>
                   <p className="text-sm text-muted-foreground mb-2">NIDN: {user.nidn || '-'}</p>
 
                   <div className="flex items-center space-x-4 text-sm text-muted-foreground">
@@ -94,7 +94,7 @@ function ProfileLayout({ access, hiddenEdit }: IProps) {
                   <InfoItem
                     icon={Users}
                     label="Jenis Kelamin"
-                    value={user.gender || '-'}
+                    value={['L', 'P'].includes(user.gender || '') ? ({ L: 'Laki-laki', P: 'Perempuan' })[user.gender as 'L' | 'P'] : '-'}
                   />
                   <InfoItem
                     icon={MapPin}

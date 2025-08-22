@@ -248,9 +248,12 @@ const DetailDialog: React.FC<IProps> = ({
           </div>
         </div>
 
-        <DialogFooter>
-          <Link href={disabled ? '' : `/audit/${indicator.code.replaceAll('/', '-')}/edit?period=${hrefPeriod}`}>
-            <Button disabled={disabled}>Edit</Button>
+        <DialogFooter className="flex-col">
+          <Link
+            href={disabled ? '' : `/audit/${indicator.code.replaceAll('/', '-')}/edit?period=${hrefPeriod}`}
+            className="w-full sm:w-auto"
+          >
+            <Button disabled={disabled} className="w-full">Edit</Button>
           </Link>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Tutup
