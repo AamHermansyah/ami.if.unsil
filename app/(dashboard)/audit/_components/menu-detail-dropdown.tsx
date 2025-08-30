@@ -43,18 +43,21 @@ function MenuDetailDropdown({ disabled, user, hrefCode, period, data }: IProps) 
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <Link href={disabled ? '' : `/audit/${hrefCode}/edit?period=${encodeURIComponent(period)}`}>
-            <DropdownMenuItem disabled={disabled}>
-              <Pencil className="w-4 h-4" />
-              Audit
-            </DropdownMenuItem>
-          </Link>
-          {user.role === 'AUDITOR' && (
+          {user.role === 'AUDITOR' ? (
             <>
               <Link href={disabled ? '' : `/audit/${hrefCode}/review?period=${encodeURIComponent(period)}`}>
                 <DropdownMenuItem disabled={disabled}>
                   <MessageSquareReply className="w-4 h-4" />
                   Beri Review (Auditor)
+                </DropdownMenuItem>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href={disabled ? '' : `/audit/${hrefCode}/edit?period=${encodeURIComponent(period)}`}>
+                <DropdownMenuItem disabled={disabled}>
+                  <Pencil className="w-4 h-4" />
+                  Edit Hasil Keluaran
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem

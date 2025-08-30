@@ -26,7 +26,7 @@ function NoPeriodAvailable({ user }: IProps) {
 
           {/* Description */}
           <p className="text-muted-foreground mb-6 leading-relaxed">
-            Untuk memulai proses audit, auditor perlu membuat periode audit terlebih dahulu.
+            Untuk memulai proses audit, auditee perlu membuat periode audit terlebih dahulu.
             Periode audit akan menentukan rentang waktu pelaksanaannya.
           </p>
 
@@ -37,16 +37,16 @@ function NoPeriodAvailable({ user }: IProps) {
               <p className="text-sm text-amber-500 font-medium mb-1">
                 Yang perlu dilakukan:
               </p>
-              {user.role === 'AUDITOR' && (
+              {user.role === 'AUDITEE' && (
                 <ul className="text-sm list-disc pl-4 text-amber-500 space-y-1">
                   <li>Tentukan nama periode audit</li>
                   <li>Atur tanggal mulai dan berakhir</li>
                   <li>Pilih kriteria yang akan diaudit</li>
                 </ul>
               )}
-              {user.role === 'AUDITEE' && (
+              {user.role === 'AUDITOR' && (
                 <ul className="text-sm list-disc pl-4 text-amber-500 space-y-1">
-                  <li>Tunggu auditor untuk membuat periode</li>
+                  <li>Tunggu auditee untuk membuat periode</li>
                   <li>Jika ada periode yang berjalan, halaman ini akan berubah dengan semestinya</li>
                   <li>Proses audit hanya bisa dilakukan jika tanggal mulai periode lebih dari sama dengan hari ini</li>
                 </ul>
@@ -56,7 +56,7 @@ function NoPeriodAvailable({ user }: IProps) {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-            {user.role === 'AUDITOR' && (
+            {user.role === 'AUDITEE' && (
               <Link href="/kelola/periode" className="w-full">
                 <Button
                   className="w-full"

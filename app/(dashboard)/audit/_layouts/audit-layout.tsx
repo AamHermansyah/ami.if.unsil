@@ -272,26 +272,16 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                                   <FastForward className="w-4 h-4" />
                                   Detail Cepat
                                 </DropdownMenuItem>
-                                <Link
-                                  href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/edit?${query}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <DropdownMenuItem disabled={disabledOptions}>
-                                    <Pencil className="w-4 h-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                </Link>
-                                {user.role === 'AUDITOR' && (
+                                {user.role === 'AUDITEE' ? (
                                   <>
                                     <Link
-                                      href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/review?${query}`}
+                                      href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/edit?${query}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
                                       <DropdownMenuItem disabled={disabledOptions}>
-                                        <MessageSquareReply className="w-4 h-4" />
-                                        Beri Review (Auditor)
+                                        <Pencil className="w-4 h-4" />
+                                        Edit
                                       </DropdownMenuItem>
                                     </Link>
                                     <DropdownMenuItem
@@ -306,6 +296,17 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                                       Hapus Indikator Audit
                                     </DropdownMenuItem>
                                   </>
+                                ) : (
+                                  <Link
+                                    href={disabledOptions ? '' : `/audit/${item.Indicator.code.replaceAll('/', '-')}/review?${query}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <DropdownMenuItem disabled={disabledOptions}>
+                                      <MessageSquareReply className="w-4 h-4" />
+                                      Beri Review (Auditor)
+                                    </DropdownMenuItem>
+                                  </Link>
                                 )}
                               </DropdownMenuContent>
                             </DropdownMenu>

@@ -24,7 +24,7 @@ export type NavigationRole = {
 };
 
 export const navigations: NavigationRole = {
-  auditee: [
+  auditor: [
     {
       title: "Ringkasan",
       url: "/",
@@ -41,7 +41,7 @@ export const navigations: NavigationRole = {
       icon: AiOutlineBarChart, // cocok untuk data hasil berupa laporan
     },
   ],
-  auditor: [
+  auditee: [
     {
       title: "Ringkasan",
       url: "/",

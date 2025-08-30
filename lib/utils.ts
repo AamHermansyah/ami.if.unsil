@@ -52,3 +52,26 @@ export const getAchievmentLabel = (value: number): AchievementLabel => {
       return 'SANGAT_KURANG';
   }
 }
+
+export function stripHtml(input: string): string {
+  if (!input) return ""
+  try {
+    if (typeof window !== "undefined" && "DOMParser" in window) {
+      const doc = new DOMParser().parseFromString(input, "text/html")
+      return (doc.body.textContent || "")
+        .replace(/[\u0000-\u001F\u007F]/g, "") // buang control chars
+        .replace(/\s+/g, " ").trim()
+    }
+  } catch { }
+  return input
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#39;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .replace(/[\u0000-\u001F\u007F]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+}

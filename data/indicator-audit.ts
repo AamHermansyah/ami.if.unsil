@@ -243,6 +243,7 @@ export async function getAchievementPerCriteriaAudit(periodId: string) {
         indicatorCode: indicatorAudit.Indicator.code,
         indicatorTitle: indicatorAudit.Indicator.title,
         achievement: indicatorAudit.achievement,
+        type: indicatorAudit.Indicator.type
       })),
     }))
 

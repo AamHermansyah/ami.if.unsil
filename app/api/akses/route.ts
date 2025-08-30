@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   try {
     const session = await auth();
     if (
-      session?.user?.role !== "AUDITOR" ||
+      session?.user?.role !== "AUDITEE" ||
       session.user.status !== "ACTIVE"
     ) {
       return new NextResponse("Unauthorized", { status: 401 });

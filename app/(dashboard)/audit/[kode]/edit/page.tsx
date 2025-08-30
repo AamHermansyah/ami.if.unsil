@@ -28,6 +28,10 @@ async function AuditEditPage({ searchParams, params }: IProps) {
     throw new Error("User tidak ditemukan di session.");
   }
 
+  if (session.user.role === 'AUDITOR') {
+    return redirect('/404', 'replace' as RedirectType);
+  }
+
   const res = await getIndicatorAuditByIndicatorCodeAndPeriod(code, period as string);
   if (res?.error) throw Error(res.message);
   if (!res?.data) return redirect('/404', 'replace' as RedirectType);
@@ -109,16 +113,20 @@ async function AuditEditPage({ searchParams, params }: IProps) {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Rekomendasi</label>
-              <p className="text-sm bg-green-500/10 p-3 rounded border-l-4 border-green-500">
-                {audit.recomendation || '-'}
-              </p>
+              <div className="bg-green-500/10 p-3 rounded border-l-4 border-green-500">
+                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div dangerouslySetInnerHTML={{ __html: audit.recomendation || 'Tidak ada' }} />
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Catatan</label>
-              <p className="text-sm bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
-                {audit.note || '-'}
-              </p>
+              <div className="bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
+                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div dangerouslySetInnerHTML={{ __html: audit.note || 'Tidak ada' }} />
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

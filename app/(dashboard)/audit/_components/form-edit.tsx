@@ -88,7 +88,7 @@ function FormEdit({ data, userId, code, period }: IProps) {
   return (
     <Card>
       <CardHeader className="border-b">
-        <CardTitle>Edit Data Audit</CardTitle>
+        <CardTitle>Edit Hasil Keluaran</CardTitle>
         <CardDescription>Setiap input harus menyatakan data atau informasi yang jelas.</CardDescription>
       </CardHeader>
       <CardContent>

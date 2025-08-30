@@ -267,7 +267,7 @@ export async function updateIndicatorAudit(input: UpdateIndicatorAuditInput) {
         action: "UPDATE",
         table: "INDICATOR_AUDIT",
         recordId: updatedAudit.id,
-        note: `Memperbarui data audit`,
+        note: `Memperbarui data hasil keluaran`,
       },
     });
 

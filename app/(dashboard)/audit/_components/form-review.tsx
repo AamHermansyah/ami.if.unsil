@@ -92,7 +92,7 @@ function FormReview({ data, userId, code, period, disabled }: IProps) {
   return (
     <Card>
       <CardHeader className="border-b">
-        <CardTitle>Edit Data Audit</CardTitle>
+        <CardTitle>Edit Review</CardTitle>
         <CardDescription>Setiap input harus menyatakan data atau informasi yang jelas.</CardDescription>
       </CardHeader>
       <CardContent>

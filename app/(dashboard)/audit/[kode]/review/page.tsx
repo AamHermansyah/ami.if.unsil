@@ -18,7 +18,7 @@ interface IProps {
   params: Promise<{ kode: string }>
 }
 
-async function AuditEditPage({ searchParams, params }: IProps) {
+async function AuditReviewPage({ searchParams, params }: IProps) {
   const period = (await searchParams).period;
   const code = (await params).kode.replaceAll('-', '/');
   if (!period) return redirect('/404', 'replace' as RedirectType);
@@ -26,6 +26,10 @@ async function AuditEditPage({ searchParams, params }: IProps) {
   const session = await auth();
   if (!session?.user) {
     throw new Error("User tidak ditemukan di session.");
+  }
+
+  if (session.user.role === 'AUDITEE') {
+    return redirect('/404', 'replace' as RedirectType);
   }
 
   const res = await getIndicatorAuditByIndicatorCodeAndPeriod(code, period as string);
@@ -61,24 +65,19 @@ async function AuditEditPage({ searchParams, params }: IProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 border rounded-md bg-card">
+            <div className="grid grid-cols-2 border rounded-md">
               <div className="p-4 space-y-1">
-                <h4>Capaian</h4>
-                <span className="text-primary dark:text-secondary font-semibold">{audit.achievement}</span>
-              </div>
-              <div className="p-4 space-y-1 border-l">
-                <h4>Sebutan</h4>
-                <Badge variant={getStatusVariant(audit.achievementLabel)} className="capitalize">
-                  {audit.achievementLabel.toLowerCase().replaceAll('_', ' ')}
+                <h4>Status Temuan</h4>
+                <Badge variant={getStatusVariant(audit.findingStatus)} className="capitalize">
+                  {audit.findingStatus.toLowerCase().replaceAll('_', ' ')}
                 </Badge>
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <h4>Kode:</h4>
-              <span className="px-2 py-1 text-sm font-mono border rounded">
-                {indicator.code}
-              </span>
+              <div className="p-4 space-y-1 border-l">
+                <h4>Kode:</h4>
+                <span className="px-2 py-1 text-sm font-mono border rounded">
+                  {indicator.code}
+                </span>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -94,31 +93,39 @@ async function AuditEditPage({ searchParams, params }: IProps) {
         <Card>
           <CardHeader className="border-b">
             <CardTitle>
-              Review Auditor
+              Hasil Keluaran
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <h4 className="text-sm font-medium mb-2">
-                Status Temuan
-              </h4>
-              <Badge variant={getStatusVariant(audit.findingStatus)} className="capitalize">
-                {audit.findingStatus.toLowerCase().replaceAll('_', ' ')}
-              </Badge>
+            <div className="grid grid-cols-2 border rounded-md">
+              <div className="p-4 space-y-1">
+                <h4 className="text-sm font-medium text-muted-foreground">Capaian</h4>
+                <span className="text-primary dark:text-secondary font-semibold">{audit.achievement}</span>
+              </div>
+              <div className="p-4 space-y-1 border-l">
+                <h4 className="text-sm font-medium text-muted-foreground">Sebutan</h4>
+                <Badge variant={getStatusVariant(audit.achievementLabel)} className="capitalize">
+                  {audit.achievementLabel.toLowerCase().replaceAll('_', ' ')}
+                </Badge>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Rekomendasi</label>
-              <p className="text-sm bg-green-500/10 p-3 rounded border-l-4 border-green-500">
-                {audit.recomendation || '-'}
-              </p>
+              <label className="text-sm font-medium text-muted-foreground">Akar Penyebab</label>
+              <div className="bg-red-500/10 p-3 rounded border-l-4 border-red-500">
+                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div dangerouslySetInnerHTML={{ __html: audit.rootCause || 'Tidak ada' }} />
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Catatan</label>
-              <p className="text-sm bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
-                {audit.note || '-'}
-              </p>
+              <label className="text-sm font-medium text-muted-foreground">Rencana Tindak Lanjut</label>
+              <div className="bg-blue-500/10 p-3 rounded border-l-4 border-blue-500">
+                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div dangerouslySetInnerHTML={{ __html: audit.plan || 'Tidak ada' }} />
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -135,4 +142,4 @@ async function AuditEditPage({ searchParams, params }: IProps) {
   );
 }
 
-export default AuditEditPage;
+export default AuditReviewPage;
