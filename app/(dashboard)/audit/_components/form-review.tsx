@@ -103,9 +103,9 @@ function FormReview({ data, userId, code, period, disabled }: IProps) {
             {disabled && (
               <Alert variant="info">
                 <Info className="h-4 w-4" />
-                <AlertTitle>Indikator Belum Diaudit</AlertTitle>
+                <AlertTitle>Indikator belum diinput oleh auditee</AlertTitle>
                 <AlertDescription>
-                  Proses audit untuk indikator ini belum dilakukan, sehingga auditor belum dapat memberikan ulasan atau komentar.
+                  Review indikator hanya dapat dilakukan setelah auditee melengkapi data.
                 </AlertDescription>
               </Alert>
             )}

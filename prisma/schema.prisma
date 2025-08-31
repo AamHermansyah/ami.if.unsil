@@ -38,7 +38,7 @@ enum AchievementLabel {
   CUKUP
   KURANG
   SANGAT_KURANG
-  BELUM_DI_AUDIT
+  BELUM_DI_INPUT
 }
 
 enum ActivityAction {
@@ -160,7 +160,7 @@ model CriteriaAudit {
 model IndicatorAudit {
   id                    String           @id @default(cuid())
   achievement           Int              @default(0)
-  achievementLabel      AchievementLabel @default(BELUM_DI_AUDIT)
+  achievementLabel      AchievementLabel @default(BELUM_DI_INPUT)
   documentName          String?
   documentLink          String?
   rootCause             String?

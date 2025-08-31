@@ -29,11 +29,11 @@ export async function getDashboardSummary(periodId: string) {
       },
     })
 
-    // 5. Progress Audit: IndicatorAudit yang labelnya !== BELUM_DI_AUDIT
+    // 5. Progress Audit: IndicatorAudit yang labelnya !== BELUM_DI_INPUT
     const completedIndicatorAudit = await db.indicatorAudit.count({
       where: {
         periodId,
-        achievementLabel: { not: AchievementLabel.BELUM_DI_AUDIT },
+        achievementLabel: { not: AchievementLabel.BELUM_DI_INPUT },
         deletedAt: null
       },
     })
@@ -103,7 +103,7 @@ export async function getDashboardSummary(periodId: string) {
       CUKUP: 0,
       KURANG: 0,
       SANGAT_KURANG: 0,
-      BELUM_DI_AUDIT: 0,
+      BELUM_DI_INPUT: 0,
     }
 
     for (const item of achievementLabelGroup) {

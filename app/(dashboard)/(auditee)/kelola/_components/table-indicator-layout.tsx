@@ -66,6 +66,7 @@ function TableIndicatorLayout({
   const q = searchParams.get('q') || '';
   const page = searchParams.get('page') || '1';
   const criteriaId = searchParams.get('criteriaId') || '';
+  const view = searchParams.get('view') || '';
   const navigate = useRouter();
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
 
@@ -113,7 +114,7 @@ function TableIndicatorLayout({
   const handleSearch = (value: string) => {
     value = value.trim();
     if (q !== value) {
-      navigate.push(`?q=${value}&criteriaId=${criteriaId}`);
+      navigate.push(`?q=${value}&criteriaId=${criteriaId}${view ? `&view=${view}` : ''}`);
     }
   }
 
@@ -177,7 +178,7 @@ function TableIndicatorLayout({
           <Select
             defaultValue={criteriaId}
             onValueChange={(value) => {
-              navigate.push(`?q=${q}${value !== 'all' ? `&criteriaId=${value}` : ''}`);
+              navigate.push(`?q=${q}${value !== 'all' ? `&criteriaId=${value}` : ''}${view ? `&view=${view}` : ''}`);
             }}
           >
             <SelectTrigger className="w-24">

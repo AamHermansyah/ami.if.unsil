@@ -189,7 +189,7 @@ async function AuditReviewPage({ searchParams, params }: IProps) {
         userId={session.user.id!}
         code={code.replaceAll('/', '-')}
         period={encodeURIComponent(period as string)}
-        disabled={audit.achievementLabel === 'BELUM_DI_AUDIT'}
+        disabled={audit.achievementLabel === 'BELUM_DI_INPUT'}
       />
     </div>
   );

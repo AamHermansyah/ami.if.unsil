@@ -31,7 +31,7 @@ export const getStatusVariant = (status: FindingStatus | AchievementLabel) => {
     case 'KTS_MAYOR':
     case 'SANGAT_KURANG':
       return 'destructive';
-    case 'BELUM_DI_AUDIT':
+    case 'BELUM_DI_INPUT':
     default:
       return 'default';
   }
