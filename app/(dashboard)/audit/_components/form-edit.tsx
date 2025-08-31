@@ -74,9 +74,18 @@ function FormEdit({ data, userId, code, period }: IProps) {
   const onSubmit = (values: IndicatorAuditValues) => {
     if (!userId) return;
 
+    const cleanRootCause = values.rootCause?.replace(/<p><\/p>/g, '') || '';
+    const cleanPlan = values.plan?.replace(/<p><\/p>/g, '') || '';
+
     setError('');
     startAction(() => {
-      updateIndicatorAudit({ ...values, id: data.id, updatedBy: userId })
+      updateIndicatorAudit({
+        ...values,
+        rootCause: cleanRootCause,
+        plan: cleanPlan,
+        id: data.id,
+        updatedBy: userId
+      })
         .then((res) => {
           if ('success' in res && res.success) {
             navigate.push(`/audit/${code}?period=${period}`);

@@ -207,7 +207,7 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                         <TableCell className="font-medium text-center">{index + 1}</TableCell>
                         <TableCell className="font-medium">{item.Indicator.code}</TableCell>
                         <TableCell>
-                          <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                          <div className="prose prose-strong:text-foreground prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                             <div dangerouslySetInnerHTML={{ __html: item.Indicator.title }} />
                           </div>
                         </TableCell>
@@ -297,7 +297,7 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                                       }}
                                     >
                                       <Trash className="w-4 h-4 text-destructive" />
-                                      Hapus Indikator Audit
+                                      Hapus
                                     </DropdownMenuItem>
                                   </>
                                 ) : (

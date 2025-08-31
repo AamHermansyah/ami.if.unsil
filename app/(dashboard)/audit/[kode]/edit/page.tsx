@@ -82,7 +82,7 @@ async function AuditEditPage({ searchParams, params }: IProps) {
 
             <div className="space-y-1">
               <h4>Indikator:</h4>
-              <div className="prose prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+              <div className="prose prose-strong:text-foreground prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                 <div dangerouslySetInnerHTML={{ __html: indicator.title }} />
               </div>
             </div>
@@ -109,7 +109,7 @@ async function AuditEditPage({ searchParams, params }: IProps) {
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Rekomendasi</label>
               <div className="bg-green-500/10 p-3 rounded border-l-4 border-green-500">
-                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                   <div dangerouslySetInnerHTML={{ __html: audit.recomendation || 'Tidak ada' }} />
                 </div>
               </div>
@@ -118,7 +118,7 @@ async function AuditEditPage({ searchParams, params }: IProps) {
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Catatan</label>
               <div className="bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
-                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                   <div dangerouslySetInnerHTML={{ __html: audit.note || 'Tidak ada' }} />
                 </div>
               </div>
@@ -127,7 +127,7 @@ async function AuditEditPage({ searchParams, params }: IProps) {
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Keterangan</label>
               <div className="bg-purple-500/10 p-3 rounded border-l-4 border-purple-500">
-                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                   <div dangerouslySetInnerHTML={{ __html: audit.additionalInformation || 'Tidak ada' }} />
                 </div>
               </div>

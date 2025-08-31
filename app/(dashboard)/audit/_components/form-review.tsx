@@ -76,9 +76,20 @@ function FormReview({ data, userId, code, period, disabled }: IProps) {
   const onSubmit = (values: IndicatorAuditReviewValues) => {
     if (!userId) return;
 
+    const cleanNote = values.note?.replace(/<p><\/p>/g, '') || '';
+    const cleanRecomendation = values.recomendation?.replace(/<p><\/p>/g, '') || '';
+    const cleanAdditional = values.additionalInformation?.replace(/<p><\/p>/g, '') || '';
+
     setError('');
     startAction(() => {
-      updateIndicatorAuditReview({ ...values, id: data.id, updatedBy: userId })
+      updateIndicatorAuditReview({
+        ...values,
+        note: cleanNote,
+        recomendation: cleanRecomendation,
+        additionalInformation: cleanAdditional,
+        id: data.id,
+        updatedBy: userId
+      })
         .then((res) => {
           if ('success' in res && res.success) {
             navigate.push(`/audit/${code}?period=${period}`);

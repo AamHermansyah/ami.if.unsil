@@ -231,7 +231,7 @@ function TableIndicatorLayout({
                         </code>
                       </TableCell>
                       <TableCell>
-                        <div className="prose prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                        <div className="prose prose-strong:text-foreground prose-sm lg:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                           <div dangerouslySetInnerHTML={{ __html: item.title }} />
                         </div>
                       </TableCell>

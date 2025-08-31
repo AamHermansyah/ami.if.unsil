@@ -57,7 +57,7 @@ function MenuDetailDropdown({ disabled, user, hrefCode, period, data }: IProps) 
               <Link href={disabled ? '' : `/audit/${hrefCode}/edit?period=${encodeURIComponent(period)}`}>
                 <DropdownMenuItem disabled={disabled}>
                   <Pencil className="w-4 h-4" />
-                  Edit Hasil Keluaran
+                  Edit
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem
@@ -66,7 +66,7 @@ function MenuDetailDropdown({ disabled, user, hrefCode, period, data }: IProps) 
                 disabled={disabled}
               >
                 <Trash className="w-4 h-4 text-destructive" />
-                Hapus Indikator Audit
+                Hapus
               </DropdownMenuItem>
             </>
           )}

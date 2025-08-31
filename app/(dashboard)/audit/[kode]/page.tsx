@@ -130,7 +130,7 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
                   </p>
                 </div>
               </div>
-              <div className="prose prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+              <div className="prose prose-strong:text-foreground prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                 <div dangerouslySetInnerHTML={{ __html: data.Indicator.title }} />
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
@@ -198,7 +198,7 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Rencana Tindak Lanjut</label>
                 <div className="text-sm bg-blue-500/10 p-3 rounded border-l-4 border-blue-500">
-                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                     <div dangerouslySetInnerHTML={{ __html: data.plan || 'Tidak ada' }} />
                   </div>
                 </div>
@@ -207,7 +207,7 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Akar Penyebab</label>
                 <div className="text-sm bg-red-500/10 p-3 rounded border-l-4 border-red-500">
-                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                     <div dangerouslySetInnerHTML={{ __html: data.rootCause || 'Tidak ada' }} />
                   </div>
                 </div>
@@ -235,7 +235,7 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Rekomendasi</label>
                 <div className="text-sm bg-green-500/10 p-3 rounded border-l-4 border-green-500">
-                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                     <div dangerouslySetInnerHTML={{ __html: data.recomendation || 'Tidak ada' }} />
                   </div>
                 </div>
@@ -244,7 +244,7 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Catatan</label>
                 <div className="text-sm bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
-                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                     <div dangerouslySetInnerHTML={{ __html: data.note || 'Tidak ada' }} />
                   </div>
                 </div>
@@ -253,7 +253,7 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Keterangan</label>
                 <div className="text-sm bg-purple-500/10 p-3 rounded border-l-4 border-purple-500">
-                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div className="prose prose-strong:text-foreground prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                     <div dangerouslySetInnerHTML={{ __html: data.additionalInformation || 'Tidak ada' }} />
                   </div>
                 </div>
