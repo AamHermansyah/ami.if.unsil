@@ -9,9 +9,11 @@ export const indicatorAuditSchema = z.object({
     .string()
     .trim()
     .optional()
-    .refine((val) => !val || z.string().url().safeParse(val).success, {
+    .refine((val) => !val || z.url().safeParse(val).success, {
       message: "Link harus berupa URL yang valid",
     }),
+  pemonev: z.string().optional(),
+  dataSource: z.string().optional(),
   rootCause: z.string().optional(),
   plan: z.string().optional(),
 });
@@ -22,6 +24,7 @@ export const indicatorAuditReviewSchema = z.object({
   findingStatus: z.enum(FindingStatus),
   note: z.string().optional(),
   recomendation: z.string().optional(),
+  additionalInformation: z.string().optional(),
 });
 
 export type IndicatorAuditReviewValues = z.infer<typeof indicatorAuditReviewSchema>

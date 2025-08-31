@@ -122,7 +122,7 @@ const DetailDialog: React.FC<IProps> = ({
 
           {/* Audit Results */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Hasil Audit</h3>
+            <h3 className="text-lg font-semibold">Hasil Keluaran</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
@@ -145,6 +145,19 @@ const DetailDialog: React.FC<IProps> = ({
                   {indicatorAudit.findingStatus.toLowerCase().replaceAll('_', ' ')}
                 </Badge>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Pemonev</label>
+              <p className="text-sm border px-2 py-1 rounded">
+                {indicatorAudit.pemonev || '-'}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Sumber Data</label>
+              <p className="text-sm border px-2 py-1 rounded">
+                {indicatorAudit.dataSource || '-'}
+              </p>
             </div>
           </div>
 
@@ -189,7 +202,7 @@ const DetailDialog: React.FC<IProps> = ({
 
           {/* Analysis Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Analisis</h3>
+            <h3 className="text-lg font-semibold">Analisis Auditee</h3>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Akar Penyebab</label>
@@ -208,6 +221,13 @@ const DetailDialog: React.FC<IProps> = ({
                 </div>
               </div>
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Review Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Review Auditor</h3>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Rekomendasi</label>
@@ -226,13 +246,22 @@ const DetailDialog: React.FC<IProps> = ({
                 </div>
               </div>
             </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Keterangan</label>
+              <div className="bg-purple-500/10 p-3 rounded border-l-4 border-purple-500">
+                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div dangerouslySetInnerHTML={{ __html: indicatorAudit.additionalInformation || 'Tidak ada' }} />
+                </div>
+              </div>
+            </div>
           </div>
 
           <Separator />
 
           {/* Metadata */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Informasi Audit</h3>
+            <h3 className="text-lg font-semibold">Informasi Lainnya</h3>
 
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">

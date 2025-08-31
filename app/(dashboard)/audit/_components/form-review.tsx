@@ -6,7 +6,8 @@ import {
   NotebookPen,
   Lightbulb,
   Search,
-  Info
+  Info,
+  Notebook
 } from 'lucide-react';
 import {
   Card,
@@ -68,6 +69,7 @@ function FormReview({ data, userId, code, period, disabled }: IProps) {
       findingStatus: data.findingStatus,
       note: data.note ?? "",
       recomendation: data.recomendation ?? "",
+      additionalInformation: data.additionalInformation ?? "",
     },
   });
 
@@ -182,6 +184,29 @@ function FormReview({ data, userId, code, period, disabled }: IProps) {
                   <FormDescription>
                     Rekomendasi yang membantu memperbaiki kondisi saat ini, dapat dilaksanakan, dan terukur.
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Keterangan Auditor */}
+            <FormField
+              control={form.control}
+              name="additionalInformation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Notebook className="w-4 h-4" />
+                    Keterangan Auditor
+                  </FormLabel>
+                  <FormControl>
+                    <RichTextEditor
+                      placeholder="Berikan tambahan keterangan..."
+                      id={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

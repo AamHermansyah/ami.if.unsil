@@ -182,6 +182,8 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
               <TableHead className="w-max text-center">Sebutan</TableHead>
               <TableHead className="max-w-[200px]">Nama Dokumen Pendukung</TableHead>
               <TableHead className="text-center">Link Bukti Fisik</TableHead>
+              <TableHead>Pemonev</TableHead>
+              <TableHead>Sumber Data</TableHead>
               <TableHead className="w-max text-center">Temuan</TableHead>
               <TableHead className="w-16 text-center">Aksi</TableHead>
             </TableRow>
@@ -192,7 +194,7 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
               <>
                 {data.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8">
+                    <TableCell colSpan={11} className="text-center py-8">
                       {q.length > 0 ? "Data tidak ditemukan" : "Belum ada data audit"}
                     </TableCell>
                   </TableRow>
@@ -237,6 +239,8 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
                             )}
                           </div>
                         </TableCell>
+                        <TableCell>{item.pemonev || '-'}</TableCell>
+                        <TableCell>{item.dataSource || '-'}</TableCell>
                         <TableCell>
                           <div className="flex justify-center capitalize">
                             <Badge variant={getStatusVariant(item.findingStatus)}>
@@ -319,7 +323,7 @@ function AuditLayout({ criterias, periods, lastPeriod, user }: IProps) {
               </>
             ) : (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-8">
+                <TableCell colSpan={11} className="text-center py-8">
                   <BarsLoader fontSize={20} className="mx-auto" />
                 </TableCell>
               </TableRow>

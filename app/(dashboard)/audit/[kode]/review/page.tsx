@@ -12,6 +12,9 @@ import { getIndicatorAuditByIndicatorCodeAndPeriod } from '@/data/indicator-audi
 import { getStatusVariant } from '@/lib/utils';
 import { auth } from '@/lib/auth';
 import FormReview from '../../_components/form-review';
+import { ExternalLink, FileText } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface IProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -55,7 +58,7 @@ async function AuditReviewPage({ searchParams, params }: IProps) {
         <Card>
           <CardHeader className="border-b">
             <CardTitle>Informasi Indikator</CardTitle>
-            <CardDescription>Tahun Akademik 2024/2025</CardDescription>
+            <CardDescription>Periode: {period}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -65,22 +68,22 @@ async function AuditReviewPage({ searchParams, params }: IProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 border rounded-md">
-              <div className="p-4 space-y-1">
-                <h4>Status Temuan</h4>
-                <Badge variant={getStatusVariant(audit.findingStatus)} className="capitalize">
-                  {audit.findingStatus.toLowerCase().replaceAll('_', ' ')}
-                </Badge>
-              </div>
-              <div className="p-4 space-y-1 border-l">
-                <h4>Kode:</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4>Kode</h4>
                 <span className="px-2 py-1 text-sm font-mono border rounded">
                   {indicator.code}
                 </span>
               </div>
+              <div>
+                <h4>Jenis Indikator</h4>
+                <p className="text-muted-foreground">
+                  {indicator.type}
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <h4>Indikator:</h4>
               <div className="prose prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                 <div dangerouslySetInnerHTML={{ __html: indicator.title }} />
@@ -107,6 +110,56 @@ async function AuditReviewPage({ searchParams, params }: IProps) {
                 <Badge variant={getStatusVariant(audit.achievementLabel)} className="capitalize">
                   {audit.achievementLabel.toLowerCase().replaceAll('_', ' ')}
                 </Badge>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-sm font-medium mb-2">
+                  Dokumen Pendukung
+                </h4>
+                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  <FileText className="w-4 h-4" />
+                  <span>{audit.documentName || 'Tidak ada dokumen'}</span>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-2">
+                  Link Bukti Fisik
+                </h4>
+                {audit.documentLink ? (
+                  <Link
+                    href={audit.documentLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button size="sm">
+                      <ExternalLink className="h-4 w-4" />
+                      Buka Dokumen
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button size="sm" disabled>
+                    <ExternalLink className="h-4 w-4" />
+                    Buka Dokumen
+                  </Button>
+                )}
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-1">
+                  Pemonev
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  {audit.pemonev || '-'}
+                </p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-1">
+                  Sumber Data
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  {audit.dataSource || '-'}
+                </p>
               </div>
             </div>
 

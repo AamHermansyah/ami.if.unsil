@@ -158,22 +158,26 @@ model CriteriaAudit {
 
 // TABEL INDICATOR AUDIT
 model IndicatorAudit {
-  id               String           @id @default(cuid())
-  achievement      Int              @default(0)
-  achievementLabel AchievementLabel @default(BELUM_DI_AUDIT)
-  documentName     String?
-  documentLink     String?
-  rootCause        String?
-  plan             String?
-  findingStatus    FindingStatus    @default(OBSERVASI)
-  note             String?
-  recomendation    String?
-  criteriaAuditId  String
-  criteriaAudit    CriteriaAudit    @relation(fields: [criteriaAuditId], references: [id])
-  indicatorId      String
-  Indicator        Indicator        @relation(fields: [indicatorId], references: [id])
-  periodId         String
-  period           Period           @relation(fields: [periodId], references: [id])
+  id                    String           @id @default(cuid())
+  achievement           Int              @default(0)
+  achievementLabel      AchievementLabel @default(BELUM_DI_AUDIT)
+  documentName          String?
+  documentLink          String?
+  rootCause             String?
+  plan                  String?
+  findingStatus         FindingStatus    @default(OBSERVASI)
+  note                  String?
+  recomendation         String?
+  pemonev               String?
+  dataSource            String?
+  additionalInformation String?
+
+  criteriaAuditId String
+  criteriaAudit   CriteriaAudit @relation(fields: [criteriaAuditId], references: [id])
+  indicatorId     String
+  Indicator       Indicator     @relation(fields: [indicatorId], references: [id])
+  periodId        String
+  period          Period        @relation(fields: [periodId], references: [id])
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

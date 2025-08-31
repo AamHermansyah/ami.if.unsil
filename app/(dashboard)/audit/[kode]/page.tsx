@@ -112,6 +112,24 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
                   {data.Indicator.criteria.code} - {data.Indicator.criteria.title}
                 </p>
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-medium mb-2">
+                    Kode
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {data.Indicator.code}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium mb-2">
+                    Jenis Indikator
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {data.Indicator.type}
+                  </p>
+                </div>
+              </div>
               <div className="prose prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                 <div dangerouslySetInnerHTML={{ __html: data.Indicator.title }} />
               </div>
@@ -158,6 +176,22 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
                       Buka Dokumen
                     </Button>
                   )}
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium mb-1">
+                    Pemonev
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {data.pemonev || '-'}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium mb-1">
+                    Sumber Data
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {data.dataSource || '-'}
+                  </p>
                 </div>
               </div>
 
@@ -212,6 +246,15 @@ async function AuditDetailPage({ searchParams, params }: IProps) {
                 <div className="text-sm bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
                   <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                     <div dangerouslySetInnerHTML={{ __html: data.note || 'Tidak ada' }} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Keterangan</label>
+                <div className="text-sm bg-purple-500/10 p-3 rounded border-l-4 border-purple-500">
+                  <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                    <div dangerouslySetInnerHTML={{ __html: data.additionalInformation || 'Tidak ada' }} />
                   </div>
                 </div>
               </div>

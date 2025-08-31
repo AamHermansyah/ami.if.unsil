@@ -55,7 +55,7 @@ async function AuditEditPage({ searchParams, params }: IProps) {
         <Card>
           <CardHeader className="border-b">
             <CardTitle>Informasi Indikator</CardTitle>
-            <CardDescription>Tahun Akademik 2024/2025</CardDescription>
+            <CardDescription>Periode: {period}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -65,27 +65,22 @@ async function AuditEditPage({ searchParams, params }: IProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 border rounded-md bg-card">
-              <div className="p-4 space-y-1">
-                <h4>Capaian</h4>
-                <span className="text-primary dark:text-secondary font-semibold">{audit.achievement}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="mb-1">Kode</h4>
+                <span className="px-2 py-1 text-sm font-mono border rounded">
+                  {indicator.code}
+                </span>
               </div>
-              <div className="p-4 space-y-1 border-l">
-                <h4>Sebutan</h4>
-                <Badge variant={getStatusVariant(audit.achievementLabel)} className="capitalize">
-                  {audit.achievementLabel.toLowerCase().replaceAll('_', ' ')}
-                </Badge>
+              <div>
+                <h4 className="mb-1">Jenis Indikator</h4>
+                <p className="text-muted-foreground">
+                  {indicator.type}
+                </p>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <h4>Kode:</h4>
-              <span className="px-2 py-1 text-sm font-mono border rounded">
-                {indicator.code}
-              </span>
-            </div>
-
-            <div className="space-y-2">
+            <div className="space-y-1">
               <h4>Indikator:</h4>
               <div className="prose prose-sm sm:prose-base max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                 <div dangerouslySetInnerHTML={{ __html: indicator.title }} />
@@ -125,6 +120,15 @@ async function AuditEditPage({ searchParams, params }: IProps) {
               <div className="bg-yellow-500/10 p-3 rounded border-l-4 border-yellow-500">
                 <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
                   <div dangerouslySetInnerHTML={{ __html: audit.note || 'Tidak ada' }} />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Keterangan</label>
+              <div className="bg-purple-500/10 p-3 rounded border-l-4 border-purple-500">
+                <div className="prose prose-sm max-w-none whitespace-normal text-justify text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5">
+                  <div dangerouslySetInnerHTML={{ __html: audit.additionalInformation || 'Tidak ada' }} />
                 </div>
               </div>
             </div>

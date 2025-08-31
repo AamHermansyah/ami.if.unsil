@@ -8,7 +8,9 @@ import {
   Link2,
   AlertCircle,
   Target,
-  Star
+  Star,
+  Building,
+  Database
 } from 'lucide-react';
 import {
   Card,
@@ -64,6 +66,8 @@ function FormEdit({ data, userId, code, period }: IProps) {
       documentLink: data.documentLink ?? "",
       rootCause: data.rootCause ?? "",
       plan: data.plan ?? "",
+      pemonev: data.pemonev ?? "",
+      dataSource: data.dataSource ?? "",
     },
   });
 
@@ -156,6 +160,60 @@ function FormEdit({ data, userId, code, period }: IProps) {
                   <FormDescription>
                     Masukkan URL lengkap yang dapat diakses oleh auditor
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Pemonev */}
+            <FormField
+              control={form.control}
+              name="pemonev"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Building className="w-4 h-4" />
+                    Pemonev
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih instansi pemonev" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="UPM">UPM</SelectItem>
+                      <SelectItem value="GKM">GKM</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Sumber Data */}
+            <FormField
+              control={form.control}
+              name="dataSource"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Database className="w-4 h-4" />
+                    Sumber Data
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih sumber data" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Program Studi">Program Studi</SelectItem>
+                      <SelectItem value="Program Studi / Kemahasiswaan">Program Studi / Kemahasiswaan</SelectItem>
+                      <SelectItem value="Fakultas">Fakultas</SelectItem>
+                      <SelectItem value="Fakultas / Wakil Dekan Bidang Keuangan">Fakultas / Wakil Dekan Bidang Keuangan</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
