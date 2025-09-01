@@ -131,10 +131,10 @@ function AddEditAccessDialog({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="email">Kriteria</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Masukkan kriteria audit"
+                      placeholder="Masukkan email"
                       disabled={type === 'edit'}
                       {...field}
                     />
@@ -148,11 +148,11 @@ function AddEditAccessDialog({
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="role">Kode</FormLabel>
+                  <FormLabel>Role</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih role akses" />
+                        <SelectValue placeholder="Pilih akses role" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
